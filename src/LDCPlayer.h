@@ -7,6 +7,7 @@
 
 #include "LDDependencies.h"
 #include "LDGroups.h"
+#include "LDSensor.h"
 
 namespace ld
 {
@@ -23,34 +24,49 @@ namespace ld
 	class LDCBlock : public sses::Component
 	{
 		private:
+			int val;
 			LDGame& game;
 			LDCPhysics& cPhysics;
 			ssvsc::Body& body;
 			LDCPhysics* parent{nullptr};
 			ssvs::Vec2i offset{0, 0};
-			int val{ssvu::getRnd(0, 99)};
-			ssvs::BitmapText text{game.getAssets().get<ssvs::BitmapFont>("limeStroked"), ssvu::toStr(val)};
+			ssvs::BitmapText text;
 
 		public:
-			LDCBlock(LDGame& mGame, LDCPhysics& mCPhysics) : game(mGame), cPhysics(mCPhysics), body(cPhysics.getBody())
+			ssvu::Delegate<void()> onDestroy;
+
+			LDCBlock(int mVal, LDGame& mGame, LDCPhysics& mCPhysics) : val(mVal), game(mGame), cPhysics(mCPhysics), body(cPhysics.getBody()),
+				text{game.getAssets().get<ssvs::BitmapFont>("limeStroked"), ssvu::toStr(val)}
 			{
 				text.setTracking(-3);
+			}
+			~LDCBlock()
+			{
+				onDestroy();
 			}
 
 			inline void update(float mFrameTime) override
 			{
-				text.setPosition(toPixels(body.getShape().getVertexNW<int>()));
+				text.setPosition(toPixels(body.getShape().getVertexNW<int>()) + ssvs::Vec2f{3, 3});
 
 				if(!cPhysics.isInAir())
+				{
+					// TODO: add getLowerClamped and getUpperClamped methods to ssv framework
+					body.setVelocity(ssvs::Utils::getClamped(body.getVelocity() * 0.9f, -2000.f, 2000.f));
+					if(parent == nullptr) body.delGroupNoResolve(LDGroup::Player);
+				}
 
 				if(parent == nullptr) return;
 				ssvs::Vec2f v{(parent->getBody().getPosition() + offset) - body.getPosition()};
-				if(getDist(parent->getBody().getPosition(), body.getPosition()) > 1500) dropped();
+				if(getDist(parent->getBody().getPosition(), body.getPosition()) > 1700)
+				{
+					dropped();
+				}
 				else body.setVelocity(v);
 			}
 			inline void draw() override
 			{
-				game.render(text);
+				if(val > -1) game.render(text);
 			}
 
 			inline void pickedUp(LDCPhysics& mParent)
@@ -58,15 +74,19 @@ namespace ld
 				parent = &mParent;
 				body.addGroupNoResolve(LDGroup::Block);
 				body.addGroup(LDGroup::BlockFloating);
+				body.addGroupNoResolve(LDGroup::Player);
 			}
-			inline void dropped()
+			inline void dropped(float mHBoost = 1.f, float mVBoost = 1.f)
 			{
 				parent = nullptr;
+				body.setVelocityX(ssvu::getClamped(body.getVelocity().x * mHBoost, -1000.f, 1000.f));
+				body.setVelocityY(ssvu::getClamped(body.getVelocity().y * mVBoost, -1000.f, 1000.f));
 				body.delGroupNoResolve(LDGroup::Block);
 				body.delGroup(LDGroup::BlockFloating);
 			}
 			inline void setOffset(ssvs::Vec2i mOffset) { offset = mOffset; }
 			inline bool hasParent() { return parent != nullptr; }
+			inline int getVal() { return val; }
 	};
 
 	class LDCPlayer : public sses::Component
@@ -81,30 +101,52 @@ namespace ld
 			Action action;
 			bool facingLeft{false}, jumpReady{false};
 			float walkSpeed{100.f}, jumpSpeed{420.f};
+			bool wasFacingLeft{false}; float lastTurn{0.f};
+			float lastJump{0.f};
 
+			LDSensor blockSensor{cPhysics, ssvs::Vec2i{10, 3000}};
 			LDCBlock* currentBlock{nullptr};
+			ssvsc::Body* lastBlock{nullptr};
+			float lastBlockTimer{0.f};
 
 		public:
 			LDCPlayer(LDGame& mGame, LDCPhysics& mCPhysics) : game(mGame), cPhysics(mCPhysics), body(cPhysics.getBody()) { }
 
 			void init() override
 			{
+				blockSensor.getSensor().addGroupToCheck(LDGroup::Block);
+
+				blockSensor.onDetection += [&](sses::Entity& mE)
+				{
+					if(hasBlock() || !game.getIAction()) return;
+					auto& block(mE.getComponent<LDCBlock>());
+					block.pickedUp(cPhysics);
+					if(currentBlock != nullptr) currentBlock->onDestroy.clear();
+					currentBlock = &block;
+					currentBlock->onDestroy += [&]{ currentBlock = nullptr; };
+					lastBlock = &mE.getComponent<LDCPhysics>().getBody();
+				};
+
 				body.onPreUpdate += [&]{ jumpReady = false; };
 				body.onPostUpdate += [&]{ };
-				body.onDetection += [&](const ssvsc::DetectionInfo& mDI)
+				body.onDetection += [&](const ssvsc::DetectionInfo& mDI){ };
+				body.onResolution += [&](const ssvsc::ResolutionInfo& mRI)
 				{
-					if(hasBlock() || !mDI.body.hasGroup(LDGroup::Block)) return;
-					if(!game.getIAction()) return;
-					auto& entity(*static_cast<sses::Entity*>(mDI.userData));
-					auto& block(entity.getComponent<LDCBlock>());
+					if(lastBlock == nullptr || &mRI.body != lastBlock || lastBlockTimer <= 0) return;
 
-					block.pickedUp(cPhysics);
-					currentBlock = &block;
+					// Ignore resolution against last picked block for some time
+					mRI.noResolvePosition = mRI.noResolveVelocity = true;
 				};
+
 				cPhysics.onResolution += [&](ssvs::Vec2i mMinIntersection) { if(mMinIntersection.y < 0) jumpReady = true; };
 			}
-			void update(float) override
+			void update(float mFrameTime) override
 			{
+				wasFacingLeft = facingLeft;
+
+				ssvs::Vec2i offset{facingLeft ? -1000 : 1000, -600};
+				blockSensor.setPosition(body.getPosition() + ssvs::Vec2i{offset.x / 2, 300});
+
 				if(game.getIX() == 0) move(0);
 				else if(game.getIX() == -1) move(-1);
 				else if(game.getIX() == 1) move(1);
@@ -127,21 +169,32 @@ namespace ld
 					else if(velocity.y < 0) action = Action::Jumping;
 				}
 
+				if(lastTurn <= 0.f)
+				{
+					if(facingLeft && !wasFacingLeft) lastTurn = 10.f;
+				}
+				else lastTurn -= mFrameTime;
+
+				if(lastJump > 0.f) lastJump -= mFrameTime;
+
 				if(hasBlock())
 				{
+					lastBlockTimer = 15.f;
+
 					if(!game.getIAction())
 					{
-						currentBlock->dropped();
+						currentBlock->dropped(((lastTurn > 0.f) ? lastTurn * 0.5f : 1.f), ((lastJump > 0.f) ? lastJump * 0.5f : 1.f));
 						currentBlock = nullptr;
 						return;
 					}
-					currentBlock->setOffset(ssvs::Vec2i{facingLeft ? -1000 : 1000, -600});
+					currentBlock->setOffset(offset);
 					if(!currentBlock->hasParent()) currentBlock = nullptr;
 				}
+				else if(lastBlockTimer > 0) lastBlockTimer -= mFrameTime;
 			}
 
 			inline void move(int mDirection)	{ body.setVelocityX(walkSpeed * mDirection); }
-			inline void jump()					{ if(!cPhysics.isInAir() && jumpReady) body.setVelocityY(-jumpSpeed); }
+			inline void jump()					{ if(!cPhysics.isInAir() && jumpReady) { body.setVelocityY(-jumpSpeed); lastJump = 10.f; } }
 
 			inline Action getAction()		{ return action; }
 			inline bool isJumpReady()		{ return jumpReady; }

@@ -2,6 +2,8 @@
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
+#include <unordered_map>
+
 #include "LDFactory.h"
 #include "LDGroups.h"
 
@@ -26,7 +28,7 @@ namespace ld
 	Entity& LDFactory::createWall(Vec2i mPos)
 	{
 		auto& result(manager.createEntity());
-		auto& cPhysics(result.createComponent<LDCPhysics>(world, true, mPos, Vec2i{1600, 1600}));
+		auto& cPhysics(result.createComponent<LDCPhysics>(world, true, mPos, Vec2i{3200, 3200}));
 		auto& cRender(result.createComponent<LDCRender>(game, cPhysics.getBody()));
 
 		Body& body(cPhysics.getBody());
@@ -34,35 +36,39 @@ namespace ld
 		body.addGroupToCheck(LDGroup::Solid);
 
 		Sprite s{assets.get<Texture>("worldTiles.png")};
-		s.setTextureRect(assets.tilesetWorld[{1, 0}]);
+		if(getRnd(0, 100) < 75) s.setTextureRect(assets.tilesetWorld[{1, 0}]);
+		else s.setTextureRect(assets.tilesetWorld[Vec2u(3 + getRnd(0, 2), 0)]);
 
 		cRender.addSprite(s);
-		cRender.setScaleWithBody(true);
+		cRender.setScaleWithBody(false);
 
 		return result;
 	}
-	Entity& LDFactory::createBlock(Vec2i mPos)
+	Entity& LDFactory::createBlock(Vec2i mPos, int mVal)
 	{
 		auto& result(manager.createEntity());
 		auto& cPhysics(result.createComponent<LDCPhysics>(world, false, mPos, Vec2i{1600, 1600}));
 		auto& cRender(result.createComponent<LDCRender>(game, cPhysics.getBody()));
-		result.createComponent<LDCBlock>(game, cPhysics);
+		result.createComponent<LDCBlock>(mVal, game, cPhysics);
 
 		Body& body(cPhysics.getBody());
 		body.addGroup(LDGroup::Solid);
 		body.addGroup(LDGroup::Block);
 		body.addGroup(LDGroup::CanBePicked);
 		body.addGroupToCheck(LDGroup::Solid);
-		body.addGroupNoResolve(LDGroup::Player);
+		//body.addGroupNoResolve(LDGroup::Player);
 		body.addGroupNoResolve(LDGroup::BlockFloating);
 
 		Sprite s{assets.get<Texture>("worldTiles.png")};
 		s.setTextureRect(assets.tilesetWorld[{0, 0}]);
-		s.setColor(Color(getRnd(0, 255), getRnd(0, 255), getRnd(0, 255), 255));
+
+		if(mVal > -1)
+		{
+			if(colorMap.find(mVal) == colorMap.end()) colorMap[mVal] = Color(getRnd(0, 255), getRnd(0, 255), getRnd(0, 255), 255);
+			s.setColor(colorMap[mVal]);
+		}
 
 		cRender.addSprite(s);
-		cRender.setScaleWithBody(true);
-
 		return result;
 	}
 
@@ -85,6 +91,39 @@ namespace ld
 		cRender.setScaleWithBody(false);
 
 		result.setDrawPriority(-1000);
+		return result;
+	}
+
+	Entity& LDFactory::createReceiver(Vec2i mPos, int mVal)
+	{
+		auto& result(manager.createEntity());
+		auto& cPhysics(result.createComponent<LDCPhysics>(world, false, mPos, Vec2i{1600, 1600}));
+		cPhysics.setAffectedByGravity(false);
+		auto& cRender(result.createComponent<LDCRender>(game, cPhysics.getBody()));
+		result.createComponent<LDCBlock>(mVal, game, cPhysics);
+
+		Body& body(cPhysics.getBody());
+		body.addGroupToCheck(LDGroup::Block);
+
+		body.onDetection += [mVal](const DetectionInfo& mDI)
+		{
+			if(!mDI.body.hasGroup(LDGroup::Block)) return;
+			auto& entity(*static_cast<Entity*>(mDI.userData));
+
+			if(mVal == -1) entity.destroy();
+			else if(mVal == entity.getComponent<LDCBlock>().getVal()) entity.destroy();
+		};
+
+		Sprite s{assets.get<Texture>("worldTiles.png")};
+		s.setTextureRect(assets.tilesetWorld[{5, 0}]);
+
+		if(mVal > -1)
+		{
+			if(colorMap.find(mVal) == colorMap.end()) colorMap[mVal] = Color(getRnd(0, 255), getRnd(0, 255), getRnd(0, 255), 255);
+			s.setColor(colorMap[mVal]);
+		}
+
+		cRender.addSprite(s);
 		return result;
 	}
 }

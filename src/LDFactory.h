@@ -15,6 +15,8 @@ namespace ld
 	class LDFactory
 	{
 		private:
+			std::unordered_map<int, sf::Color> colorMap;
+
 			LDAssets& assets;
 			LDGame& game;
 			sses::Manager& manager;
@@ -24,8 +26,9 @@ namespace ld
 			LDFactory(LDAssets& mAssets, LDGame& mGame, sses::Manager& mManager, ssvsc::World& mWorld);
 
 			sses::Entity& createWall(ssvs::Vec2i mPos);
-			sses::Entity& createBlock(ssvs::Vec2i mPos);
+			sses::Entity& createBlock(ssvs::Vec2i mPos, int mVal = -1);
 			sses::Entity& createPlayer(ssvs::Vec2i mPos);
+			sses::Entity& createReceiver(ssvs::Vec2i mPos, int mVal = -1);
 	};
 }
 

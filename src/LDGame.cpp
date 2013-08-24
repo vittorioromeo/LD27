@@ -17,7 +17,7 @@ using namespace sses;
 namespace ld
 {
 	LDGame::LDGame(GameWindow& mGameWindow, LDAssets& mAssets) : gameWindow(mGameWindow), assets(mAssets), factory{assets, *this, manager, world},
-		world(createResolver<Retro>(), createSpatial<Grid>(1000, 1000, 1000, 500)),  debugText{assets.get<BitmapFont>("limeStroked")}
+		world(createResolver<Retro>(), createSpatial<Grid>(1000, 1000, 3000, 500)),  debugText{assets.get<BitmapFont>("limeStroked")}
 	{
 		// Let's initialize stuff from my game framework
 		// These are delegates from SSVUtils, similar to C# delegates
@@ -49,11 +49,14 @@ namespace ld
 
 		// Debug
 		gameState.addInput({{k::Num1}}, [&](float){ factory.createWall(getMousePosition()); }, t::Once);
-		gameState.addInput({{k::Num2}}, [&](float){ factory.createBlock(getMousePosition()); }, t::Once);
+		gameState.addInput({{k::Num2}}, [&](float){ factory.createBlock(getMousePosition(), getRnd(0, 10)); }, t::Once);
 		gameState.addInput({{k::Num3}}, [&](float){ factory.createPlayer(getMousePosition()); }, t::Once);
+		gameState.addInput({{k::Num4}}, [&](float){ factory.createBlock(getMousePosition()); }, t::Once);
+		gameState.addInput({{k::Num5}}, [&](float){ factory.createReceiver(getMousePosition(), getRnd(0, 10)); }, t::Once);
+		gameState.addInput({{k::Num6}}, [&](float){ factory.createReceiver(getMousePosition()); }, t::Once);
 
 		// Level debug
-		for(int i{0}; i < 30; ++i) factory.createWall({i * 1600, 0});
+		for(int i{0}; i < 30; ++i) factory.createWall({i * 3200, 0});
 	}
 
 	void LDGame::update(float mFrameTime)

@@ -15,7 +15,8 @@ namespace ld
 		Block,
 		CanBePicked,
 		Player,
-		BlockFloating
+		BlockFloating,
+		Sensor
 	};
 }
 
