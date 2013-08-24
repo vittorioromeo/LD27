@@ -162,7 +162,7 @@ namespace ld
 				if(facingLeft && !wasFacingLeft) lastTurn = 20.f;
 				if(!facingLeft && !wasFacingRight) lastTurn = 20.f;
 
-				if(lastTurn > 0.f) { lastTurn -= mFrameTime; ssvu::lo<<lastTurn<<std::endl;}
+				if(lastTurn > 0.f) lastTurn -= mFrameTime;
 				if(lastJump > 0.f) lastJump -= mFrameTime;
 
 				if(hasBlock())

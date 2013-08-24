@@ -46,6 +46,9 @@ namespace ld
 			bool inputAction{false}, inputJump{false};
 			int inputX{0}, inputY{0};
 
+			bool mustChangeLevel{false};
+			int level{0};
+
 		public:
 			LDGame(ssvs::GameWindow& mGameWindow, LDAssets& mAssets);
 
@@ -55,10 +58,12 @@ namespace ld
 			void showMessage(const std::string& mMsg, float mDuration, const sf::Color& mColor = sf::Color::White);
 
 			void newGame();
+			void nextLevel();
 
 			void levelOne();
 			void levelTwo();
 			void levelThree();
+			void levelFour();
 
 			void update(float mFrameTime);
 			void updateDebugText(float mFrameTime);

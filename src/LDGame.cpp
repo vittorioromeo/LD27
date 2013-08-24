@@ -84,10 +84,15 @@ namespace ld
 		levelStatus = LDLevelStatus{};
 
 		// Level loading
-		//levelOne();
-		//levelTwo();
-		levelThree();
+		switch(level)
+		{
+			case 0: levelOne(); break;
+			case 1: levelTwo(); break;
+			case 2: levelThree(); break;
+			case 3: levelFour(); break;
+		}
 	}
+	void LDGame::nextLevel() { level = level < 3 ? level + 1 : 0; mustChangeLevel = true; }
 
 	void LDGame::levelOne()
 	{
@@ -105,7 +110,7 @@ namespace ld
 		for(int i{0}; i < 10; ++i) rndWorkerHash += toStr(getRnd(1, 10));
 
 		for(int i{0}; i < 10; ++i) { pW(i, 0); pW(0, -i); }
-		auto& player(factory.createPlayer(put(0, -1)));
+		auto& player(factory.createPlayer(put(1, -1)));
 		const auto& pBody(player.getComponent<LDCPhysics>().getBody());
 
 		auto pCrateX(sX + 20000);
@@ -155,7 +160,7 @@ namespace ld
 		auto pT([=](int mX, int mY) -> Entity& { return factory.createTele(put(mX, mY)); });
 
 		for(int i{0}; i < 10; ++i) { pW(i, 0); pW(0, -i); }
-		auto& player(factory.createPlayer(put(0, -1)));
+		auto& player(factory.createPlayer(put(1, -1)));
 		const auto& pBody(player.getComponent<LDCPhysics>().getBody());
 
 		auto intro([=, &pBody]{ return !levelStatus.started && (!msgDone || !msgText.getString().empty()); });
@@ -185,10 +190,10 @@ namespace ld
 		auto pT([=](int mX, int mY) -> Entity& { return factory.createTele(put(mX, mY)); });
 
 		for(int i{0}; i < 10; ++i) { pW(i, 0); pW(0, -i); }
-		auto& player(factory.createPlayer(put(0, -1)));
+		auto& player(factory.createPlayer(put(1, -1)));
 		const auto& pBody(player.getComponent<LDCPhysics>().getBody());
 
-		auto intro([=, &pBody]{ return !levelStatus.started && (!msgDone || !msgText.getString().empty()); });
+		auto intro([=, &pBody]{ return (!msgDone || !msgText.getString().empty()); });
 
 		pB(9, -3);
 		pB(9, -2);
@@ -203,6 +208,38 @@ namespace ld
 		t.append<Do>([=]{ showMessage("speed is everything, worker", 150); });																				t.append<WaitWhile>(intro);
 		t.append<Do>([=]{ showMessage("10corp does not tolerate slowness", 150, Color::Red); });															t.append<WaitWhile>(intro);
 		t.append<Do>([=]{ showMessage("do not be afraid to throw 10corp standardized cratestorages\nif that speeds up your tasks", 150, Color::Red); });	t.append<WaitWhile>(intro);
+	}
+
+	void LDGame::levelFour()
+	{
+		levelStatus.title = "introduction - part 4";
+		levelStatus.tutorial = false;
+
+		int sX{1000}, sY{1000};
+		auto put([=](int mX, int mY){ return Vec2i(sX + 3200 * mX, sY + 3200 * mY); });
+		auto pW([=](int mX, int mY) -> Entity& { return factory.createWall(put(mX, mY)); });
+		auto pB([=](int mX, int mY, int mVal = -1) -> Entity& { return factory.createBlock(put(mX, mY), mVal); });
+		auto pR([=](int mX, int mY, int mVal = -1) -> Entity& { return factory.createReceiver(put(mX, mY), mVal); });
+		auto pT([=](int mX, int mY) -> Entity& { return factory.createTele(put(mX, mY)); });
+
+		for(int i{0}; i < 10; ++i) { pW(i, 0); pW(0, -i); }
+		auto& player(factory.createPlayer(put(1, -1)));
+		const auto& pBody(player.getComponent<LDCPhysics>().getBody());
+
+		auto intro([=, &pBody]{ return (!msgDone || !msgText.getString().empty()); });
+
+														pW(13, -1);
+											pR(12,0,0);	pW(13, 0);	pR(14,0,1);
+		pW(9, 1);							pW(12, 1);	pW(13, 1);	pW(14, 1);							pW(17, 1);
+		pW(9, 2);							pW(12, 2);				pW(14, 2);							pW(17, 2);
+		pW(9, 3);	pB(10,3,1);																pB(16,3,0);				pT(18, 3);
+		pW(9, 4);	pW(10, 4);	pW(11, 4);	pW(12, 4);	pW(13, 4);	pW(14, 4);	pW(15, 4);	pW(16, 4);	pW(17, 4);	pW(18, 4);
+
+
+		auto& t(timelineManager.create());
+		t.append<Do>([=]{ showMessage("not every cratestorage can be automatically sorted, worker", 150); });	t.append<WaitWhile>(intro);
+		t.append<Do>([=]{ showMessage("10corp does not tolerate mistakes", 150, Color::Red); });				t.append<WaitWhile>(intro);
+		t.append<Do>([=]{ showMessage("the white cratereceivers accept everything, though", 150); });			t.append<WaitWhile>(intro);
 	}
 
 	void LDGame::update(float mFrameTime)
@@ -271,6 +308,12 @@ namespace ld
 		}
 
 		if(manager.getEntityCount(LDGroup::Block) == 0) levelStatus.started = false;
+
+		if(mustChangeLevel)
+		{
+			mustChangeLevel = false;
+			newGame();
+		}
 	}
 	void LDGame::updateDebugText(float mFrameTime)
 	{

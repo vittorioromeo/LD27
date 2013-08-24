@@ -58,6 +58,8 @@ namespace ld
 		body.addGroupToCheck(LDGroup::Solid);
 		//body.addGroupNoResolve(LDGroup::Player);
 		body.addGroupNoResolve(LDGroup::BlockFloating);
+		body.setRestitutionX(-0.2f);
+		body.setRestitutionY(-0.2f);
 
 		Sprite s{assets.get<Texture>("worldTiles.png")};
 		s.setTextureRect(assets.tilesetWorld[{0, 0}]);
@@ -152,7 +154,7 @@ namespace ld
 			if(!mDI.body.hasGroup(LDGroup::Player)) return;
 			auto& entity(*static_cast<Entity*>(mDI.userData));
 
-			if(manager.getEntityCount(LDGroup::Block) == 0) entity.destroy();
+			if(manager.getEntityCount(LDGroup::Block) == 0) game.nextLevel();
 		};
 
 		Sprite s{assets.get<Texture>("worldTiles.png")};
