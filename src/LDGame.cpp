@@ -9,6 +9,7 @@ using namespace sf;
 using namespace ssvu;
 using namespace ssvu::FileSystem;
 using namespace ssvs;
+using namespace ssvs::Utils;
 using namespace ssvsc;
 using namespace ssvsc::Utils;
 using namespace sses;
@@ -25,6 +26,34 @@ namespace ld
 
 		// Let's make the debug text prettier
 		debugText.setTracking(-3);
+
+		// Input initialization
+		using k = Keyboard::Key;
+		using b = Mouse::Button;
+		using t = Input::Trigger::Type;
+
+		gameState.addInput({{k::Escape}}, [&](float){ gameWindow.stop(); });
+
+		gameState.addInput({{k::A}}, [=](float mFrameTime){ camera.move(Vec2f{-10, 0} * mFrameTime); });
+		gameState.addInput({{k::D}}, [=](float mFrameTime){ camera.move(Vec2f{10, 0} * mFrameTime); });
+		gameState.addInput({{k::W}}, [=](float mFrameTime){ camera.move(Vec2f{0, -10} * mFrameTime); });
+		gameState.addInput({{k::S}}, [=](float mFrameTime){ camera.move(Vec2f{0, 10} * mFrameTime); });
+		gameState.addInput({{k::Q}}, [=](float mFrameTime){ camera.zoom(pow(1.1f, mFrameTime)); });
+		gameState.addInput({{k::E}}, [=](float mFrameTime){ camera.zoom(pow(0.9f, mFrameTime)); });
+
+		add2StateInput(gameState, {{k::Z}}, inputAction);
+		add2StateInput(gameState, {{k::X}}, inputJump);
+
+		add3StateInput(gameState, {{k::Left}}, {{k::Right}}, inputX);
+		add3StateInput(gameState, {{k::Up}}, {{k::Down}}, inputY);
+
+		// Debug
+		gameState.addInput({{k::Num1}}, [&](float){ factory.createWall(getMousePosition()); }, t::Once);
+		gameState.addInput({{k::Num2}}, [&](float){ factory.createBlock(getMousePosition()); }, t::Once);
+		gameState.addInput({{k::Num3}}, [&](float){ factory.createPlayer(getMousePosition()); }, t::Once);
+
+		// Level debug
+		for(int i{0}; i < 30; ++i) factory.createWall({i * 1600, 0});
 	}
 
 	void LDGame::update(float mFrameTime)

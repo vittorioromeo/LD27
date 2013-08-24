@@ -24,6 +24,9 @@ namespace ld
 			sses::Manager manager;
 			ssvs::BitmapText debugText;
 
+			bool inputAction{false}, inputJump{false};
+			int inputX{0}, inputY{0};
+
 		public:
 			LDGame(ssvs::GameWindow& mGameWindow, LDAssets& mAssets);
 
@@ -39,6 +42,11 @@ namespace ld
 			inline ssvs::GameState& getGameState()		{ return gameState; }
 			inline ssvsc::World& getWorld()				{ return world; }
 			inline sses::Manager& getManager()			{ return manager; }
+
+			inline bool getIAction()					{ return inputAction; }
+			inline bool getIJump()						{ return inputJump; }
+			inline int getIX()							{ return inputX; }
+			inline int getIY()							{ return inputY; }
 	};
 }
 

@@ -15,6 +15,9 @@ namespace ld
 			ssvs::AssetManager assetManager;
 
 		public:
+			ssvs::Tileset tilesetChar{ssvuj::as<ssvs::Tileset>(ssvuj::readFromFile("Data/Tilesets/tilesetChar.json"))};
+			ssvs::Tileset tilesetWorld{ssvuj::as<ssvs::Tileset>(ssvuj::readFromFile("Data/Tilesets/tilesetWorld.json"))};
+
 			inline LDAssets()
 			{
 				ssvs::Utils::loadAssetsFromJson(assetManager, "Data/", ssvuj::readFromFile("Data/assets.json"));

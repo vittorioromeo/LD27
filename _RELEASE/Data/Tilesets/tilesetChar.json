@@ -1,0 +1,9 @@
+{
+	"tileSize": [25, 38],
+
+	"labels": 
+	[
+		["t_stand", "t_walk0", "t_walk1", "t_walk2", "t_walk3", "t_hold"],
+		["l_stand", "l_walk0", "l_walk1", "l_walk2", "l_walk3", "l_walk4", "l_walk5", "l_walk6"]
+	]
+}

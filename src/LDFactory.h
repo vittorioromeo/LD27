@@ -22,6 +22,10 @@ namespace ld
 
 		public:
 			LDFactory(LDAssets& mAssets, LDGame& mGame, sses::Manager& mManager, ssvsc::World& mWorld);
+
+			sses::Entity& createWall(ssvs::Vec2i mPos);
+			sses::Entity& createBlock(ssvs::Vec2i mPos);
+			sses::Entity& createPlayer(ssvs::Vec2i mPos);
 	};
 }
 

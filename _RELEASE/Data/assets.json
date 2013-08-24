@@ -1,6 +1,8 @@
 {
 	"textures":
 	[
-		"limeStroked.png"
+		"limeStroked.png",
+		"charTiles.png",
+		"worldTiles.png"
 	]
 }

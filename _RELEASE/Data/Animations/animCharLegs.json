@@ -1,0 +1,36 @@
+{
+	"stand":
+	{
+		"frames": 
+		[
+			["l_stand", 100]
+		]
+	},
+
+	"jump":
+	{
+		"frames": 
+		[
+			["l_walk2", 100]
+		]
+	},
+
+	"fall":
+	{
+		"frames": 
+		[
+			["l_walk0", 100]
+		]
+	},
+
+	"walk":
+	{
+		"frames":
+		[			
+			["l_walk2", 6.5],
+			["l_walk3", 6.5],
+			["l_walk0", 6.5],
+			["l_walk1", 6.5]
+		]
+	}
+}
