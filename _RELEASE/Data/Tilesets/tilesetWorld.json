@@ -3,6 +3,6 @@
 
 	"labels": 
 	[
-		["block", "wall0", "wall1", "wall2", "receiver"]
+		["block", "wall0", "wall1", "wall2", "receiver", "tele"]
 	]
 }

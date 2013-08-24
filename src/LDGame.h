@@ -12,6 +12,15 @@
 
 namespace ld
 {
+	struct LDLevelStatus
+	{
+		std::string title{"unnamed level"};
+		bool tutorial{false};
+
+		bool started{false};
+		float timeLeft{0.f};
+	};
+
 	class LDGame
 	{
 		private:
@@ -23,12 +32,30 @@ namespace ld
 			ssvsc::World world;
 			sses::Manager manager;
 			ssvs::BitmapText debugText;
+			ssvu::TimelineManager timelineManager;
+			LDLevelStatus levelStatus;
+
+			ssvs::BitmapText msgText;
+			std::string currentMsg;
+			float currentMsgDuration{0.f};
+			float msgCharTime{0.f};
+			bool msgDone{false};
+
+			ssvs::BitmapText timerText;
 
 			bool inputAction{false}, inputJump{false};
 			int inputX{0}, inputY{0};
 
 		public:
 			LDGame(ssvs::GameWindow& mGameWindow, LDAssets& mAssets);
+
+			void start10Secs();
+			void showMessage(const std::string& mMsg, float mDuration, const sf::Color& mColor = sf::Color::White);
+
+			void newGame();
+
+			void levelOne();
+			void levelTwo();
 
 			void update(float mFrameTime);
 			void updateDebugText(float mFrameTime);

@@ -29,6 +29,7 @@ namespace ld
 			sses::Entity& createBlock(ssvs::Vec2i mPos, int mVal = -1);
 			sses::Entity& createPlayer(ssvs::Vec2i mPos);
 			sses::Entity& createReceiver(ssvs::Vec2i mPos, int mVal = -1);
+			sses::Entity& createTele(ssvs::Vec2i mPos);
 	};
 }
 

@@ -8,19 +8,10 @@
 #include "LDDependencies.h"
 #include "LDGroups.h"
 #include "LDSensor.h"
+#include "LDUtils.h"
 
 namespace ld
 {
-	inline static int getDist(int x1, int y1, int x2, int y2)
-	{
-		int diffx = x1 - x2;
-		int diffy = y1 - y2;
-		int diffx_sqr = std::pow(diffx, 2);
-		int diffy_sqr = std::pow(diffy, 2);
-		return std::sqrt(diffx_sqr + diffy_sqr);
-	}
-	inline static int getDist(ssvs::Vec2i mA, ssvs::Vec2i mB) { return getDist(mA.x, mA.y, mB.x, mB.y); }
-
 	class LDCBlock : public sses::Component
 	{
 		private:
@@ -40,7 +31,7 @@ namespace ld
 			{
 				text.setTracking(-3);
 			}
-			~LDCBlock() { onDestroy(); }
+			~LDCBlock() { onDestroy(); } // TODO: find a way to detect dead entities after LD27
 
 			inline void update(float mFrameTime) override
 			{

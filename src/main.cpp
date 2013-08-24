@@ -18,13 +18,13 @@ struct LDMenu
 {
 	GameWindow& window;
 	LDAssets& assets;
-	GameState& nextState;
 	GameState gameState;
+	LDGame& game;
 	Menu menu;
 	BitmapText txt;
 	Camera camera{window, {{800 / 2 - 200, 600 / 2 - 150}, {400, 300}}};
 
-	LDMenu(GameWindow& mGameWindow, LDAssets& mAssets, GameState& mNextState) : window(mGameWindow), assets(mAssets), nextState(mNextState),
+	LDMenu(GameWindow& mGameWindow, LDAssets& mAssets, LDGame& mGame) : window(mGameWindow), assets(mAssets), game(mGame),
 		txt{assets.get<BitmapFont>("limeStroked"), ""}
 	{
 		txt.setTracking(-3);
@@ -35,30 +35,22 @@ struct LDMenu
 		using k = Keyboard::Key;
 		using b = Mouse::Button;
 		using t = Input::Trigger::Type;
-		gameState.addInput({{k::Up}},		[&](float){ menu.previous(); }, t::Once);
-		gameState.addInput({{k::Down}},		[&](float){ menu.next(); }, t::Once);
-		gameState.addInput({{k::Left}},		[&](float){ menu.decrease(); }, t::Once);
-		gameState.addInput({{k::Right}},	[&](float){ menu.increase(); }, t::Once);
+		gameState.addInput({{k::Up}},					[&](float){ menu.previous(); }, t::Once);
+		gameState.addInput({{k::Down}},					[&](float){ menu.next(); }, t::Once);
+		gameState.addInput({{k::Left}},					[&](float){ menu.decrease(); }, t::Once);
+		gameState.addInput({{k::Right}},				[&](float){ menu.increase(); }, t::Once);
 		gameState.addInput({{k::Return}, {k::Space}},	[&](float){ menu.exec(); }, t::Once);
-		gameState.addInput({{k::Escape}},	[&](float){ menu.goBack(); }, t::Once);
+		gameState.addInput({{k::Escape}},				[&](float){ menu.goBack(); }, t::Once);
 
 		namespace i = ssvms::Items;
 		auto& main = menu.createCategory("10corp");
-		main.create<i::Single>("play", [&]{ window.setGameState(nextState); });
+		main.create<i::Single>("play", [&]{ game.newGame(); window.setGameState(game.getGameState()); });
 		main.create<i::Single>("exit", [&]{ window.stop(); });
 
 	}
 
-	inline void update(float mFT)
-	{
-
-	}
-	inline void draw()
-	{
-		camera.apply();
-		drawMenu(menu);
-		camera.unapply();
-	}
+	inline void update(float mFT) { }
+	inline void draw() { camera.apply(); drawMenu(menu); camera.unapply(); }
 
 	inline void render(Drawable& mDrawable) { window.draw(mDrawable); }
 	inline BitmapText& renderTextImpl(const string& mStr, BitmapText& mText, Vec2f mPosition)
@@ -108,7 +100,7 @@ int main()
 	gameWindow.setMaxFPS(200);
 
 	LDGame game{gameWindow, assets};
-	LDMenu menuGame{gameWindow, assets, game.getGameState()};
+	LDMenu menuGame{gameWindow, assets, game};
 
 	gameWindow.setGameState(menuGame.gameState);
 	gameWindow.run();

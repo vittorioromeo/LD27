@@ -38,6 +38,7 @@ namespace ld
 
 			inline ssvsc::World& getWorld() const			{ return world; }
 			inline ssvsc::Body& getBody() const				{ return body; }
+			inline ssvs::Vec2i getPos() const				{ return body.getPosition(); }
 			inline ssvs::Vec2i getLastResolution() const	{ return lastResolution; }
 			inline bool isAffectedByGravity() const			{ return affectedByGravity; }
 			inline bool isCrushedLeft() const				{ return crushedLeft > crushedTolerance; }

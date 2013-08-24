@@ -46,8 +46,7 @@ namespace ld
 	}
 	Entity& LDFactory::createBlock(Vec2i mPos, int mVal)
 	{
-		auto& result(manager.createEntity());
-		result.addGroup(LDGroup::Block);
+		auto& result(manager.createEntity()); result.addGroup(LDGroup::Block);
 		auto& cPhysics(result.createComponent<LDCPhysics>(world, false, mPos, Vec2i{1600, 1600}));
 		auto& cRender(result.createComponent<LDCRender>(game, cPhysics.getBody()));
 		result.createComponent<LDCBlock>(mVal, game, cPhysics);
@@ -75,7 +74,7 @@ namespace ld
 
 	Entity& LDFactory::createPlayer(Vec2i mPos)
 	{
-		auto& result(manager.createEntity());
+		auto& result(manager.createEntity()); result.addGroup(LDGroup::Player);
 		auto& cPhysics(result.createComponent<LDCPhysics>(world, false, mPos, Vec2i{1000, 3200}));
 		auto& cRender(result.createComponent<LDCRender>(game, cPhysics.getBody()));
 		auto& cPlayer(result.createComponent<LDCPlayer>(game, cPhysics));
@@ -107,13 +106,21 @@ namespace ld
 		body.addGroupToCheck(LDGroup::Block);
 		body.setResolve(false);
 
-		body.onDetection += [mVal](const DetectionInfo& mDI)
+		body.onDetection += [this, mVal](const DetectionInfo& mDI)
 		{
 			if(!mDI.body.hasGroup(LDGroup::Block)) return;
 			auto& entity(*static_cast<Entity*>(mDI.userData));
 
-			if(mVal == -1) entity.destroy();
-			else if(mVal == entity.getComponent<LDCBlock>().getVal()) entity.destroy();
+			if(mVal == -1)
+			{
+				entity.destroy();
+				this->game.start10Secs();
+			}
+			else if(mVal == entity.getComponent<LDCBlock>().getVal())
+			{
+				entity.destroy();
+				this->game.start10Secs();
+			}
 		};
 
 		Sprite s{assets.get<Texture>("worldTiles.png")};
@@ -124,6 +131,32 @@ namespace ld
 			if(colorMap.find(mVal) == colorMap.end()) colorMap[mVal] = Color(getRnd(0, 255), getRnd(0, 255), getRnd(0, 255), 255);
 			s.setColor(colorMap[mVal]);
 		}
+
+		cRender.addSprite(s);
+		return result;
+	}
+
+	Entity& LDFactory::createTele(Vec2i mPos)
+	{
+		auto& result(manager.createEntity());
+		auto& cPhysics(result.createComponent<LDCPhysics>(world, false, mPos, Vec2i{1600, 1600}));
+		cPhysics.setAffectedByGravity(false);
+		auto& cRender(result.createComponent<LDCRender>(game, cPhysics.getBody()));
+
+		Body& body(cPhysics.getBody());
+		body.addGroupToCheck(LDGroup::Player);
+		body.setResolve(false);
+
+		body.onDetection += [this](const DetectionInfo& mDI)
+		{
+			if(!mDI.body.hasGroup(LDGroup::Player)) return;
+			auto& entity(*static_cast<Entity*>(mDI.userData));
+
+			if(manager.getEntityCount(LDGroup::Block) == 0) entity.destroy();
+		};
+
+		Sprite s{assets.get<Texture>("worldTiles.png")};
+		s.setTextureRect(assets.tilesetWorld[{6, 0}]);
 
 		cRender.addSprite(s);
 		return result;
