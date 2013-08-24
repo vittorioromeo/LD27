@@ -5,6 +5,7 @@
 #include "LDGame.h"
 #include "LDGroups.h"
 #include "LDCPhysics.h"
+#include "LDCPlayer.h"
 
 using namespace std;
 using namespace sf;
@@ -65,7 +66,8 @@ namespace ld
 		gameState.addInput({{k::E}}, [=](float mFrameTime){ camera.zoom(pow(0.9f, mFrameTime)); });
 	}
 
-	void LDGame::start10Secs() { levelStatus.started = true; levelStatus.timeLeft = 10.f; }
+	void LDGame::start10Secs() { if(!levelStatus.started) { levelStatus.started = true; levelStatus.timeLeft = 10.f; } }
+	void LDGame::refresh10Secs() { levelStatus.timeLeft = 10.f; }
 
 	void LDGame::showMessage(const string& mMsg, float mDuration, const Color& mColor)
 	{
@@ -83,7 +85,8 @@ namespace ld
 
 		// Level loading
 		//levelOne();
-		levelTwo();
+		//levelTwo();
+		levelThree();
 	}
 
 	void LDGame::levelOne()
@@ -158,17 +161,48 @@ namespace ld
 		auto intro([=, &pBody]{ return !levelStatus.started && (!msgDone || !msgText.getString().empty()); });
 
 		pW(9, 1);	pB(10, 1);																pB(16, 1);
-		pW(9, 2);	pW(10, 2);	pW(11, 2);							pW(14, 2);				pB(16, 2);
-		pW(9, 3);	pR(10, 3);							pW(13, 3);	pW(14, 3);	pW(15, 3);	pB(16, 3);
-		pW(9, 4);	pW(10, 4);	pW(11, 4);				pW(13, 4);	pW(14, 4);	pW(15, 4);	pW(16, 4);
+		pW(9, 2);	pW(10, 2);										pW(14, 2);				pB(16, 2);
+		pW(9, 3);	pR(10, 3);							pW(13, 3);	pW(14, 3);	pW(15, 3);	pB(16, 3);	pT(17, 3);
+		pW(9, 4);	pW(10, 4);	pW(11, 4);				pW(13, 4);	pW(14, 4);	pW(15, 4);	pW(16, 4);	pW(17, 4);
 								pW(11, 5);	pW(12, 5);	pW(13, 5);
 
 		auto& t(timelineManager.create());
-		t.append<Do>([=]{ showMessage("welcome back, worker", 150); });																						t.append<WaitWhile>(intro);
+		t.append<Do>([=]{ showMessage("welcome back, worker", 150); });																								t.append<WaitWhile>(intro);
+		t.append<Do>([=]{ showMessage("10corp does not tolerate slowness", 150, Color::Red); });																	t.append<WaitWhile>(intro);
+		t.append<Do>([=]{ showMessage("after grabbing the first cratestorage, you\nwill only have 10 seconds before\nyou will be terminated", 150, Color::Red); });	t.append<WaitWhile>(intro);
+	}
+
+	void LDGame::levelThree()
+	{
+		levelStatus.title = "introduction - part 3";
+		levelStatus.tutorial = false;
+
+		int sX{1000}, sY{1000};
+		auto put([=](int mX, int mY){ return Vec2i(sX + 3200 * mX, sY + 3200 * mY); });
+		auto pW([=](int mX, int mY) -> Entity& { return factory.createWall(put(mX, mY)); });
+		auto pB([=](int mX, int mY) -> Entity& { return factory.createBlock(put(mX, mY)); });
+		auto pR([=](int mX, int mY) -> Entity& { return factory.createReceiver(put(mX, mY)); });
+		auto pT([=](int mX, int mY) -> Entity& { return factory.createTele(put(mX, mY)); });
+
+		for(int i{0}; i < 10; ++i) { pW(i, 0); pW(0, -i); }
+		auto& player(factory.createPlayer(put(0, -1)));
+		const auto& pBody(player.getComponent<LDCPhysics>().getBody());
+
+		auto intro([=, &pBody]{ return !levelStatus.started && (!msgDone || !msgText.getString().empty()); });
+
+		pB(9, -3);
+		pB(9, -2);
+		pB(9, -1);																				pW(17, 0);
+		pW(9, 1);																				pW(17, 1);
+		pW(9, 2);											pW(14, 2);							pW(17, 2);
+		pW(9, 3);	pT(10, 3);								pW(14, 3);	pW(15, 3);	pR(16, 3);	pW(17, 3);
+		pW(9, 4);	pW(10, 4);								pW(14, 4);	pW(15, 4);	pW(16, 4);	pW(17, 4);
+
+
+		auto& t(timelineManager.create());
+		t.append<Do>([=]{ showMessage("speed is everything, worker", 150); });																				t.append<WaitWhile>(intro);
 		t.append<Do>([=]{ showMessage("10corp does not tolerate slowness", 150, Color::Red); });															t.append<WaitWhile>(intro);
-		t.append<Do>([=]{ showMessage("after sending the first crate, you\nwill only have 10 seconds before\nyou will be terminated", 150, Color::Red); });	t.append<WaitWhile>(intro);
-
-
+		t.append<Do>([=]{ showMessage("do not be afraid to throw 10corp standardized cratestorages\nif that speeds up your tasks", 150, Color::Red); });	t.append<WaitWhile>(intro);
 	}
 
 	void LDGame::update(float mFrameTime)
@@ -182,15 +216,17 @@ namespace ld
 				timerText.setColor(Color::Red);
 				timerText.setString(toStr(levelStatus.timeLeft));
 			}
-			else
-			{
-				// explode head here
-			}
+			else if(manager.getEntityCount(LDGroup::Player) > 0) manager.getEntities(LDGroup::Player)[0]->destroy();
+			else timerText.setString("too slow");
+
+			auto grow = static_cast<int>(10.f - levelStatus.timeLeft) * 0.4f;
+			timerText.setScale(4.f + grow, 4.f + grow);
 		}
 		else
 		{
 			timerText.setColor(Color::Blue);
-			timerText.setString("safe");
+			timerText.setString(levelStatus.tutorial ? "tutorial" : "safe");
+			timerText.setScale(4.f, 4.f);
 		}
 		timerText.setPosition({0.f, gameWindow.getHeight() - timerText.getGlobalBounds().height});
 
@@ -220,24 +256,21 @@ namespace ld
 			else msgCharTime -= mFrameTime;
 		}
 
-		// TimelineManager is from SSVUtils, it handles coroutine-like timeline objects
-		timelineManager.update(mFrameTime);
-
-		// Manager is from SSVEntitySystem, it handles entities and components
-		manager.update(mFrameTime);
-
-		// World is from SSVSCollision, it handles "physics"
-		world.update(mFrameTime);
-
-		// And debugText is just a debugging text showing FPS and other cool info
-		updateDebugText(mFrameTime);
+		timelineManager.update(mFrameTime); // TimelineManager is from SSVUtils, it handles coroutine-like timeline objects
+		manager.update(mFrameTime); // Manager is from SSVEntitySystem, it handles entities and components
+		world.update(mFrameTime); // World is from SSVSCollision, it handles "physics"
+		updateDebugText(mFrameTime); // And debugText is just a debugging text showing FPS and other cool info
 
 		// TODO: more concise?
 		if(manager.getEntityCount(LDGroup::Player) > 0)
 		{
-			const auto& pPos(toPixels(manager.getEntities(LDGroup::Player)[0]->getComponent<LDCPhysics>().getPos()));
-			camera.move(-(camera.getCenter() - pPos) / 40.f);
+			auto pPos(toPixels(manager.getEntities(LDGroup::Player)[0]->getComponent<LDCPhysics>().getPos()));
+			panVec += manager.getEntities(LDGroup::Player)[0]->getComponent<LDCPlayer>().isFacingLeft() ? Vec2f{-1.f, 0} : Vec2f{1.f, 0};
+			clamp(panVec, -100.f, 100.f);
+			camera.move(-(camera.getCenter() - (pPos + panVec)) / 40.f);
 		}
+
+		if(manager.getEntityCount(LDGroup::Block) == 0) levelStatus.started = false;
 	}
 	void LDGame::updateDebugText(float mFrameTime)
 	{

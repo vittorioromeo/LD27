@@ -49,7 +49,7 @@ namespace ld
 				using Action = LDCPlayer::Action;
 
 				cRender.setFlippedX(cPlayer.isFacingLeft());
-				cRender.setOffset({0, -3});
+				cRender.setOffset({0, -6});
 
 				switch(cPlayer.getAction())
 				{

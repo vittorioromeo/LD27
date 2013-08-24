@@ -70,7 +70,7 @@ struct LDMenu
 		auto& currentItems(mMenu.getItems());
 		for(int i{0}; i < static_cast<int>(currentItems.size()); ++i)
 		{
-			currentY += 19;
+			currentY += 12;
 			if(i != 0 && i % 21 == 0) { currentY = 0; currentX += 180; }
 			string name, itemName{currentItems[i]->getName()};
 			if(i == mMenu.getIndex()) name.append(">> ");

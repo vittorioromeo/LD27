@@ -75,7 +75,7 @@ namespace ld
 	Entity& LDFactory::createPlayer(Vec2i mPos)
 	{
 		auto& result(manager.createEntity()); result.addGroup(LDGroup::Player);
-		auto& cPhysics(result.createComponent<LDCPhysics>(world, false, mPos, Vec2i{1000, 3200}));
+		auto& cPhysics(result.createComponent<LDCPhysics>(world, false, mPos, Vec2i{800, 2700}));
 		auto& cRender(result.createComponent<LDCRender>(game, cPhysics.getBody()));
 		auto& cPlayer(result.createComponent<LDCPlayer>(game, cPhysics));
 		result.createComponent<LDCPlayerAnimation>(assets.tilesetChar, cRender, cPlayer);
@@ -114,12 +114,12 @@ namespace ld
 			if(mVal == -1)
 			{
 				entity.destroy();
-				this->game.start10Secs();
+				this->game.refresh10Secs();
 			}
 			else if(mVal == entity.getComponent<LDCBlock>().getVal())
 			{
 				entity.destroy();
-				this->game.start10Secs();
+				this->game.refresh10Secs();
 			}
 		};
 
@@ -139,7 +139,7 @@ namespace ld
 	Entity& LDFactory::createTele(Vec2i mPos)
 	{
 		auto& result(manager.createEntity());
-		auto& cPhysics(result.createComponent<LDCPhysics>(world, false, mPos, Vec2i{1600, 1600}));
+		auto& cPhysics(result.createComponent<LDCPhysics>(world, false, mPos, Vec2i{1600, 100}));
 		cPhysics.setAffectedByGravity(false);
 		auto& cRender(result.createComponent<LDCRender>(game, cPhysics.getBody()));
 

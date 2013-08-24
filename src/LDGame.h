@@ -42,7 +42,7 @@ namespace ld
 			bool msgDone{false};
 
 			ssvs::BitmapText timerText;
-
+			ssvs::Vec2f panVec;
 			bool inputAction{false}, inputJump{false};
 			int inputX{0}, inputY{0};
 
@@ -50,12 +50,15 @@ namespace ld
 			LDGame(ssvs::GameWindow& mGameWindow, LDAssets& mAssets);
 
 			void start10Secs();
+			void refresh10Secs();
+
 			void showMessage(const std::string& mMsg, float mDuration, const sf::Color& mColor = sf::Color::White);
 
 			void newGame();
 
 			void levelOne();
 			void levelTwo();
+			void levelThree();
 
 			void update(float mFrameTime);
 			void updateDebugText(float mFrameTime);

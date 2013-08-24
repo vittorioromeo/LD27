@@ -59,6 +59,7 @@ namespace ld
 
 			inline void pickedUp(LDCPhysics& mParent)
 			{
+				game.start10Secs();
 				parent = &mParent;
 				body.addGroupNoResolve(LDGroup::Block);
 				body.addGroup(LDGroup::BlockFloating);
@@ -89,7 +90,7 @@ namespace ld
 			Action action;
 			bool facingLeft{false}, jumpReady{false};
 			float walkSpeed{150.f}, jumpSpeed{520.f};
-			bool wasFacingLeft{false}; float lastTurn{0.f};
+			bool wasFacingLeft{false}; float lastTurn{0.f}; bool wasFacingRight{false};
 			float lastJump{0.f};
 
 			LDSensor blockSensor{cPhysics, ssvs::Vec2i{10, 2400}};
@@ -131,6 +132,7 @@ namespace ld
 			void update(float mFrameTime) override
 			{
 				wasFacingLeft = facingLeft;
+				wasFacingRight = !facingLeft;
 
 				ssvs::Vec2i offset{facingLeft ? -1000 : 1000, -600};
 				blockSensor.setPosition(body.getPosition() + ssvs::Vec2i{offset.x / 2, 300});
@@ -157,12 +159,10 @@ namespace ld
 					else if(velocity.y < 0) action = Action::Jumping;
 				}
 
-				if(lastTurn <= 0.f)
-				{
-					if(facingLeft && !wasFacingLeft) lastTurn = 10.f;
-				}
-				else lastTurn -= mFrameTime;
+				if(facingLeft && !wasFacingLeft) lastTurn = 20.f;
+				if(!facingLeft && !wasFacingRight) lastTurn = 20.f;
 
+				if(lastTurn > 0.f) { lastTurn -= mFrameTime; ssvu::lo<<lastTurn<<std::endl;}
 				if(lastJump > 0.f) lastJump -= mFrameTime;
 
 				if(hasBlock())
@@ -171,7 +171,7 @@ namespace ld
 
 					if(!game.getIAction())
 					{
-						currentBlock->dropped(((lastTurn > 0.f) ? lastTurn * 0.5f : 1.f), ((lastJump > 0.f) ? lastJump * 0.5f : 1.f));
+						currentBlock->dropped(((lastTurn > 0.f) ? lastTurn * 0.12f : 1.f), ((lastJump > 0.f) ? lastJump * 0.12f : 1.f));
 						currentBlock = nullptr;
 						return;
 					}
@@ -182,7 +182,7 @@ namespace ld
 			}
 
 			inline void move(int mDirection)	{ body.setVelocityX(walkSpeed * mDirection); }
-			inline void jump()					{ if(!cPhysics.isInAir() && jumpReady) { body.setVelocityY(-jumpSpeed); lastJump = 10.f; } }
+			inline void jump()					{ if(!cPhysics.isInAir() && jumpReady) { body.setVelocityY(-jumpSpeed); lastJump = 20.f; } }
 
 			inline Action getAction()		{ return action; }
 			inline bool isJumpReady()		{ return jumpReady; }
