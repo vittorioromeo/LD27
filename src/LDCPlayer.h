@@ -40,10 +40,7 @@ namespace ld
 			{
 				text.setTracking(-3);
 			}
-			~LDCBlock()
-			{
-				onDestroy();
-			}
+			~LDCBlock() { onDestroy(); }
 
 			inline void update(float mFrameTime) override
 			{
@@ -100,11 +97,11 @@ namespace ld
 			ssvsc::Body& body;
 			Action action;
 			bool facingLeft{false}, jumpReady{false};
-			float walkSpeed{100.f}, jumpSpeed{420.f};
+			float walkSpeed{150.f}, jumpSpeed{520.f};
 			bool wasFacingLeft{false}; float lastTurn{0.f};
 			float lastJump{0.f};
 
-			LDSensor blockSensor{cPhysics, ssvs::Vec2i{10, 3000}};
+			LDSensor blockSensor{cPhysics, ssvs::Vec2i{10, 2400}};
 			LDCBlock* currentBlock{nullptr};
 			ssvsc::Body* lastBlock{nullptr};
 			float lastBlockTimer{0.f};

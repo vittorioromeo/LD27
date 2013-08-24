@@ -47,6 +47,7 @@ namespace ld
 	Entity& LDFactory::createBlock(Vec2i mPos, int mVal)
 	{
 		auto& result(manager.createEntity());
+		result.addGroup(LDGroup::Block);
 		auto& cPhysics(result.createComponent<LDCPhysics>(world, false, mPos, Vec2i{1600, 1600}));
 		auto& cRender(result.createComponent<LDCRender>(game, cPhysics.getBody()));
 		result.createComponent<LDCBlock>(mVal, game, cPhysics);
@@ -104,6 +105,7 @@ namespace ld
 
 		Body& body(cPhysics.getBody());
 		body.addGroupToCheck(LDGroup::Block);
+		body.setResolve(false);
 
 		body.onDetection += [mVal](const DetectionInfo& mDI)
 		{

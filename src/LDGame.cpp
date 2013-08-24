@@ -3,6 +3,7 @@
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
 #include "LDGame.h"
+#include "LDGroups.h"
 
 using namespace std;
 using namespace sf;
@@ -56,7 +57,7 @@ namespace ld
 		gameState.addInput({{k::Num6}}, [&](float){ factory.createReceiver(getMousePosition()); }, t::Once);
 
 		// Level debug
-		for(int i{0}; i < 30; ++i) factory.createWall({i * 3200, 0});
+		for(int i{0}; i < 30; ++i) factory.createWall({i * 3200, 3200 * 8});
 	}
 
 	void LDGame::update(float mFrameTime)
@@ -87,6 +88,9 @@ namespace ld
 		s << "Sensors: "			<< world.getSensors().size() << endl;
 		s << "Entities: "			<< entities.size() << endl;
 		s << "Components: "			<< componentCount << endl;
+
+		if(manager.getEntityCount(LDGroup::Block) == 0)
+			s << "SAFE: NO BLOCKS" << endl;
 
 		debugText.setString(s.str());
 	}
