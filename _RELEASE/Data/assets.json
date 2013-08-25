@@ -4,5 +4,19 @@
 		"limeStroked.png",
 		"charTiles.png",
 		"worldTiles.png"
+	],
+
+	"soundBuffers":
+	[	
+		"bounce.wav",
+		"death.wav",
+		"expl.wav",
+		"jump.wav",
+		"recv.wav",
+		"tele.wav",
+		"step.wav",
+		"pick.wav",
+		"drop.wav",
+		"blip.wav"
 	]
 }

@@ -66,8 +66,8 @@ namespace ld
 		gameState.addInput({{k::E}}, [=](float mFrameTime){ camera.zoom(pow(0.9f, mFrameTime)); });
 	}
 
-	void LDGame::start10Secs() { if(!levelStatus.started) { levelStatus.started = true; levelStatus.timeLeft = 10.f; } }
-	void LDGame::refresh10Secs() { levelStatus.timeLeft = 10.f; }
+	void LDGame::start10Secs() { if(!levelStatus.started) { levelStatus.started = true; refresh10Secs(); } }
+	void LDGame::refresh10Secs() { levelStatus.timeLeft = 10.f; levelStatus.secondTime = 1.f; }
 
 	void LDGame::showMessage(const string& mMsg, float mDuration, const Color& mColor)
 	{
@@ -90,9 +90,10 @@ namespace ld
 			case 1: levelTwo(); break;
 			case 2: levelThree(); break;
 			case 3: levelFour(); break;
+			case 4: levelFive(); break;
 		}
 	}
-	void LDGame::nextLevel() { level = level < 3 ? level + 1 : 0; mustChangeLevel = true; }
+	void LDGame::nextLevel() { level = level < 4 ? level + 1 : 0; mustChangeLevel = true; }
 
 	void LDGame::levelOne()
 	{
@@ -242,18 +243,61 @@ namespace ld
 		t.append<Do>([=]{ showMessage("the white cratereceivers accept everything, though", 150); });			t.append<WaitWhile>(intro);
 	}
 
+	void LDGame::levelFive()
+	{
+		levelStatus.title = "first task";
+		levelStatus.tutorial = false;
+
+		int sX{1000}, sY{1000};
+		auto put([=](int mX, int mY){ return Vec2i(sX + 3200 * mX, sY + 3200 * mY); });
+		auto pW([=](int mX, int mY) -> Entity& { return factory.createWall(put(mX, mY)); });
+		auto pB([=](int mX, int mY, int mVal = -1) -> Entity& { return factory.createBlock(put(mX, mY), mVal); });
+		auto pR([=](int mX, int mY, int mVal = -1) -> Entity& { return factory.createReceiver(put(mX, mY), mVal); });
+		auto pT([=](int mX, int mY) -> Entity& { return factory.createTele(put(mX, mY)); });
+
+		for(int i{0}; i < 10; ++i) { pW(i, 0); pW(0, -i); }
+		auto& player(factory.createPlayer(put(1, -1)));
+		const auto& pBody(player.getComponent<LDCPhysics>().getBody());
+
+		auto intro([=, &pBody]{ return (!msgDone || !msgText.getString().empty()); });
+
+											pW(11, -2);
+											pW(11, -1);				pB(13,-1,0);
+																	pB(13,0,0);
+					pW(9, 1);	pB(10, 1);				pW(12, 1);	pW(13,1);	pW(14, 1);
+					pW(9, 2);	pB(10, 2);				pW(12, 2);	pR(13,2,0);	pW(14, 2);				pB(16,3,1);
+					pR(9,3,1);	pB(10, 3);																pB(16,3,1);
+								pW(10, 4);	pW(11, 4);	pW(12, 4);	pW(13, 4);	pW(14, 4);	pW(15, 4);	pW(16, 4);
+											pT(11, 5);	pR(12, 5);
+		pW(8, 6);	pW(9, 6);	pW(10, 6);	pW(11, 6);
+
+		auto& t(timelineManager.create());
+		t.append<Do>([=]{ showMessage("of course, 10corp assumes you can use your\nbrain, too", 150); });	t.append<WaitWhile>(intro);
+	}
+
 	void LDGame::update(float mFrameTime)
 	{
 		// 10 SECONDS!
 		if(levelStatus.started && !levelStatus.tutorial)
 		{
+			if(levelStatus.secondTime >= 0.f) levelStatus.secondTime -= mFrameTime / 60.f;
+			else if(levelStatus.timeLeft > 0.f)
+			{
+				levelStatus.secondTime = 1.f;
+				assets.playSound("blip.wav", SoundPlayer::Mode::Overlap, levelStatus.timeLeft - 3.f);
+			}
+
 			if(levelStatus.timeLeft >= 0.f)
 			{
 				levelStatus.timeLeft -= mFrameTime / 60.f;
 				timerText.setColor(Color::Red);
 				timerText.setString(toStr(levelStatus.timeLeft));
 			}
-			else if(manager.getEntityCount(LDGroup::Player) > 0) manager.getEntities(LDGroup::Player)[0]->destroy();
+			else if(manager.getEntityCount(LDGroup::Player) > 0)
+			{
+				manager.getEntities(LDGroup::Player)[0]->destroy();
+				assets.playSound("death.wav");
+			}
 			else timerText.setString("too slow");
 
 			auto grow = static_cast<int>(10.f - levelStatus.timeLeft) * 0.4f;

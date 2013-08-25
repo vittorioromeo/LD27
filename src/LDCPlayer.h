@@ -30,6 +30,14 @@ namespace ld
 				text{game.getAssets().get<ssvs::BitmapFont>("limeStroked"), ssvu::toStr(val)}
 			{
 				text.setTracking(-3);
+				body.onResolution += [&](const ssvsc::ResolutionInfo& mRI)
+				{
+					if(body.hasGroup(LDGroup::BlockFloating)) return;
+
+					if((std::abs(body.getVelocity().x) > 400 && mRI.resolution.x != 0) ||
+					   (std::abs(body.getVelocity().y) > 400 && mRI.resolution.y != 0))
+						game.getAssets().playSound("bounce.wav");
+				};
 			}
 			~LDCBlock() { onDestroy(); } // TODO: find a way to detect dead entities after LD27
 
@@ -52,16 +60,12 @@ namespace ld
 				}
 				else body.setVelocity(v);
 			}
-			inline void draw() override
-			{
-				if(val > -1) game.render(text);
-			}
+			inline void draw() override { if(val > -1) game.render(text); }
 
 			inline void pickedUp(LDCPhysics& mParent)
 			{
 				game.start10Secs();
 				parent = &mParent;
-				body.addGroupNoResolve(LDGroup::Block);
 				body.addGroup(LDGroup::BlockFloating);
 				body.addGroupNoResolve(LDGroup::Player);
 			}
@@ -70,7 +74,7 @@ namespace ld
 				parent = nullptr;
 				body.setVelocityX(ssvu::getClamped(body.getVelocity().x * mHBoost, -1000.f, 1000.f));
 				body.setVelocityY(ssvu::getClamped(body.getVelocity().y * mVBoost, -1000.f, 1000.f));
-				body.delGroupNoResolve(LDGroup::Block);
+
 				body.delGroup(LDGroup::BlockFloating);
 			}
 			inline void setOffset(ssvs::Vec2i mOffset) { offset = mOffset; }
@@ -91,7 +95,7 @@ namespace ld
 			bool facingLeft{false}, jumpReady{false};
 			float walkSpeed{150.f}, jumpSpeed{520.f};
 			bool wasFacingLeft{false}; float lastTurn{0.f}; bool wasFacingRight{false};
-			float lastJump{0.f};
+			float lastJump{0.f}, stepTime{0.f};
 
 			LDSensor blockSensor{cPhysics, ssvs::Vec2i{10, 2400}};
 			LDCBlock* currentBlock{nullptr};
@@ -100,6 +104,14 @@ namespace ld
 
 		public:
 			LDCPlayer(LDGame& mGame, LDCPhysics& mCPhysics) : game(mGame), cPhysics(mCPhysics), body(cPhysics.getBody()) { }
+			~LDCPlayer()
+			{
+				if(currentBlock != nullptr)
+				{
+					currentBlock->onDestroy.clear();
+					currentBlock->dropped();
+				}
+			}
 
 			void init() override
 			{
@@ -114,6 +126,8 @@ namespace ld
 					currentBlock = &block;
 					currentBlock->onDestroy += [&]{ currentBlock = nullptr; };
 					lastBlock = &mE.getComponent<LDCPhysics>().getBody();
+
+					game.getAssets().playSound("pick.wav", ssvs::SoundPlayer::Mode::Abort);
 				};
 
 				body.onPreUpdate += [&]{ jumpReady = false; };
@@ -137,9 +151,9 @@ namespace ld
 				ssvs::Vec2i offset{facingLeft ? -1000 : 1000, -600};
 				blockSensor.setPosition(body.getPosition() + ssvs::Vec2i{offset.x / 2, 300});
 
-				if(game.getIX() == 0) move(0);
-				else if(game.getIX() == -1) move(-1);
-				else if(game.getIX() == 1) move(1);
+				if(game.getIX() == 0) move(0, mFrameTime);
+				else if(game.getIX() == -1) move(-1, mFrameTime);
+				else if(game.getIX() == 1) move(1, mFrameTime);
 
 				if(game.getIJump() == 1) jump();
 
@@ -171,6 +185,7 @@ namespace ld
 
 					if(!game.getIAction())
 					{
+						game.getAssets().playSound("drop.wav", ssvs::SoundPlayer::Mode::Abort);
 						currentBlock->dropped(((lastTurn > 0.f) ? lastTurn * 0.12f : 1.f), ((lastJump > 0.f) ? lastJump * 0.12f : 1.f));
 						currentBlock = nullptr;
 						return;
@@ -181,8 +196,27 @@ namespace ld
 				else if(lastBlockTimer > 0) lastBlockTimer -= mFrameTime;
 			}
 
-			inline void move(int mDirection)	{ body.setVelocityX(walkSpeed * mDirection); }
-			inline void jump()					{ if(!cPhysics.isInAir() && jumpReady) { body.setVelocityY(-jumpSpeed); lastJump = 20.f; } }
+			inline void move(int mDirection, float mFrameTime)
+			{
+				body.setVelocityX(walkSpeed * mDirection);
+
+				if(mDirection != 0)
+				{
+					if(stepTime > 0.f) stepTime -= mFrameTime;
+					else if(!cPhysics.isInAir())
+					{
+						game.getAssets().playSound("step.wav");
+						stepTime = 26.f;
+					}
+				}
+			}
+			inline void jump()
+			{
+				if(cPhysics.isInAir() || !jumpReady) return;
+				body.setVelocityY(-jumpSpeed);
+				lastJump = 20.f;
+				game.getAssets().playSound("jump.wav");
+			}
 
 			inline Action getAction()		{ return action; }
 			inline bool isJumpReady()		{ return jumpReady; }

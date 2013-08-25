@@ -113,13 +113,9 @@ namespace ld
 			if(!mDI.body.hasGroup(LDGroup::Block)) return;
 			auto& entity(*static_cast<Entity*>(mDI.userData));
 
-			if(mVal == -1)
+			if(mVal == -1 || (mVal == entity.getComponent<LDCBlock>().getVal()))
 			{
-				entity.destroy();
-				this->game.refresh10Secs();
-			}
-			else if(mVal == entity.getComponent<LDCBlock>().getVal())
-			{
+				game.getAssets().playSound("recv.wav", SoundPlayer::Mode::Override);
 				entity.destroy();
 				this->game.refresh10Secs();
 			}
@@ -154,7 +150,11 @@ namespace ld
 			if(!mDI.body.hasGroup(LDGroup::Player)) return;
 			auto& entity(*static_cast<Entity*>(mDI.userData));
 
-			if(manager.getEntityCount(LDGroup::Block) == 0) game.nextLevel();
+			if(manager.getEntityCount(LDGroup::Block) == 0)
+			{
+				game.nextLevel();
+				game.getAssets().playSound("tele.wav", SoundPlayer::Mode::Override);
+			}
 		};
 
 		Sprite s{assets.get<Texture>("worldTiles.png")};

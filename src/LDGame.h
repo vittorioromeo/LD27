@@ -18,7 +18,7 @@ namespace ld
 		bool tutorial{false};
 
 		bool started{false};
-		float timeLeft{0.f};
+		float timeLeft{0.f}, secondTime{0.f};
 	};
 
 	class LDGame
@@ -64,6 +64,7 @@ namespace ld
 			void levelTwo();
 			void levelThree();
 			void levelFour();
+			void levelFive();
 
 			void update(float mFrameTime);
 			void updateDebugText(float mFrameTime);
