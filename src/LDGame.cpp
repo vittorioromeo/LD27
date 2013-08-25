@@ -20,6 +20,8 @@ using namespace sses;
 
 namespace ld
 {
+	int LDGame::levelCount{6};
+
 	LDGame::LDGame(GameWindow& mGameWindow, LDAssets& mAssets) : gameWindow(mGameWindow), assets(mAssets), factory{assets, *this, manager, world},
 		world(createResolver<Retro>(), createSpatial<Grid>(1000, 1000, 3000, 500)),  debugText{assets.get<BitmapFont>("limeStroked")}, msgText{assets.get<BitmapFont>("limeStroked")},
 		timerText{assets.get<BitmapFont>("limeStroked")}
@@ -47,6 +49,8 @@ namespace ld
 		gameState.addInput({{k::D}}, [=](float mFrameTime){ camera.move(Vec2f{10, 0} * mFrameTime); });
 		gameState.addInput({{k::W}}, [=](float mFrameTime){ camera.move(Vec2f{0, -10} * mFrameTime); });
 		gameState.addInput({{k::S}}, [=](float mFrameTime){ camera.move(Vec2f{0, 10} * mFrameTime); });
+		gameState.addInput({{k::Q}}, [=](float mFrameTime){ camera.zoom(pow(1.1f, mFrameTime)); });
+		gameState.addInput({{k::E}}, [=](float mFrameTime){ camera.zoom(pow(0.9f, mFrameTime)); });
 
 		add2StateInput(gameState, {{k::Z}}, inputAction);
 		add2StateInput(gameState, {{k::X}}, inputJump);
@@ -57,14 +61,12 @@ namespace ld
 		gameState.addInput({{k::R}}, [&](float){ newGame(); }, t::Once);
 
 		// Debug
-		gameState.addInput({{k::Num1}}, [&](float){ factory.createWall(getMousePosition()); }, t::Once);
+		/*gameState.addInput({{k::Num1}}, [&](float){ factory.createWall(getMousePosition()); }, t::Once);
 		gameState.addInput({{k::Num2}}, [&](float){ factory.createBlock(getMousePosition(), getRnd(0, 10)); }, t::Once);
 		gameState.addInput({{k::Num3}}, [&](float){ factory.createPlayer(getMousePosition()); }, t::Once);
 		gameState.addInput({{k::Num4}}, [&](float){ factory.createBlock(getMousePosition()); }, t::Once);
 		gameState.addInput({{k::Num5}}, [&](float){ factory.createReceiver(getMousePosition(), getRnd(0, 10)); }, t::Once);
-		gameState.addInput({{k::Num6}}, [&](float){ factory.createReceiver(getMousePosition()); }, t::Once);
-		gameState.addInput({{k::Q}}, [=](float mFrameTime){ camera.zoom(pow(1.1f, mFrameTime)); });
-		gameState.addInput({{k::E}}, [=](float mFrameTime){ camera.zoom(pow(0.9f, mFrameTime)); });
+		gameState.addInput({{k::Num6}}, [&](float){ factory.createReceiver(getMousePosition()); }, t::Once);*/
 	}
 
 	void LDGame::start10Secs() { if(!levelStatus.started) { levelStatus.started = true; refresh10Secs(); } }
@@ -92,24 +94,24 @@ namespace ld
 			case 2: levelThree(); break;
 			case 3: levelFour(); break;
 			case 4: levelFive(); break;
+			case 5: levelSix(); break;
+			case 6: levelSeven(); break;
 		}
 	}
-	void LDGame::nextLevel() { level = level < 4 ? level + 1 : 0; mustChangeLevel = true; }
+	void LDGame::nextLevel() { level = level < levelCount ? level + 1 : 0; mustChangeLevel = true; }
+
+	constexpr int sX{1000}; constexpr int sY{1000};
+	static Vec2i put(int mX, int mY) { return Vec2i(sX + 3200 * mX, sY + 3200 * mY); }
+	Entity& LDGame::pW(int mX, int mY)				{ return factory.createWall(put(mX, mY)); }
+	Entity& LDGame::pB(int mX, int mY, int mVal)	{ return factory.createBlock(put(mX, mY), mVal); }
+	Entity& LDGame::pR(int mX, int mY, int mVal)	{ return factory.createReceiver(put(mX, mY), mVal); }
+	Entity& LDGame::pT(int mX, int mY)				{ return factory.createTele(put(mX, mY)); }
 
 	void LDGame::levelOne()
 	{
-		levelStatus.title = "introduction - part 1";
-		levelStatus.tutorial = true;
+		levelStatus.title = "introduction - part 1"; levelStatus.tutorial = true;
 
-		int sX{1000}, sY{1000};
-		auto put([=](int mX, int mY){ return Vec2i(sX + 3200 * mX, sY + 3200 * mY); });
-		auto pW([=](int mX, int mY) -> Entity& { return factory.createWall(put(mX, mY)); });
-		auto pB([=](int mX, int mY) -> Entity& { return factory.createBlock(put(mX, mY)); });
-		auto pR([=](int mX, int mY) -> Entity& { return factory.createReceiver(put(mX, mY)); });
-		auto pT([=](int mX, int mY) -> Entity& { return factory.createTele(put(mX, mY)); });
-
-		string rndWorkerHash;
-		for(int i{0}; i < 10; ++i) rndWorkerHash += toStr(getRnd(1, 10));
+		string rndWorkerHash; for(int i{0}; i < 10; ++i) rndWorkerHash += toStr(getRnd(1, 10));
 
 		for(int i{0}; i < 10; ++i) { pW(i, 0); pW(0, -i); }
 		auto& player(factory.createPlayer(put(1, -1)));
@@ -149,17 +151,11 @@ namespace ld
 		t.append<Do>([=]{ showMessage("assigment successful\nplace remaining cratestorages and\nproceed to the 10corp standardized molecular transporter", -1, Color::Green); });
 	}
 
+
+
 	void LDGame::levelTwo()
 	{
 		levelStatus.title = "introduction - part 2";
-		levelStatus.tutorial = false;
-
-		int sX{1000}, sY{1000};
-		auto put([=](int mX, int mY){ return Vec2i(sX + 3200 * mX, sY + 3200 * mY); });
-		auto pW([=](int mX, int mY) -> Entity& { return factory.createWall(put(mX, mY)); });
-		auto pB([=](int mX, int mY) -> Entity& { return factory.createBlock(put(mX, mY)); });
-		auto pR([=](int mX, int mY) -> Entity& { return factory.createReceiver(put(mX, mY)); });
-		auto pT([=](int mX, int mY) -> Entity& { return factory.createTele(put(mX, mY)); });
 
 		for(int i{0}; i < 10; ++i) { pW(i, 0); pW(0, -i); }
 		auto& player(factory.createPlayer(put(1, -1)));
@@ -176,20 +172,12 @@ namespace ld
 		auto& t(timelineManager.create());
 		t.append<Do>([=]{ showMessage("welcome back, worker", 150); });																								t.append<WaitWhile>(intro);
 		t.append<Do>([=]{ showMessage("10corp does not tolerate slowness", 150, Color::Red); });																	t.append<WaitWhile>(intro);
-		t.append<Do>([=]{ showMessage("after grabbing the first cratestorage, you\nwill only have 10 seconds before\nyou will be terminated", 150, Color::Red); });	t.append<WaitWhile>(intro);
+		t.append<Do>([=]{ showMessage("after grabbing the first cratestorage, you\nwill only have 10 seconds before\nyour termination", 150, Color::Red); });	t.append<WaitWhile>(intro);
 	}
 
 	void LDGame::levelThree()
 	{
 		levelStatus.title = "introduction - part 3";
-		levelStatus.tutorial = false;
-
-		int sX{1000}, sY{1000};
-		auto put([=](int mX, int mY){ return Vec2i(sX + 3200 * mX, sY + 3200 * mY); });
-		auto pW([=](int mX, int mY) -> Entity& { return factory.createWall(put(mX, mY)); });
-		auto pB([=](int mX, int mY) -> Entity& { return factory.createBlock(put(mX, mY)); });
-		auto pR([=](int mX, int mY) -> Entity& { return factory.createReceiver(put(mX, mY)); });
-		auto pT([=](int mX, int mY) -> Entity& { return factory.createTele(put(mX, mY)); });
 
 		for(int i{0}; i < 10; ++i) { pW(i, 0); pW(0, -i); }
 		auto& player(factory.createPlayer(put(1, -1)));
@@ -215,14 +203,6 @@ namespace ld
 	void LDGame::levelFour()
 	{
 		levelStatus.title = "introduction - part 4";
-		levelStatus.tutorial = false;
-
-		int sX{1000}, sY{1000};
-		auto put([=](int mX, int mY){ return Vec2i(sX + 3200 * mX, sY + 3200 * mY); });
-		auto pW([=](int mX, int mY) -> Entity& { return factory.createWall(put(mX, mY)); });
-		auto pB([=](int mX, int mY, int mVal = -1) -> Entity& { return factory.createBlock(put(mX, mY), mVal); });
-		auto pR([=](int mX, int mY, int mVal = -1) -> Entity& { return factory.createReceiver(put(mX, mY), mVal); });
-		auto pT([=](int mX, int mY) -> Entity& { return factory.createTele(put(mX, mY)); });
 
 		for(int i{0}; i < 10; ++i) { pW(i, 0); pW(0, -i); }
 		auto& player(factory.createPlayer(put(1, -1)));
@@ -247,14 +227,6 @@ namespace ld
 	void LDGame::levelFive()
 	{
 		levelStatus.title = "first task";
-		levelStatus.tutorial = false;
-
-		int sX{1000}, sY{1000};
-		auto put([=](int mX, int mY){ return Vec2i(sX + 3200 * mX, sY + 3200 * mY); });
-		auto pW([=](int mX, int mY) -> Entity& { return factory.createWall(put(mX, mY)); });
-		auto pB([=](int mX, int mY, int mVal = -1) -> Entity& { return factory.createBlock(put(mX, mY), mVal); });
-		auto pR([=](int mX, int mY, int mVal = -1) -> Entity& { return factory.createReceiver(put(mX, mY), mVal); });
-		auto pT([=](int mX, int mY) -> Entity& { return factory.createTele(put(mX, mY)); });
 
 		for(int i{0}; i < 10; ++i) { pW(i, 0); pW(0, -i); }
 		auto& player(factory.createPlayer(put(1, -1)));
@@ -274,6 +246,55 @@ namespace ld
 
 		auto& t(timelineManager.create());
 		t.append<Do>([=]{ showMessage("of course, 10corp assumes you can use your\nbrain, too", 150); });	t.append<WaitWhile>(intro);
+	}
+
+	void LDGame::levelSix()
+	{
+		levelStatus.title = "second task";
+
+		for(int i{0}; i < 8; ++i) { pW(i, 0); pW(0, -i); }
+		auto& player(factory.createPlayer(put(1, -1)));
+		const auto& pBody(player.getComponent<LDCPhysics>().getBody());
+
+		auto intro([=, &pBody]{ return (!msgDone || !msgText.getString().empty()); });
+
+											pW(11, -2);	pW(12, -2);	pW(13, -2);
+														pR(12,-1,0);
+					pB(9,0,1);							pW(12, 0);							pB(15,1,0);
+					pB(9,1,0);							pR(12,1,1);							pB(15,1,1);
+					pW(9, 3);							pW(12, 2);							pW(15, 3);
+
+
+		pB(8,5,3);							pB(11,5,0);				pB(13,5,1);	pB(14,5,0);				pR(16,5,2);
+		pW(8, 6);				pW(10, 6);	pW(11, 6);	pW(12, 6);	pW(13, 6);	pW(14, 6);	pW(15, 6);	pW(16, 6);
+		pB(8,7,2);							pT(11, 7);	pR(12,7,3);
+		pW(8, 8);	pW(9, 8);	pW(10, 8);	pW(11, 8);	pW(12, 8);
+
+
+		auto& t(timelineManager.create());
+		t.append<Do>([=]{ showMessage("10corp standardized cratestorages are not fragile\nuse your environment to complete your tasks", 150); });	t.append<WaitWhile>(intro);
+	}
+
+	void LDGame::levelSeven()
+	{
+		levelStatus.title = "third task";
+
+		for(int i{0}; i < 8; ++i) { pW(i, 0); pW(0, -i); }
+		auto& player(factory.createPlayer(put(1, -1)));
+		const auto& pBody(player.getComponent<LDCPhysics>().getBody());
+
+		auto intro([=, &pBody]{ return (!msgDone || !msgText.getString().empty()); });											pW(18, -1);
+																																pW(18, 0);
+																	pW(13, 1);										pB(17,2,1);	pW(18, 1);
+																													pW(17, 3);	pW(18, 2);
+																	pR(13,3,1);							pR(16,4,2);				pW(18, 3);
+																	pW(13,4);							pR(16,5,2);				pW(18, 4);
+		pR(8,5,2);	pB(9,5,0);	pB(10,5,0);							pR(13,5,0);	pB(14,5,2);	pT(15, 5);	pB(16,5,1);				pW(18, 5);
+		pW(8, 6);	pW(9, 6);	pW(10, 6);	pW(11, 6);	pW(12, 6);	pW(13, 6);	pW(14, 6);	pW(15, 6);	pW(16, 6);	pW(17, 6);	pW(18, 6);
+
+
+		auto& t(timelineManager.create());
+		t.append<Do>([=]{ showMessage("this is your final task for today\ngood luck, worker", 150); });	t.append<WaitWhile>(intro);
 	}
 
 	void LDGame::update(float mFrameTime)
@@ -393,6 +414,3 @@ namespace ld
 		render(timerText);
 	}
 }
-
-// I absolutely have no idea what the game design should be
-// Sort of

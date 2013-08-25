@@ -53,6 +53,8 @@ namespace ld
 			int level{0};
 
 		public:
+			static int levelCount;
+
 			LDGame(ssvs::GameWindow& mGameWindow, LDAssets& mAssets);
 
 			void start10Secs();
@@ -63,11 +65,18 @@ namespace ld
 			void newGame();
 			void nextLevel();
 
+			sses::Entity& pW(int mX, int mY);
+			sses::Entity& pB(int mX, int mY, int mVal = -1);
+			sses::Entity& pR(int mX, int mY, int mVal = -1);
+			sses::Entity& pT(int mX, int mY);
+
 			void levelOne();
 			void levelTwo();
 			void levelThree();
 			void levelFour();
 			void levelFive();
+			void levelSix();
+			void levelSeven();
 
 			inline void setMenuGame(LDMenu& mMG){ menuGame = &mMG; }
 			inline void setLevel(int mLevel){ level = mLevel; }

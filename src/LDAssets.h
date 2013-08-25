@@ -27,6 +27,7 @@ namespace ld
 				assetManager.load<ssvs::BitmapFont>("limeStroked", assetManager.get<sf::Texture>("limeStroked.png"), ssvuj::as<ssvs::BitmapFontData>(ssvuj::readFromFile("Data/lime.json")));
 
 				soundPlayer.setVolume(50);
+				musicPlayer.setVolume(30);
 			}
 
 			inline ssvs::AssetManager& operator()() { return assetManager; }
@@ -41,8 +42,8 @@ namespace ld
 			{
 				musicPlayer.stop();
 				if(!LDConfig::get().musicEnabled) return;
-				musicPlayer.setLoop(true);
 				musicPlayer.play(get<sf::Music>(mName));
+				musicPlayer.setLoop(true);
 			}
 	};
 }

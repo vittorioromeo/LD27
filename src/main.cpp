@@ -21,7 +21,6 @@ int main()
 	unsigned int width{VideoMode::getDesktopMode().width}, height{VideoMode::getDesktopMode().height};
 	width = 800; height = 600;
 
-	LDConfig::get().init();
 	LDAssets assets;
 
 	GameWindow gameWindow;
