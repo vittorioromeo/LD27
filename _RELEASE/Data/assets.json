@@ -18,5 +18,10 @@
 		"pick.wav",
 		"drop.wav",
 		"blip.wav"
-	]
+	],
+
+	"musics":
+	[
+		"mus.ogg"
+	]	
 }

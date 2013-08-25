@@ -9,13 +9,19 @@
 
 namespace ld
 {
-	namespace Config
+	struct LDConfig
 	{
-		static bool soundEnabled{true};
-		static bool musicEnabled{false};
+		bool soundEnabled;
+		bool musicEnabled;
 
+		inline void init()
+		{
+			soundEnabled = true;
+			musicEnabled = true;
+		}
 
-	}
+		inline static LDConfig& get() { static LDConfig instance; return instance; }
+	};
 }
 
 #endif

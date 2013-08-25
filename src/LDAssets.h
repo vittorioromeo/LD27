@@ -14,9 +14,10 @@ namespace ld
 	{
 		private:
 			ssvs::AssetManager assetManager;
-			ssvs::SoundPlayer soundPlayer;
 
 		public:
+			ssvs::SoundPlayer soundPlayer;
+			ssvs::MusicPlayer musicPlayer;
 			ssvs::Tileset tilesetChar{ssvuj::as<ssvs::Tileset>(ssvuj::readFromFile("Data/Tilesets/tilesetChar.json"))};
 			ssvs::Tileset tilesetWorld{ssvuj::as<ssvs::Tileset>(ssvuj::readFromFile("Data/Tilesets/tilesetWorld.json"))};
 
@@ -33,8 +34,15 @@ namespace ld
 
 			inline void playSound(const std::string& mName, ssvs::SoundPlayer::Mode mMode = ssvs::SoundPlayer::Mode::Overlap, float mPitch = 1.f)
 			{
-				if(!Config::soundEnabled) return;
+				if(!LDConfig::get().soundEnabled) return;
 				soundPlayer.play(get<sf::SoundBuffer>(mName), mMode, mPitch);
+			}
+			inline void playMusic(const std::string& mName)
+			{
+				musicPlayer.stop();
+				if(!LDConfig::get().musicEnabled) return;
+				musicPlayer.setLoop(true);
+				musicPlayer.play(get<sf::Music>(mName));
 			}
 	};
 }

@@ -3,6 +3,7 @@
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
 #include "LDGame.h"
+#include "LDMenu.h"
 #include "LDGroups.h"
 #include "LDCPhysics.h"
 #include "LDCPlayer.h"
@@ -40,7 +41,7 @@ namespace ld
 		using b = Mouse::Button;
 		using t = Input::Trigger::Type;
 
-		gameState.addInput({{k::Escape}}, [&](float){ gameWindow.stop(); });
+		gameState.addInput({{k::Escape}}, [&](float){ assets.musicPlayer.stop(); gameWindow.setGameState(menuGame->gameState); });
 
 		gameState.addInput({{k::A}}, [=](float mFrameTime){ camera.move(Vec2f{-10, 0} * mFrameTime); });
 		gameState.addInput({{k::D}}, [=](float mFrameTime){ camera.move(Vec2f{10, 0} * mFrameTime); });

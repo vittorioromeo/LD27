@@ -12,6 +12,8 @@
 
 namespace ld
 {
+	struct LDMenu;
+
 	struct LDLevelStatus
 	{
 		std::string title{"unnamed level"};
@@ -34,6 +36,7 @@ namespace ld
 			ssvs::BitmapText debugText;
 			ssvu::TimelineManager timelineManager;
 			LDLevelStatus levelStatus;
+			LDMenu* menuGame{nullptr};
 
 			ssvs::BitmapText msgText;
 			std::string currentMsg;
@@ -65,6 +68,9 @@ namespace ld
 			void levelThree();
 			void levelFour();
 			void levelFive();
+
+			inline void setMenuGame(LDMenu& mMG){ menuGame = &mMG; }
+			inline void setLevel(int mLevel){ level = mLevel; }
 
 			void update(float mFrameTime);
 			void updateDebugText(float mFrameTime);
