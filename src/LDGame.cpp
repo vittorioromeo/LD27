@@ -369,17 +369,13 @@ namespace ld
 		{
 			auto pPos(toPixels(manager.getEntities(LDGroup::Player)[0]->getComponent<LDCPhysics>().getPos()));
 			panVec += manager.getEntities(LDGroup::Player)[0]->getComponent<LDCPlayer>().isFacingLeft() ? Vec2f{-1.f, 0} : Vec2f{1.f, 0};
-			clamp(panVec, -100.f, 100.f);
+			cClamp(panVec, -100.f, 100.f);
 			camera.move(-(camera.getCenter() - (pPos + panVec)) / 40.f);
 		}
 
 		if(manager.getEntityCount(LDGroup::Block) == 0) levelStatus.started = false;
 
-		if(mustChangeLevel)
-		{
-			mustChangeLevel = false;
-			newGame();
-		}
+		if(mustChangeLevel) { mustChangeLevel = false; newGame(); }
 	}
 	void LDGame::updateDebugText(float mFrameTime)
 	{

@@ -34,8 +34,7 @@ namespace ld
 				animTorsoJump = ssvs::Utils::getAnimationFromJson(tileset, animsTorso["jump"]);
 				animTorsoFall = ssvs::Utils::getAnimationFromJson(tileset, animsTorso["fall"]);
 				animTorsoWalk = ssvs::Utils::getAnimationFromJson(tileset, animsTorso["walk"]);
-				animTorsoWalk.setPingPong(true);
-				animTorsoWalk.setSpeed(0.75f);
+				animTorsoWalk.setType(ssvs::Animation::Type::PingPong); animTorsoWalk.setSpeed(0.75f);
 				animTorsoHold = ssvs::Utils::getAnimationFromJson(tileset, animsTorso["hold"]);
 
 				animLegsStand = ssvs::Utils::getAnimationFromJson(tileset, animsLegs["stand"]);
@@ -76,13 +75,13 @@ namespace ld
 				if(currentTorsoAnim != nullptr)
 				{
 					currentTorsoAnim->update(mFrameTime);
-					cRender[1].setTextureRect(tileset[currentTorsoAnim->getCurrentIndex()]);
+					cRender[1].setTextureRect(tileset[currentTorsoAnim->getTileIndex()]);
 				}
 
 				if(currentLegsAnim != nullptr)
 				{
 					currentLegsAnim->update(mFrameTime);
-					cRender[0].setTextureRect(tileset[currentLegsAnim->getCurrentIndex()]);
+					cRender[0].setTextureRect(tileset[currentLegsAnim->getTileIndex()]);
 				}
 			}
 	};

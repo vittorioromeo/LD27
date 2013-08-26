@@ -48,7 +48,7 @@ namespace ld
 				if(!cPhysics.isInAir())
 				{
 					// TODO: add getLowerClamped and getUpperClamped methods to ssv framework
-					body.setVelocity(ssvs::Utils::getClamped(body.getVelocity() * 0.9f, -2000.f, 2000.f));
+					body.setVelocity(ssvs::Utils::getCClamped(body.getVelocity() * 0.9f, -2000.f, 2000.f));
 					if(parent == nullptr) body.delGroupNoResolve(LDGroup::Player);
 				}
 
