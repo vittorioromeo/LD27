@@ -60,13 +60,12 @@ namespace ld
 
 		gameState.addInput({{k::R}}, [&](float){ newGame(); }, t::Once);
 
-		// Debug
-		/*gameState.addInput({{k::Num1}}, [&](float){ factory.createWall(getMousePosition()); }, t::Once);
+		gameState.addInput({{k::Num1}}, [&](float){ factory.createWall(getMousePosition()); }, t::Once);
 		gameState.addInput({{k::Num2}}, [&](float){ factory.createBlock(getMousePosition(), getRnd(0, 10)); }, t::Once);
 		gameState.addInput({{k::Num3}}, [&](float){ factory.createPlayer(getMousePosition()); }, t::Once);
 		gameState.addInput({{k::Num4}}, [&](float){ factory.createBlock(getMousePosition()); }, t::Once);
 		gameState.addInput({{k::Num5}}, [&](float){ factory.createReceiver(getMousePosition(), getRnd(0, 10)); }, t::Once);
-		gameState.addInput({{k::Num6}}, [&](float){ factory.createReceiver(getMousePosition()); }, t::Once);*/
+		gameState.addInput({{k::Num6}}, [&](float){ factory.createReceiver(getMousePosition()); }, t::Once);
 	}
 
 	void LDGame::start10Secs() { if(!levelStatus.started) { levelStatus.started = true; refresh10Secs(); } }
@@ -135,7 +134,7 @@ namespace ld
 		const auto& pReceiverBody(pReceiver.getComponent<LDCPhysics>().getBody());
 
 		auto intro([=, &pBody]{ return pBody.getPosition().x < pCrateX - 5000 && (!msgDone || !msgText.getString().empty()); });
-		auto crateNotPlaced([=, &pCrateBody, &pReceiverBody]{ return getDist(pCrateBody.getPosition(), pReceiverBody.getPosition()) > 3200; });
+		auto crateNotPlaced([=, &pCrateBody, &pReceiverBody]{ return getDistanceEuclidean(pCrateBody.getPosition(), pReceiverBody.getPosition()) > 3200; });
 
 		auto& t(timelineManager.create());
 		t.append<Do>([=]{ showMessage("10corp welcomes you, worker #" + rndWorkerHash, 150); });																		t.append<WaitWhile>(intro);

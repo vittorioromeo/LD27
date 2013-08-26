@@ -40,7 +40,6 @@ namespace ld
 			}
 			inline void playMusic(const std::string& mName)
 			{
-				musicPlayer.stop();
 				if(!LDConfig::get().musicEnabled) return;
 				musicPlayer.play(get<sf::Music>(mName));
 				musicPlayer.setLoop(true);

@@ -47,17 +47,13 @@ namespace ld
 
 				if(!cPhysics.isInAir())
 				{
-					// TODO: add getLowerClamped and getUpperClamped methods to ssv framework
-					body.setVelocity(ssvs::Utils::getCClamped(body.getVelocity() * 0.9f, -2000.f, 2000.f));
+					body.setVelocityX(ssvu::getClampedMin(body.getVelocity().x * 0.9f, 0.f));
 					if(parent == nullptr) body.delGroupNoResolve(LDGroup::Player);
 				}
 
 				if(parent == nullptr) return;
 				ssvs::Vec2f v{(parent->getBody().getPosition() + offset) - body.getPosition()};
-				if(getDist(parent->getBody().getPosition(), body.getPosition()) > 1700)
-				{
-					dropped();
-				}
+				if(ssvs::Utils::getDistanceEuclidean(parent->getBody().getPosition(), body.getPosition()) > 1700) dropped();
 				else body.setVelocity(v);
 			}
 			inline void draw() override { if(val > -1) game.render(text); }
@@ -72,9 +68,8 @@ namespace ld
 			inline void dropped(float mHBoost = 1.f, float mVBoost = 1.f)
 			{
 				parent = nullptr;
-				body.setVelocityX(ssvu::getClamped(body.getVelocity().x * mHBoost, -1000.f, 1000.f));
-				body.setVelocityY(ssvu::getClamped(body.getVelocity().y * mVBoost, -1000.f, 1000.f));
-
+				auto newVel(body.getVelocity()); newVel.x *= mHBoost; newVel.y *= mVBoost;
+				body.setVelocity(ssvs::Utils::getCClamped(newVel, -1000.f, 1000.f));
 				body.delGroup(LDGroup::BlockFloating);
 			}
 			inline void setOffset(ssvs::Vec2i mOffset) { offset = mOffset; }
@@ -106,11 +101,10 @@ namespace ld
 			LDCPlayer(LDGame& mGame, LDCPhysics& mCPhysics) : game(mGame), cPhysics(mCPhysics), body(cPhysics.getBody()) { }
 			~LDCPlayer()
 			{
-				if(currentBlock != nullptr)
-				{
-					currentBlock->onDestroy.clear();
-					currentBlock->dropped();
-				}
+				if(currentBlock == nullptr) return;
+
+				currentBlock->onDestroy.clear();
+				currentBlock->dropped();
 			}
 
 			void init() override

@@ -17,9 +17,7 @@ namespace ld
 	struct LDLevelStatus
 	{
 		std::string title{"unnamed level"};
-		bool tutorial{false};
-
-		bool started{false};
+		bool tutorial{false}, started{false};
 		float timeLeft{0.f}, secondTime{0.f};
 	};
 

@@ -20,11 +20,11 @@ namespace ld
 		LDGame& game;
 		ssvms::Menu menu;
 		ssvs::BitmapText txt, creditsTxt;
-		ssvs::Camera camera{window, {{800 / 2 - 200, 600 / 2 - 150}, {400, 300}}};
+		ssvs::Camera camera{window, {{800 / 2 - 200, 600 / 2 - 150}, {400, 300}}}; // TODO: overhaul camera class
 		int level{0};
 
 		LDMenu(ssvs::GameWindow& mGameWindow, LDAssets& mAssets, LDGame& mGame) : window(mGameWindow), assets(mAssets), game(mGame),
-			txt{assets.get<ssvs::BitmapFont>("limeStroked"), ""}, creditsTxt{assets.get<ssvs::BitmapFont>("limeStroked"), ""}
+			txt{assets.get<ssvs::BitmapFont>("limeStroked")}, creditsTxt{assets.get<ssvs::BitmapFont>("limeStroked")}
 		{
 			txt.setTracking(-3);
 			creditsTxt.setTracking(-3);
@@ -53,13 +53,12 @@ namespace ld
 			});
 			main.create<i::Slider>("starting level", [&]{ return level; }, [&](int l){ level = l; }, 0, LDGame::levelCount, 1);
 
-			main.create<i::Toggle>("sound", []{ return LDConfig::get().soundEnabled; }, [](bool mV){ LDConfig::get().soundEnabled = mV; });
+			main.create<i::Toggle>("sound", LDConfig::get().soundEnabled);
 			main.create<i::Slider>("sound volume", [&]{ return assets.soundPlayer.getVolume(); }, [&](int v){ assets.soundPlayer.setVolume(v); }, 0, 100, 10) | [&]{ return LDConfig::get().soundEnabled; };
-			main.create<i::Toggle>("music", []{ return LDConfig::get().musicEnabled; }, [](bool mV){ LDConfig::get().musicEnabled = mV; });
+			main.create<i::Toggle>("music", LDConfig::get().musicEnabled);
 			main.create<i::Slider>("music volume", [&]{ return assets.musicPlayer.getVolume(); }, [&](int v){ assets.musicPlayer.setVolume(v); }, 0, 100, 10) | [&]{ return LDConfig::get().musicEnabled; };
 
 			main.create<i::Single>("exit", [&]{ window.stop(); });
-
 		}
 
 		inline void update(float mFT) { menu.update(); }
@@ -72,7 +71,7 @@ namespace ld
 			mText.setPosition(mPosition); render(mText); return mText;
 		}
 		inline const sf::Color& getTextColor() const { return sf::Color::White; }
-		inline ssvs::BitmapText& renderText(const std::string& mStr, ssvs::BitmapText& mText, ssvs::Vec2f mPos)						{ mText.setColor(getTextColor()); return renderTextImpl(mStr, mText, mPos); }
+		inline ssvs::BitmapText& renderText(const std::string& mStr, ssvs::BitmapText& mText, ssvs::Vec2f mPos)								{ mText.setColor(getTextColor()); return renderTextImpl(mStr, mText, mPos); }
 		inline ssvs::BitmapText& renderText(const std::string& mStr, ssvs::BitmapText& mText, ssvs::Vec2f mPos, const sf::Color& mColor)	{ mText.setColor(mColor); return renderTextImpl(mStr, mText, mPos); }
 
 		void drawMenu(const ssvms::Menu& mMenu)
