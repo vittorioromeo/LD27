@@ -345,7 +345,7 @@ namespace ld
 		else if(currentMsgDuration > 0.f)
 		{
 			currentMsgDuration -= mFrameTime;
-			clamp(currentMsgDuration, 0.f, numeric_limits<float>::max()); // TODO: lower bound clamp
+			clampMin(currentMsgDuration, 0.f);
 		}
 		else if(currentMsgDuration != -1) msgDone = true;
 		if(msgDone && !msgText.getString().empty())
