@@ -2,6 +2,8 @@ callgrind.*
 CMakeLists.txt.user.*
 
 lib/
+build/
+winbuild/
 *.0000000
 doc/html
 doc/latex
