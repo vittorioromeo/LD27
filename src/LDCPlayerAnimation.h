@@ -30,17 +30,17 @@ namespace ld
 				ssvuj::Obj animsTorso{ssvuj::readFromFile("Data/Animations/animCharTorso.json")};
 				ssvuj::Obj animsLegs{ssvuj::readFromFile("Data/Animations/animCharLegs.json")};
 
-				animTorsoStand = ssvs::Utils::getAnimationFromJson(tileset, animsTorso["stand"]);
-				animTorsoJump = ssvs::Utils::getAnimationFromJson(tileset, animsTorso["jump"]);
-				animTorsoFall = ssvs::Utils::getAnimationFromJson(tileset, animsTorso["fall"]);
-				animTorsoWalk = ssvs::Utils::getAnimationFromJson(tileset, animsTorso["walk"]);
+				animTorsoStand = ssvs::getAnimationFromJson(tileset, animsTorso["stand"]);
+				animTorsoJump = ssvs::getAnimationFromJson(tileset, animsTorso["jump"]);
+				animTorsoFall = ssvs::getAnimationFromJson(tileset, animsTorso["fall"]);
+				animTorsoWalk = ssvs::getAnimationFromJson(tileset, animsTorso["walk"]);
 				animTorsoWalk.setType(ssvs::Animation::Type::PingPong); animTorsoWalk.setSpeed(0.75f);
-				animTorsoHold = ssvs::Utils::getAnimationFromJson(tileset, animsTorso["hold"]);
+				animTorsoHold = ssvs::getAnimationFromJson(tileset, animsTorso["hold"]);
 
-				animLegsStand = ssvs::Utils::getAnimationFromJson(tileset, animsLegs["stand"]);
-				animLegsJump = ssvs::Utils::getAnimationFromJson(tileset, animsLegs["jump"]);
-				animLegsFall = ssvs::Utils::getAnimationFromJson(tileset, animsLegs["fall"]);
-				animLegsWalk = ssvs::Utils::getAnimationFromJson(tileset, animsLegs["walk"]);
+				animLegsStand = ssvs::getAnimationFromJson(tileset, animsLegs["stand"]);
+				animLegsJump = ssvs::getAnimationFromJson(tileset, animsLegs["jump"]);
+				animLegsFall = ssvs::getAnimationFromJson(tileset, animsLegs["fall"]);
+				animLegsWalk = ssvs::getAnimationFromJson(tileset, animsLegs["walk"]);
 			}
 
 			void update(float mFrameTime) override

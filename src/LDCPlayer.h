@@ -53,7 +53,7 @@ namespace ld
 
 				if(parent == nullptr) return;
 				ssvs::Vec2f v{(parent->getBody().getPosition() + offset) - body.getPosition()};
-				if(ssvs::Utils::getDistanceEuclidean(parent->getBody().getPosition(), body.getPosition()) > 1700) dropped();
+				if(ssvs::getDistanceEuclidean(parent->getBody().getPosition(), body.getPosition()) > 1700) dropped();
 				else body.setVelocity(v);
 			}
 			inline void draw() override { if(val > -1) game.render(text); }
@@ -69,7 +69,7 @@ namespace ld
 			{
 				parent = nullptr;
 				auto newVel(body.getVelocity()); newVel.x *= mHBoost; newVel.y *= mVBoost;
-				body.setVelocity(ssvs::Utils::getCClamped(newVel, -1000.f, 1000.f));
+				body.setVelocity(ssvs::getCClamped(newVel, -1000.f, 1000.f));
 				body.delGroup(LDGroup::BlockFloating);
 			}
 			inline void setOffset(ssvs::Vec2i mOffset) { offset = mOffset; }
