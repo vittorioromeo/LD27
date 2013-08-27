@@ -26,7 +26,7 @@ namespace ld
 		private:
 			ssvs::GameWindow& gameWindow;
 			LDAssets& assets;
-			ssvs::Camera camera{gameWindow, {{800 / 2 - 200, 600 / 2 - 150}, {400, 300}}};
+			ssvs::Camera camera{gameWindow, 2.f};
 			LDFactory factory;
 			ssvs::GameState gameState;
 			ssvsc::World world;

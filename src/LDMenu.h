@@ -20,7 +20,7 @@ namespace ld
 		LDGame& game;
 		ssvms::Menu menu;
 		ssvs::BitmapText txt, creditsTxt;
-		ssvs::Camera camera{window, {{800 / 2 - 200, 600 / 2 - 150}, {400, 300}}}; // TODO: overhaul camera class
+		ssvs::Camera camera{window, {400 - 200, 300 - 150}, 2.f}; // TODO: overhaul camera class
 		int level{0};
 
 		LDMenu(ssvs::GameWindow& mGameWindow, LDAssets& mAssets, LDGame& mGame) : window(mGameWindow), assets(mAssets), game(mGame),
@@ -61,7 +61,7 @@ namespace ld
 			main.create<i::Single>("exit", [&]{ window.stop(); });
 		}
 
-		inline void update(float mFT) { menu.update(); }
+		inline void update(float mFrameTime) { camera.update(mFrameTime); menu.update(); }
 		inline void draw() { camera.apply(); drawMenu(menu); camera.unapply(); render(creditsTxt); }
 
 		inline void render(sf::Drawable& mDrawable) { window.draw(mDrawable); }

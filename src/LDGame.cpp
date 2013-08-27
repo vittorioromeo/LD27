@@ -44,12 +44,12 @@ namespace ld
 
 		gameState.addInput({{k::Escape}}, [&](float){ assets.musicPlayer.stop(); gameWindow.setGameState(menuGame->gameState); });
 
-		gameState.addInput({{k::A}}, [=](float mFrameTime){ camera.move(Vec2f{-10, 0} * mFrameTime); });
-		gameState.addInput({{k::D}}, [=](float mFrameTime){ camera.move(Vec2f{10, 0} * mFrameTime); });
-		gameState.addInput({{k::W}}, [=](float mFrameTime){ camera.move(Vec2f{0, -10} * mFrameTime); });
-		gameState.addInput({{k::S}}, [=](float mFrameTime){ camera.move(Vec2f{0, 10} * mFrameTime); });
-		gameState.addInput({{k::Q}}, [=](float mFrameTime){ camera.zoom(pow(1.1f, mFrameTime)); });
-		gameState.addInput({{k::E}}, [=](float mFrameTime){ camera.zoom(pow(0.9f, mFrameTime)); });
+		gameState.addInput({{k::A}}, [=](float){ camera.pan(-10, 0); });
+		gameState.addInput({{k::D}}, [=](float){ camera.pan(10, 0); });
+		gameState.addInput({{k::W}}, [=](float){ camera.pan(0, -10); });
+		gameState.addInput({{k::S}}, [=](float){ camera.pan(0, 10); });
+		gameState.addInput({{k::Q}}, [=](float){ camera.zoomOut(1.1f); });
+		gameState.addInput({{k::E}}, [=](float){ camera.zoomIn(1.1f); });
 
 		add2StateInput(gameState, {{k::Z}}, inputAction);
 		add2StateInput(gameState, {{k::X}}, inputJump);
@@ -368,12 +368,14 @@ namespace ld
 			auto pPos(toPixels(manager.getEntities(LDGroup::Player)[0]->getComponent<LDCPhysics>().getPos()));
 			panVec += manager.getEntities(LDGroup::Player)[0]->getComponent<LDCPlayer>().isFacingLeft() ? Vec2f{-1.f, 0} : Vec2f{1.f, 0};
 			cClamp(panVec, -100.f, 100.f);
-			camera.move(-(camera.getCenter() - (pPos + panVec)) / 40.f);
+			camera.pan(-(camera.getCenter() - (pPos + panVec)) / 40.f);
 		}
 
 		if(manager.getEntityCount(LDGroup::Block) == 0) levelStatus.started = false;
 
 		if(mustChangeLevel) { mustChangeLevel = false; newGame(); }
+
+		camera.update(mFrameTime);
 	}
 	void LDGame::updateDebugText(float mFrameTime)
 	{
@@ -400,7 +402,7 @@ namespace ld
 
 	void LDGame::draw()
 	{
-		camera.apply();
+		camera.apply<int>();
 		manager.draw();
 		camera.unapply();
 		//render(debugText);
