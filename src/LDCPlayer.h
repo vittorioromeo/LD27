@@ -41,13 +41,13 @@ namespace ld
 			}
 			~LDCBlock() { onDestroy(); } // TODO: find a way to detect dead entities after LD27
 
-			inline void update(float mFrameTime) override
+			inline void update(float) override
 			{
 				text.setPosition(toPixels(body.getShape().getVertexNW<int>()) + ssvs::Vec2f{3, 3});
 
 				if(!cPhysics.isInAir())
 				{
-					body.setVelocityX(ssvu::getClampedMin(body.getVelocity().x * 0.9f, 0.f));
+					body.setVelocityX(body.getVelocity().x * 0.9f);
 					if(parent == nullptr) body.delGroupNoResolve(LDGroup::Player);
 				}
 
@@ -126,7 +126,7 @@ namespace ld
 
 				body.onPreUpdate += [&]{ jumpReady = false; };
 				body.onPostUpdate += [&]{ };
-				body.onDetection += [&](const ssvsc::DetectionInfo& mDI){ };
+				body.onDetection += [&](const ssvsc::DetectionInfo&){ };
 				body.onResolution += [&](const ssvsc::ResolutionInfo& mRI)
 				{
 					if(lastBlock == nullptr || &mRI.body != lastBlock || lastBlockTimer <= 0) return;

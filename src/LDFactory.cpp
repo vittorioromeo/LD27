@@ -148,7 +148,6 @@ namespace ld
 		body.onDetection += [this](const DetectionInfo& mDI)
 		{
 			if(!mDI.body.hasGroup(LDGroup::Player)) return;
-			auto& entity(*static_cast<Entity*>(mDI.userData));
 
 			if(manager.getEntityCount(LDGroup::Block) == 0)
 			{
