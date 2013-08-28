@@ -43,7 +43,7 @@ namespace ld
 
 			inline void update(float) override
 			{
-				text.setPosition(toPixels(body.getShape().getVertexNW<int>()) + ssvs::Vec2f{3, 3});
+				text.setPosition(toPixels(body.getShape().getVertexNW<int>()) + ssvs::Vec2f{4, 3});
 
 				if(!cPhysics.isInAir())
 				{
@@ -72,7 +72,7 @@ namespace ld
 				body.setVelocity(ssvs::getCClamped(newVel, -1000.f, 1000.f));
 				body.delGroup(LDGroup::BlockFloating);
 			}
-			inline void setOffset(ssvs::Vec2i mOffset) { offset = mOffset; }
+			inline void setOffset(const ssvs::Vec2i& mOffset) { offset = mOffset; }
 			inline bool hasParent() { return parent != nullptr; }
 			inline int getVal() { return val; }
 	};
@@ -135,7 +135,7 @@ namespace ld
 					mRI.noResolvePosition = mRI.noResolveVelocity = true;
 				};
 
-				cPhysics.onResolution += [&](ssvs::Vec2i mMinIntersection) { if(mMinIntersection.y < 0) jumpReady = true; };
+				cPhysics.onResolution += [&](const ssvs::Vec2i& mMinIntersection) { if(mMinIntersection.y < 0) jumpReady = true; };
 			}
 			void update(float mFrameTime) override
 			{

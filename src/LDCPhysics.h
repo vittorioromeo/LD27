@@ -28,7 +28,7 @@ namespace ld
 			ssvu::Delegate<void(sses::Entity&)> onDetection;
 			ssvu::Delegate<void(ssvs::Vec2i)> onResolution;
 
-			LDCPhysics(ssvsc::World& mWorld, bool mIsStatic, ssvs::Vec2i mPosition, ssvs::Vec2i mSize, bool mAffectedByGravity = true);
+			LDCPhysics(ssvsc::World& mWorld, bool mIsStatic, const ssvs::Vec2i& mPosition, const ssvs::Vec2i& mSize, bool mAffectedByGravity = true);
 			~LDCPhysics();
 
 			void init() override;
@@ -36,20 +36,20 @@ namespace ld
 
 			inline void setAffectedByGravity(bool mAffectedByGravity) { affectedByGravity = mAffectedByGravity; }
 
-			inline ssvsc::World& getWorld() const			{ return world; }
-			inline ssvsc::Body& getBody() const				{ return body; }
-			inline ssvs::Vec2i getPos() const				{ return body.getPosition(); }
-			inline ssvs::Vec2i getLastResolution() const	{ return lastResolution; }
-			inline bool isAffectedByGravity() const			{ return affectedByGravity; }
-			inline bool isCrushedLeft() const				{ return crushedLeft > crushedTolerance; }
-			inline bool isCrushedRight() const				{ return crushedRight > crushedTolerance; }
-			inline bool isCrushedTop() const				{ return crushedTop > crushedTolerance; }
-			inline bool isCrushedBottom() const				{ return crushedBottom > crushedTolerance; }
-			inline int getCrushedLeft() const				{ return crushedLeft; }
-			inline int getCrushedRight() const				{ return crushedRight; }
-			inline int getCrushedTop() const				{ return crushedTop; }
-			inline int getCrushedBottom() const				{ return crushedBottom; }
-			inline bool isInAir()							{ return body.getShape().getY() != body.getOldShape().getY(); }
+			inline ssvsc::World& getWorld() const				{ return world; }
+			inline ssvsc::Body& getBody() const					{ return body; }
+			inline const ssvs::Vec2i& getPos() const			{ return body.getPosition(); }
+			inline const ssvs::Vec2i& getLastResolution() const	{ return lastResolution; }
+			inline bool isAffectedByGravity() const				{ return affectedByGravity; }
+			inline bool isCrushedLeft() const					{ return crushedLeft > crushedTolerance; }
+			inline bool isCrushedRight() const					{ return crushedRight > crushedTolerance; }
+			inline bool isCrushedTop() const					{ return crushedTop > crushedTolerance; }
+			inline bool isCrushedBottom() const					{ return crushedBottom > crushedTolerance; }
+			inline int getCrushedLeft() const					{ return crushedLeft; }
+			inline int getCrushedRight() const					{ return crushedRight; }
+			inline int getCrushedTop() const					{ return crushedTop; }
+			inline int getCrushedBottom() const					{ return crushedBottom; }
+			inline bool isInAir()								{ return body.getShape().getY() != body.getOldShape().getY(); }
 	};
 }
 

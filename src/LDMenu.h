@@ -65,14 +65,14 @@ namespace ld
 		inline void draw() { camera.apply(); drawMenu(menu); camera.unapply(); render(creditsTxt); }
 
 		inline void render(sf::Drawable& mDrawable) { window.draw(mDrawable); }
-		inline ssvs::BitmapText& renderTextImpl(const std::string& mStr, ssvs::BitmapText& mText, ssvs::Vec2f mPosition)
+		inline ssvs::BitmapText& renderTextImpl(const std::string& mStr, ssvs::BitmapText& mText, const ssvs::Vec2f& mPosition)
 		{
 			if(mText.getString() != mStr) mText.setString(mStr);
 			mText.setPosition(mPosition); render(mText); return mText;
 		}
 		inline const sf::Color& getTextColor() const { return sf::Color::White; }
-		inline ssvs::BitmapText& renderText(const std::string& mStr, ssvs::BitmapText& mText, ssvs::Vec2f mPos)								{ mText.setColor(getTextColor()); return renderTextImpl(mStr, mText, mPos); }
-		inline ssvs::BitmapText& renderText(const std::string& mStr, ssvs::BitmapText& mText, ssvs::Vec2f mPos, const sf::Color& mColor)	{ mText.setColor(mColor); return renderTextImpl(mStr, mText, mPos); }
+		inline ssvs::BitmapText& renderText(const std::string& mStr, ssvs::BitmapText& mText, const ssvs::Vec2f& mPos)							{ mText.setColor(getTextColor()); return renderTextImpl(mStr, mText, mPos); }
+		inline ssvs::BitmapText& renderText(const std::string& mStr, ssvs::BitmapText& mText, const ssvs::Vec2f& mPos, const sf::Color& mColor)	{ mText.setColor(mColor); return renderTextImpl(mStr, mText, mPos); }
 
 		void drawMenu(const ssvms::Menu& mMenu)
 		{

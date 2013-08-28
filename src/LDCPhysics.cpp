@@ -14,7 +14,7 @@ using namespace ssvu;
 
 namespace ld
 {
-	LDCPhysics::LDCPhysics(World& mWorld, bool mIsStatic, Vec2i mPosition, Vec2i mSize, bool mAffectedByGravity)
+	LDCPhysics::LDCPhysics(World& mWorld, bool mIsStatic, const Vec2i& mPosition, const Vec2i& mSize, bool mAffectedByGravity)
 		: world(mWorld), body(world.create(mPosition, mSize, mIsStatic)), affectedByGravity{mAffectedByGravity} { }
 	LDCPhysics::~LDCPhysics() { body.destroy(); }
 

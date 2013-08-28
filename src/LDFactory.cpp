@@ -25,7 +25,7 @@ namespace ld
 {
 	LDFactory::LDFactory(LDAssets& mAssets, LDGame& mGame, Manager& mManager, World& mWorld) : assets(mAssets), game(mGame), manager(mManager), world(mWorld) { }
 
-	Entity& LDFactory::createWall(Vec2i mPos)
+	Entity& LDFactory::createWall(const Vec2i& mPos)
 	{
 		auto& result(manager.createEntity());
 		auto& cPhysics(result.createComponent<LDCPhysics>(world, true, mPos, Vec2i{3200, 3200}));
@@ -44,7 +44,7 @@ namespace ld
 
 		return result;
 	}
-	Entity& LDFactory::createBlock(Vec2i mPos, int mVal)
+	Entity& LDFactory::createBlock(const Vec2i& mPos, int mVal)
 	{
 		auto& result(manager.createEntity()); result.addGroup(LDGroup::Block);
 		auto& cPhysics(result.createComponent<LDCPhysics>(world, false, mPos, Vec2i{1600, 1600}));
@@ -74,7 +74,7 @@ namespace ld
 		return result;
 	}
 
-	Entity& LDFactory::createPlayer(Vec2i mPos)
+	Entity& LDFactory::createPlayer(const Vec2i& mPos)
 	{
 		auto& result(manager.createEntity()); result.addGroup(LDGroup::Player);
 		auto& cPhysics(result.createComponent<LDCPhysics>(world, false, mPos, Vec2i{800, 2700}));
@@ -96,7 +96,7 @@ namespace ld
 		return result;
 	}
 
-	Entity& LDFactory::createReceiver(Vec2i mPos, int mVal)
+	Entity& LDFactory::createReceiver(const Vec2i& mPos, int mVal)
 	{
 		auto& result(manager.createEntity());
 		auto& cPhysics(result.createComponent<LDCPhysics>(world, false, mPos, Vec2i{1600, 1600}));
@@ -134,7 +134,7 @@ namespace ld
 		return result;
 	}
 
-	Entity& LDFactory::createTele(Vec2i mPos)
+	Entity& LDFactory::createTele(const Vec2i& mPos)
 	{
 		auto& result(manager.createEntity());
 		auto& cPhysics(result.createComponent<LDCPhysics>(world, false, mPos, Vec2i{1600, 100}));

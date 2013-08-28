@@ -24,7 +24,7 @@ namespace ld
 		public:
 			ssvu::Delegate<void(sses::Entity&)> onDetection;
 
-			LDSensor(LDCPhysics& mParent, ssvs::Vec2i mSize) : parent(mParent), position(parent.getBody().getPosition()), sensor(parent.getWorld().createSensor(position, mSize))
+			LDSensor(LDCPhysics& mParent, const ssvs::Vec2i& mSize) : parent(mParent), position(parent.getBody().getPosition()), sensor(parent.getWorld().createSensor(position, mSize))
 			{
 				sensor.addGroup(LDGroup::Sensor);
 
@@ -38,7 +38,7 @@ namespace ld
 			}
 			~LDSensor() { sensor.destroy(); }
 
-			void setPosition(ssvs::Vec2i mPos) { position = mPos; }
+			void setPosition(const ssvs::Vec2i& mPos) { position = mPos; }
 
 			inline ssvsc::Sensor& getSensor()	{ return sensor; }
 			inline bool isActive() const		{ return active; }

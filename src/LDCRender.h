@@ -53,7 +53,7 @@ namespace ld
 			inline void setFlippedX(bool mFlippedX)				{ flippedX = mFlippedX; }
 			inline void setFlippedY(bool mFlippedY)				{ flippedY = mFlippedY; }
 			inline void setScaleWithBody(bool mScaleWithBody)	{ scaleWithBody = mScaleWithBody; }
-			inline void setOffset(ssvs::Vec2f mOffset)			{ offset = mOffset; }
+			inline void setOffset(const ssvs::Vec2f& mOffset)	{ offset = mOffset; }
 	};
 }
 

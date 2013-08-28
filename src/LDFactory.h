@@ -25,11 +25,11 @@ namespace ld
 		public:
 			LDFactory(LDAssets& mAssets, LDGame& mGame, sses::Manager& mManager, ssvsc::World& mWorld);
 
-			sses::Entity& createWall(ssvs::Vec2i mPos);
-			sses::Entity& createBlock(ssvs::Vec2i mPos, int mVal = -1);
-			sses::Entity& createPlayer(ssvs::Vec2i mPos);
-			sses::Entity& createReceiver(ssvs::Vec2i mPos, int mVal = -1);
-			sses::Entity& createTele(ssvs::Vec2i mPos);
+			sses::Entity& createWall(const ssvs::Vec2i& mPos);
+			sses::Entity& createBlock(const ssvs::Vec2i& mPos, int mVal = -1);
+			sses::Entity& createPlayer(const ssvs::Vec2i& mPos);
+			sses::Entity& createReceiver(const ssvs::Vec2i& mPos, int mVal = -1);
+			sses::Entity& createTele(const ssvs::Vec2i& mPos);
 	};
 }
 
