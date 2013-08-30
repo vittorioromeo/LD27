@@ -298,7 +298,7 @@ namespace ld
 		{
 			levelStatus.timer.resume();
 
-			if(levelStatus.timer(mFrameTime)) assets.playSound("blip.wav", SoundPlayer::Mode::Overlap, levelStatus.timer.getTicks() - 3.f);
+			if(levelStatus.timer.update(mFrameTime)) assets.playSound("blip.wav", SoundPlayer::Mode::Overlap, levelStatus.timer.getTicks() - 3.f);
 
 			if(levelStatus.timer.getTotalSecs() > 10.f)
 			{
@@ -331,13 +331,13 @@ namespace ld
 		// Message control
 		if(msgTimer.isEnabled() && msgText.getString().size() < currentMsg.size())
 		{
-			if(msgCharTimer(mFrameTime, 2.f)) msgText.setString(msgText.getString() + currentMsg[msgText.getString().size()]);
+			if(msgCharTimer.update(mFrameTime, 2.f)) msgText.setString(msgText.getString() + currentMsg[msgText.getString().size()]);
 		}
-		else if(msgTimer(mFrameTime)) msgTimer.stop();
+		else if(msgTimer.update(mFrameTime)) msgTimer.stop();
 
 		if(!msgTimer.isEnabled() && !msgText.getString().empty())
 		{
-			if(msgCharTimer(mFrameTime, 0.6f)) msgText.setString(msgText.getString().substr(0, msgText.getString().size() - 1));
+			if(msgCharTimer.update(mFrameTime, 0.6f)) msgText.setString(msgText.getString().substr(0, msgText.getString().size() - 1));
 		}
 
 		timelineManager.update(mFrameTime); // TimelineManager is from SSVUtils, it handles coroutine-like timeline objects
