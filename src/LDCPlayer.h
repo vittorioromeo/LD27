@@ -38,6 +38,28 @@ namespace ld
 					   (std::abs(body.getVelocity().y) > 400 && mRI.resolution.y != 0))
 						game.getAssets().playSound("bounce.wav");
 				};
+				body.onPreUpdate += [this]
+				{
+					//body.setVelocity(ssvs::getCClamped(body.getVelocity(), -800.f, 800.f));
+
+					if(!cPhysics.isInAir())
+					{
+						// Ground friction
+						body.setVelocityX(body.getVelocity().x * 0.9f);
+
+						// If velocity is very small, set it to 0
+						if(std::abs(body.getVelocity().x) < 100.f) body.setVelocityX(0.f);
+
+						if(parent == nullptr) body.delGroupNoResolve(LDGroup::Player);
+					}
+				};
+
+				body.onPostUpdate += [this]
+				{
+					// Global min/max velocity
+					//body.setVelocity(ssvs::getCClamped(body.getVelocity(), -800.f, 800.f));
+				};
+
 			}
 			~LDCBlock() { onDestroy(); } // TODO: find a way to detect dead entities after LD27
 
@@ -45,16 +67,15 @@ namespace ld
 			{
 				text.setPosition(toPixels(body.getShape().getVertexNW<int>()) + ssvs::Vec2f{4, 3});
 
-				if(!cPhysics.isInAir())
+				if(parent != nullptr)
 				{
-					body.setVelocityX(body.getVelocity().x * 0.9f);
-					if(parent == nullptr) body.delGroupNoResolve(LDGroup::Player);
+					ssvs::Vec2f v{(parent->getBody().getPosition() + offset) - body.getPosition()};
+					if(ssvs::getDistanceEuclidean(parent->getBody().getPosition(), body.getPosition()) > 1700) dropped();
+					else body.setVelocity(v);
 				}
 
-				if(parent == nullptr) return;
-				ssvs::Vec2f v{(parent->getBody().getPosition() + offset) - body.getPosition()};
-				if(ssvs::getDistanceEuclidean(parent->getBody().getPosition(), body.getPosition()) > 1700) dropped();
-				else body.setVelocity(v);
+
+
 			}
 			inline void draw() override { if(val > -1) game.render(text); }
 
@@ -114,6 +135,7 @@ namespace ld
 				blockSensor.onDetection += [&](sses::Entity& mE)
 				{
 					if(hasBlock() || !game.getIAction()) return;
+					if(!mE.getComponent<LDCPhysics>().getBody().hasGroup(LDGroup::CanBePicked)) return;
 					auto& block(mE.getComponent<LDCBlock>());
 					block.pickedUp(cPhysics);
 					if(currentBlock != nullptr) currentBlock->onDestroy.clear();
@@ -129,6 +151,9 @@ namespace ld
 				body.onDetection += [&](const ssvsc::DetectionInfo&){ };
 				body.onResolution += [&](const ssvsc::ResolutionInfo& mRI)
 				{
+					// When you get pushed in a floor/ceiling so hard that a fourth of your height is inside, you're considered crushed
+					//if(std::abs(mRI.resolution.y) > body.getHeight() / 12.f) { getEntity().destroy(); return; }
+
 					if(lastBlock == nullptr || &mRI.body != lastBlock || lastBlockTimer <= 0) return;
 
 					// Ignore resolution against last picked block for some time

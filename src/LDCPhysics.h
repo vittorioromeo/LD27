@@ -49,7 +49,7 @@ namespace ld
 			inline int getCrushedRight() const					{ return crushedRight; }
 			inline int getCrushedTop() const					{ return crushedTop; }
 			inline int getCrushedBottom() const					{ return crushedBottom; }
-			inline bool isInAir()								{ return body.getShape().getY() != body.getOldShape().getY(); }
+			inline bool isInAir()								{ return std::abs(body.getShape().getY() - body.getOldShape().getY()) > 10.f; }
 	};
 }
 

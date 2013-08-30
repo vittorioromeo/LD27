@@ -44,22 +44,31 @@ namespace ld
 
 		return result;
 	}
-	Entity& LDFactory::createBlock(const Vec2i& mPos, int mVal)
+	Entity& LDFactory::createBlockBase(const Vec2i& mPos, const Vec2i& mSize, int mVal)
 	{
 		auto& result(manager.createEntity()); result.addGroup(LDGroup::Block);
-		auto& cPhysics(result.createComponent<LDCPhysics>(world, false, mPos, Vec2i{1600, 1600}));
-		auto& cRender(result.createComponent<LDCRender>(game, cPhysics.getBody()));
+		auto& cPhysics(result.createComponent<LDCPhysics>(world, false, mPos, mSize));
+		result.createComponent<LDCRender>(game, cPhysics.getBody());
 		result.createComponent<LDCBlock>(mVal, game, cPhysics);
 
 		Body& body(cPhysics.getBody());
 		body.addGroup(LDGroup::Solid);
 		body.addGroup(LDGroup::Block);
-		body.addGroup(LDGroup::CanBePicked);
 		body.addGroupToCheck(LDGroup::Solid);
-		//body.addGroupNoResolve(LDGroup::Player);
 		body.addGroupNoResolve(LDGroup::BlockFloating);
-		body.setRestitutionX(0.f);
-		body.setRestitutionY(0.f);
+		return result;
+	}
+	Entity& LDFactory::createBlock(const Vec2i& mPos, int mVal)
+	{
+		auto& result(createBlockBase(mPos, {1600, 1600}, mVal));
+		auto& cPhysics(result.getComponent<LDCPhysics>());
+		auto& cRender(result.getComponent<LDCRender>());
+		Body& body(cPhysics.getBody());
+
+		body.addGroup(LDGroup::CanBePicked);
+		body.setRestitutionX(0.3f);
+		body.setRestitutionY(0.3f);
+		body.setMass(1.f);
 
 		Sprite s{assets.get<Texture>("worldTiles.png")};
 		s.setTextureRect(assets.tilesetWorld[{0, 0}]);
@@ -71,6 +80,59 @@ namespace ld
 		}
 
 		cRender.addSprite(s);
+
+		return result;
+	}
+	Entity& LDFactory::createBlockBig(const Vec2i& mPos, int mVal)
+	{
+		auto& result(createBlockBase(mPos, {2800, 2800}, mVal));
+		auto& cPhysics(result.getComponent<LDCPhysics>());
+		auto& cRender(result.getComponent<LDCRender>());
+		Body& body(cPhysics.getBody());
+
+		body.setRestitutionX(0.3f);
+		body.setRestitutionY(0.3f);
+		body.setMass(10.f);
+
+		body.onPreUpdate += [&body]{ lo << body.getVelocity().x << " ; " << body.getVelocity().y << endl; };
+		body.onPostUpdate += [&body]{ lo << body.getVelocity().x << " ; " << body.getVelocity().y << endl; };
+
+		Sprite s{assets.get<Texture>("worldTiles.png")};
+		s.setTextureRect(assets.tilesetWorld[{2, 0}]);
+
+		if(mVal > -1)
+		{
+			if(colorMap.find(mVal) == colorMap.end()) colorMap[mVal] = Color(getRnd(0, 255), getRnd(0, 255), getRnd(0, 255), 255);
+			s.setColor(colorMap[mVal]);
+		}
+
+		cRender.addSprite(s);
+
+		return result;
+	}
+	Entity& LDFactory::createBlockBall(const Vec2i& mPos, int mVal)
+	{
+		auto& result(createBlockBase(mPos, {1000, 1000}, mVal));
+		auto& cPhysics(result.getComponent<LDCPhysics>());
+		auto& cRender(result.getComponent<LDCRender>());
+		Body& body(cPhysics.getBody());
+
+		body.addGroup(LDGroup::CanBePicked);
+		body.setRestitutionX(0.8f);
+		body.setRestitutionY(0.8f);
+		body.setMass(0.6f);
+
+		Sprite s{assets.get<Texture>("worldTiles.png")};
+		s.setTextureRect(assets.tilesetWorld[{7, 0}]);
+
+		if(mVal > -1)
+		{
+			if(colorMap.find(mVal) == colorMap.end()) colorMap[mVal] = Color(getRnd(0, 255), getRnd(0, 255), getRnd(0, 255), 255);
+			s.setColor(colorMap[mVal]);
+		}
+
+		cRender.addSprite(s);
+
 		return result;
 	}
 
@@ -87,6 +149,9 @@ namespace ld
 		body.addGroup(LDGroup::Player);
 		body.addGroupToCheck(LDGroup::Solid);
 		body.addGroupNoResolve(LDGroup::BlockFloating);
+		body.setRestitutionX(0.f);
+		body.setRestitutionY(0.f);
+		body.setMass(1.f);
 
 		cRender.addSprite(Sprite{assets.get<Texture>("charTiles.png")});
 		cRender.addSprite(Sprite{assets.get<Texture>("charTiles.png")});

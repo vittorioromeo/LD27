@@ -22,11 +22,15 @@ namespace ld
 			sses::Manager& manager;
 			ssvsc::World& world;
 
+			sses::Entity& createBlockBase(const ssvs::Vec2i& mPos, const ssvs::Vec2i& mSize, int mVal = -1);
+
 		public:
 			LDFactory(LDAssets& mAssets, LDGame& mGame, sses::Manager& mManager, ssvsc::World& mWorld);
 
 			sses::Entity& createWall(const ssvs::Vec2i& mPos);
 			sses::Entity& createBlock(const ssvs::Vec2i& mPos, int mVal = -1);
+			sses::Entity& createBlockBig(const ssvs::Vec2i& mPos, int mVal = -1);
+			sses::Entity& createBlockBall(const ssvs::Vec2i& mPos, int mVal = -1);
 			sses::Entity& createPlayer(const ssvs::Vec2i& mPos);
 			sses::Entity& createReceiver(const ssvs::Vec2i& mPos, int mVal = -1);
 			sses::Entity& createTele(const ssvs::Vec2i& mPos);
