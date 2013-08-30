@@ -58,8 +58,8 @@ namespace ld
 		body.addGroupToCheck(LDGroup::Solid);
 		//body.addGroupNoResolve(LDGroup::Player);
 		body.addGroupNoResolve(LDGroup::BlockFloating);
-		body.setRestitutionX(-0.2f);
-		body.setRestitutionY(-0.2f);
+		body.setRestitutionX(0.f);
+		body.setRestitutionY(0.f);
 
 		Sprite s{assets.get<Texture>("worldTiles.png")};
 		s.setTextureRect(assets.tilesetWorld[{0, 0}]);

@@ -22,7 +22,7 @@ namespace ld
 	int LDGame::levelCount{6};
 
 	LDGame::LDGame(GameWindow& mGameWindow, LDAssets& mAssets) : gameWindow(mGameWindow), assets(mAssets), factory{assets, *this, manager, world},
-		world(createResolver<Retro>(), createSpatial<Grid>(1000, 1000, 3000, 500)),  debugText{assets.get<BitmapFont>("limeStroked")}, msgText{assets.get<BitmapFont>("limeStroked")},
+		world(createResolver<Impulse>(), createSpatial<HashGrid>(1000, 1000, 3000, 500)),  debugText{assets.get<BitmapFont>("limeStroked")}, msgText{assets.get<BitmapFont>("limeStroked")},
 		timerText{assets.get<BitmapFont>("limeStroked")}
 	{
 		// Let's initialize stuff from my game framework
@@ -67,15 +67,10 @@ namespace ld
 		gameState.addInput({{k::Num6}}, [&](float){ factory.createReceiver(getMousePosition()); }, t::Once);
 	}
 
-	void LDGame::start10Secs() { if(!levelStatus.started) { levelStatus.started = true; refresh10Secs(); } }
-	void LDGame::refresh10Secs() { levelStatus.timeLeft = 10.f; levelStatus.secondTime = 1.f; }
+	void LDGame::start10Secs()		{ levelStatus.started = true; }
+	void LDGame::refresh10Secs()	{ levelStatus.timer.resetAll(); }
 
-	void LDGame::showMessage(const string& mMsg, float mDuration, const Color& mColor)
-	{
-		currentMsgDuration = mDuration; currentMsg = "> " + mMsg;
-		msgText.setString(""); msgDone = false;
-		msgText.setColor(mColor);
-	}
+	void LDGame::showMessage(const string& mMsg, float mDuration, const Color& mColor) { msgTimer.restart(mDuration); currentMsg = "> " + mMsg; msgText.setString(""); msgText.setColor(mColor); }
 
 	void LDGame::newGame()
 	{
@@ -83,6 +78,8 @@ namespace ld
 		manager.clear();
 		timelineManager.clear();
 		levelStatus = LDLevelStatus{};
+		msgCharTimer.resetAll();
+		msgTimer.resetAll();
 
 		// Level loading
 		switch(level)
@@ -132,7 +129,7 @@ namespace ld
 		const auto& pCrateBody(pCrate.getComponent<LDCPhysics>().getBody());
 		const auto& pReceiverBody(pReceiver.getComponent<LDCPhysics>().getBody());
 
-		auto intro([=, &pBody]{ return pBody.getPosition().x < pCrateX - 5000 && (!msgDone || !msgText.getString().empty()); });
+		auto intro([=, &pBody]{ return pBody.getPosition().x < pCrateX - 5000 && (msgTimer.isEnabled() || !msgText.getString().empty()); });
 		auto crateNotPlaced([=, &pCrateBody, &pReceiverBody]{ return getDistanceEuclidean(pCrateBody.getPosition(), pReceiverBody.getPosition()) > 3200; });
 
 		auto& t(timelineManager.create());
@@ -159,7 +156,7 @@ namespace ld
 		auto& player(factory.createPlayer(put(1, -1)));
 		const auto& pBody(player.getComponent<LDCPhysics>().getBody());
 
-		auto intro([=, &pBody]{ return !levelStatus.started && (!msgDone || !msgText.getString().empty()); });
+		auto intro([=, &pBody]{ return !levelStatus.started && (msgTimer.isEnabled() || !msgText.getString().empty()); });
 
 		pW(9, 1);	pB(10, 1);																pB(16, 1);
 		pW(9, 2);	pW(10, 2);										pW(14, 2);				pB(16, 2);
@@ -181,7 +178,7 @@ namespace ld
 		auto& player(factory.createPlayer(put(1, -1)));
 		const auto& pBody(player.getComponent<LDCPhysics>().getBody());
 
-		auto intro([=, &pBody]{ return (!msgDone || !msgText.getString().empty()); });
+		auto intro([=, &pBody]{ return (msgTimer.isEnabled() || !msgText.getString().empty()); });
 
 		pB(9, -3);
 		pB(9, -2);
@@ -206,7 +203,7 @@ namespace ld
 		auto& player(factory.createPlayer(put(1, -1)));
 		const auto& pBody(player.getComponent<LDCPhysics>().getBody());
 
-		auto intro([=, &pBody]{ return (!msgDone || !msgText.getString().empty()); });
+		auto intro([=, &pBody]{ return (msgTimer.isEnabled() || !msgText.getString().empty()); });
 
 														pW(13, -1);
 											pR(12,0,0);	pW(13, 0);	pR(14,0,1);
@@ -230,7 +227,7 @@ namespace ld
 		auto& player(factory.createPlayer(put(1, -1)));
 		const auto& pBody(player.getComponent<LDCPhysics>().getBody());
 
-		auto intro([=, &pBody]{ return (!msgDone || !msgText.getString().empty()); });
+		auto intro([=, &pBody]{ return (msgTimer.isEnabled() || !msgText.getString().empty()); });
 
 											pW(11, -2);
 											pW(11, -1);				pB(13,-1,0);
@@ -254,7 +251,7 @@ namespace ld
 		auto& player(factory.createPlayer(put(1, -1)));
 		const auto& pBody(player.getComponent<LDCPhysics>().getBody());
 
-		auto intro([=, &pBody]{ return (!msgDone || !msgText.getString().empty()); });
+		auto intro([=, &pBody]{ return (msgTimer.isEnabled() || !msgText.getString().empty()); });
 
 											pW(11, -2);	pW(12, -2);	pW(13, -2);
 														pR(12,-1,0);
@@ -281,7 +278,7 @@ namespace ld
 		auto& player(factory.createPlayer(put(1, -1)));
 		const auto& pBody(player.getComponent<LDCPhysics>().getBody());
 
-		auto intro([=, &pBody]{ return (!msgDone || !msgText.getString().empty()); });											pW(18, -1);
+		auto intro([=, &pBody]{ return (msgTimer.isEnabled() || !msgText.getString().empty()); });											pW(18, -1);
 																																pW(18, 0);
 																	pW(13, 1);										pB(17,2,1);	pW(18, 1);
 																													pW(17, 3);	pW(18, 2);
@@ -297,34 +294,34 @@ namespace ld
 
 	void LDGame::update(float mFrameTime)
 	{
-		// 10 SECONDS!
 		if(levelStatus.started && !levelStatus.tutorial)
 		{
-			if(levelStatus.secondTime >= 0.f) levelStatus.secondTime -= mFrameTime / 60.f;
-			else if(levelStatus.timeLeft > 0.f)
-			{
-				levelStatus.secondTime = 1.f;
-				assets.playSound("blip.wav", SoundPlayer::Mode::Overlap, levelStatus.timeLeft - 3.f);
-			}
+			levelStatus.timer.resume();
 
-			if(levelStatus.timeLeft >= 0.f)
+			if(levelStatus.timer(mFrameTime)) assets.playSound("blip.wav", SoundPlayer::Mode::Overlap, levelStatus.timer.getTicks() - 3.f);
+
+			if(levelStatus.timer.getTotalSecs() > 10.f)
 			{
-				levelStatus.timeLeft -= mFrameTime / 60.f;
+				if(manager.getEntityCount(LDGroup::Player) > 0)
+				{
+					manager.getEntities(LDGroup::Player)[0]->destroy();
+					assets.playSound("death.wav");
+				}
+
+				timerText.setString("too slow");
+			}
+			else if(levelStatus.timer.getTotalSecs() < 10)
+			{
 				timerText.setColor(Color::Red);
-				timerText.setString(toStr(levelStatus.timeLeft));
+				timerText.setString(toStr(10.f - levelStatus.timer.getTotalSecs()));
 			}
-			else if(manager.getEntityCount(LDGroup::Player) > 0)
-			{
-				manager.getEntities(LDGroup::Player)[0]->destroy();
-				assets.playSound("death.wav");
-			}
-			else timerText.setString("too slow");
 
-			auto grow = static_cast<int>(10.f - levelStatus.timeLeft) * 0.4f;
+			auto grow = levelStatus.timer.getTotalSecs() * 0.4f;
 			timerText.setScale(4.f + grow, 4.f + grow);
 		}
 		else
 		{
+			levelStatus.timer.pause();
 			timerText.setColor(Color::Blue);
 			timerText.setString(levelStatus.tutorial ? "tutorial" : "safe");
 			timerText.setScale(4.f, 4.f);
@@ -332,29 +329,15 @@ namespace ld
 		timerText.setPosition({0.f, gameWindow.getHeight() - timerText.getGlobalBounds().height});
 
 		// Message control
-		if(!msgDone && msgText.getString().size() < currentMsg.size())
+		if(msgTimer.isEnabled() && msgText.getString().size() < currentMsg.size())
 		{
-			if(msgCharTime <= 0.f)
-			{
-				msgText.setString(msgText.getString() + currentMsg[msgText.getString().size()]);
-				msgCharTime = 2.2f;
-			}
-			else msgCharTime -= mFrameTime;
+			if(msgCharTimer(mFrameTime, 2.f)) msgText.setString(msgText.getString() + currentMsg[msgText.getString().size()]);
 		}
-		else if(currentMsgDuration > 0.f)
+		else if(msgTimer(mFrameTime)) msgTimer.stop();
+
+		if(!msgTimer.isEnabled() && !msgText.getString().empty())
 		{
-			currentMsgDuration -= mFrameTime;
-			clampMin(currentMsgDuration, 0.f);
-		}
-		else if(currentMsgDuration != -1) msgDone = true;
-		if(msgDone && !msgText.getString().empty())
-		{
-			if(msgCharTime <= 0.f)
-			{
-				msgText.setString(msgText.getString().substr(0, msgText.getString().size() - 1));
-				msgCharTime = 0.7f;
-			}
-			else msgCharTime -= mFrameTime;
+			if(msgCharTimer(mFrameTime, 0.6f)) msgText.setString(msgText.getString().substr(0, msgText.getString().size() - 1));
 		}
 
 		timelineManager.update(mFrameTime); // TimelineManager is from SSVUtils, it handles coroutine-like timeline objects

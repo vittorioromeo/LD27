@@ -18,7 +18,8 @@ namespace ld
 	{
 		std::string title{"unnamed level"};
 		bool tutorial{false}, started{false};
-		float timeLeft{0.f}, secondTime{0.f};
+		ssvu::Ticker timer{60.f};
+
 	};
 
 	class LDGame
@@ -38,9 +39,7 @@ namespace ld
 
 			ssvs::BitmapText msgText;
 			std::string currentMsg;
-			float currentMsgDuration{0.f};
-			float msgCharTime{0.f};
-			bool msgDone{false};
+			ssvu::Ticker msgCharTimer{2.f}, msgTimer{0.f, false};
 
 			ssvs::BitmapText timerText;
 			ssvs::Vec2f panVec;
@@ -84,7 +83,7 @@ namespace ld
 			void draw();
 			inline void render(const sf::Drawable& mDrawable) { gameWindow.draw(mDrawable); }
 
-			inline ssvs::Vec2i getMousePosition()		{ return toCoords(camera.getMousePosition()); }
+			inline ssvs::Vec2i getMousePosition() const	{ return toCoords(camera.getMousePosition()); }
 			inline ssvs::GameWindow& getGameWindow()	{ return gameWindow; }
 			inline LDAssets& getAssets()				{ return assets; }
 			inline LDFactory& getFactory()				{ return factory; }
@@ -92,10 +91,10 @@ namespace ld
 			inline ssvsc::World& getWorld()				{ return world; }
 			inline sses::Manager& getManager()			{ return manager; }
 
-			inline bool getIAction()					{ return inputAction; }
-			inline bool getIJump()						{ return inputJump; }
-			inline int getIX()							{ return inputX; }
-			inline int getIY()							{ return inputY; }
+			inline bool getIAction() const				{ return inputAction; }
+			inline bool getIJump() const				{ return inputJump; }
+			inline int getIX() const					{ return inputX; }
+			inline int getIY() const					{ return inputY; }
 	};
 }
 
