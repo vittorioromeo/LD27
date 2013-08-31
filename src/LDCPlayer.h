@@ -30,7 +30,7 @@ namespace ld
 				text{game.getAssets().get<ssvs::BitmapFont>("limeStroked"), ssvu::toStr(val)}
 			{
 				text.setTracking(-3);
-				body.onResolution += [&](const ssvsc::ResolutionInfo& mRI)
+				body.onResolution += [this](const ssvsc::ResolutionInfo& mRI)
 				{
 					if(body.hasGroup(LDGroup::BlockFloating)) return;
 
@@ -48,7 +48,7 @@ namespace ld
 						body.setVelocityX(body.getVelocity().x * 0.9f);
 
 						// If velocity is very small, set it to 0
-						if(std::abs(body.getVelocity().x) < 100.f) body.setVelocityX(0.f);
+						if(std::abs(body.getVelocity().x) < 50.f) body.setVelocityX(0.f);
 
 						if(parent == nullptr) body.delGroupNoResolve(LDGroup::Player);
 					}
@@ -132,7 +132,7 @@ namespace ld
 			{
 				blockSensor.getSensor().addGroupToCheck(LDGroup::Block);
 
-				blockSensor.onDetection += [&](sses::Entity& mE)
+				blockSensor.onDetection += [this](sses::Entity& mE)
 				{
 					if(hasBlock() || !game.getIAction()) return;
 					if(!mE.getComponent<LDCPhysics>().getBody().hasGroup(LDGroup::CanBePicked)) return;
@@ -140,16 +140,16 @@ namespace ld
 					block.pickedUp(cPhysics);
 					if(currentBlock != nullptr) currentBlock->onDestroy.clear();
 					currentBlock = &block;
-					currentBlock->onDestroy += [&]{ currentBlock = nullptr; };
+					currentBlock->onDestroy += [this]{ currentBlock = nullptr; };
 					lastBlock = &mE.getComponent<LDCPhysics>().getBody();
 
 					game.getAssets().playSound("pick.wav", ssvs::SoundPlayer::Mode::Abort);
 				};
 
-				body.onPreUpdate += [&]{ jumpReady = false; };
-				body.onPostUpdate += [&]{ };
-				body.onDetection += [&](const ssvsc::DetectionInfo&){ };
-				body.onResolution += [&](const ssvsc::ResolutionInfo& mRI)
+				body.onPreUpdate += [this]{ jumpReady = false; };
+				body.onPostUpdate += [this]{ };
+				body.onDetection += [this](const ssvsc::DetectionInfo&){ };
+				body.onResolution += [this](const ssvsc::ResolutionInfo& mRI)
 				{
 					// When you get pushed in a floor/ceiling so hard that a fourth of your height is inside, you're considered crushed
 					//if(std::abs(mRI.resolution.y) > body.getHeight() / 12.f) { getEntity().destroy(); return; }
@@ -160,7 +160,7 @@ namespace ld
 					mRI.noResolvePosition = mRI.noResolveVelocity = true;
 				};
 
-				cPhysics.onResolution += [&](const ssvs::Vec2i& mMinIntersection) { if(mMinIntersection.y < 0) jumpReady = true; };
+				cPhysics.onResolution += [this](const ssvs::Vec2i& mMinIntersection) { if(mMinIntersection.y < 0) jumpReady = true; };
 			}
 			void update(float mFrameTime) override
 			{

@@ -42,7 +42,7 @@ namespace ld
 		using b = Mouse::Button;
 		using t = Input::Trigger::Type;
 
-		gameState.addInput({{k::Escape}}, [&](float){ assets.musicPlayer.stop(); gameWindow.setGameState(menuGame->gameState); });
+		gameState.addInput({{k::Escape}}, [this](float){ assets.musicPlayer.stop(); gameWindow.setGameState(menuGame->gameState); });
 
 		gameState.addInput({{k::A}}, [=](float){ camera.pan(-10, 0); });
 		gameState.addInput({{k::D}}, [=](float){ camera.pan(10, 0); });
@@ -57,16 +57,16 @@ namespace ld
 		add3StateInput(gameState, {{k::Left}}, {{k::Right}}, inputX);
 		add3StateInput(gameState, {{k::Up}}, {{k::Down}}, inputY);
 
-		gameState.addInput({{k::R}}, [&](float){ newGame(); }, t::Once);
+		gameState.addInput({{k::R}}, [this](float){ newGame(); }, t::Once);
 
-		gameState.addInput({{k::Num1}}, [&](float){ factory.createWall(getMousePosition()); }, t::Once);
-		gameState.addInput({{k::Num2}}, [&](float){ factory.createBlock(getMousePosition(), getRnd(0, 10)); }, t::Once);
-		gameState.addInput({{k::Num3}}, [&](float){ factory.createPlayer(getMousePosition()); }, t::Once);
-		gameState.addInput({{k::Num4}}, [&](float){ factory.createBlock(getMousePosition()); }, t::Once);
-		gameState.addInput({{k::Num5}}, [&](float){ factory.createReceiver(getMousePosition(), getRnd(0, 10)); }, t::Once);
-		gameState.addInput({{k::Num6}}, [&](float){ factory.createReceiver(getMousePosition()); }, t::Once);
-		gameState.addInput({{k::Num7}}, [&](float){ factory.createBlockBig(getMousePosition()); }, t::Once);
-		gameState.addInput({{k::Num8}}, [&](float){ factory.createBlockBall(getMousePosition()); }, t::Once);
+		gameState.addInput({{k::Num1}}, [this](float){ factory.createWall(getMousePosition()); }, t::Once);
+		gameState.addInput({{k::Num2}}, [this](float){ factory.createBlock(getMousePosition(), getRnd(0, 10)); }, t::Once);
+		gameState.addInput({{k::Num3}}, [this](float){ factory.createPlayer(getMousePosition()); }, t::Once);
+		gameState.addInput({{k::Num4}}, [this](float){ factory.createBlock(getMousePosition()); }, t::Once);
+		gameState.addInput({{k::Num5}}, [this](float){ factory.createReceiver(getMousePosition(), getRnd(0, 10)); }, t::Once);
+		gameState.addInput({{k::Num6}}, [this](float){ factory.createReceiver(getMousePosition()); }, t::Once);
+		gameState.addInput({{k::Num7}}, [this](float){ factory.createBlockBig(getMousePosition()); }, t::Once);
+		gameState.addInput({{k::Num8}}, [this](float){ factory.createBlockBall(getMousePosition()); }, t::Once);
 	}
 
 	void LDGame::start10Secs()		{ levelStatus.started = true; }

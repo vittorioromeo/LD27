@@ -32,33 +32,33 @@ namespace ld
 			creditsTxt.setString("entry for ludum dare #27\ncreated by vittorio romeo\nhttp://vittorioromeo.info\n\nmove with arrow keys\nkeep 'Z' pressed to grab blocks\npress 'X' to jump\nuse 'W/S/A/D' to pan camera\nuse 'Q/E' to zoom\npress 'R' to restart the level");
 			creditsTxt.setPosition({window.getWidth() - creditsTxt.getGlobalBounds().width, window.getHeight() - creditsTxt.getGlobalBounds().height});
 
-			gameState.onUpdate += [&](float mFrameTime){ update(mFrameTime); };
-			gameState.onDraw += [&]{ draw(); };
+			gameState.onUpdate += [this](float mFrameTime){ update(mFrameTime); };
+			gameState.onDraw += [this]{ draw(); };
 
 			using k = sf::Keyboard::Key;
 			using b = sf::Mouse::Button;
 			using t = ssvs::Input::Trigger::Type;
-			gameState.addInput({{k::Up}},					[&](float){ assets.playSound("blip.wav"); menu.previous(); }, t::Once);
-			gameState.addInput({{k::Down}},					[&](float){ assets.playSound("blip.wav"); menu.next(); }, t::Once);
-			gameState.addInput({{k::Left}},					[&](float){ assets.playSound("blip.wav"); menu.decrease(); }, t::Once);
-			gameState.addInput({{k::Right}},				[&](float){ assets.playSound("blip.wav"); menu.increase(); }, t::Once);
-			gameState.addInput({{k::Return}, {k::Space}},	[&](float){ assets.playSound("blip.wav"); menu.exec(); }, t::Once);
+			gameState.addInput({{k::Up}},					[this](float){ assets.playSound("blip.wav"); menu.previous(); }, t::Once);
+			gameState.addInput({{k::Down}},					[this](float){ assets.playSound("blip.wav"); menu.next(); }, t::Once);
+			gameState.addInput({{k::Left}},					[this](float){ assets.playSound("blip.wav"); menu.decrease(); }, t::Once);
+			gameState.addInput({{k::Right}},				[this](float){ assets.playSound("blip.wav"); menu.increase(); }, t::Once);
+			gameState.addInput({{k::Return}, {k::Space}},	[this](float){ assets.playSound("blip.wav"); menu.exec(); }, t::Once);
 
 			namespace i = ssvms::Items;
 			auto& main = menu.createCategory("10corp");
-			main.create<i::Single>("play", [&]
+			main.create<i::Single>("play", [this]
 			{
 				game.setLevel(level); game.newGame(); window.setGameState(game.getGameState());
 				assets.playMusic("mus.ogg");
 			});
-			main.create<i::Slider>("starting level", [&]{ return level; }, [&](int l){ level = l; }, 0, LDGame::levelCount, 1);
+			main.create<i::Slider>("starting level", [this]{ return level; }, [this](int l){ level = l; }, 0, LDGame::levelCount, 1);
 
 			main.create<i::Toggle>("sound", LDConfig::get().soundEnabled);
-			main.create<i::Slider>("sound volume", [&]{ return assets.soundPlayer.getVolume(); }, [&](int v){ assets.soundPlayer.setVolume(v); }, 0, 100, 10) | [&]{ return LDConfig::get().soundEnabled; };
+			main.create<i::Slider>("sound volume", [this]{ return assets.soundPlayer.getVolume(); }, [this](int v){ assets.soundPlayer.setVolume(v); }, 0, 100, 10) | [this]{ return LDConfig::get().soundEnabled; };
 			main.create<i::Toggle>("music", LDConfig::get().musicEnabled);
-			main.create<i::Slider>("music volume", [&]{ return assets.musicPlayer.getVolume(); }, [&](int v){ assets.musicPlayer.setVolume(v); }, 0, 100, 10) | [&]{ return LDConfig::get().musicEnabled; };
+			main.create<i::Slider>("music volume", [this]{ return assets.musicPlayer.getVolume(); }, [this](int v){ assets.musicPlayer.setVolume(v); }, 0, 100, 10) | [this]{ return LDConfig::get().musicEnabled; };
 
-			main.create<i::Single>("exit", [&]{ window.stop(); });
+			main.create<i::Single>("exit", [this]{ window.stop(); });
 		}
 
 		inline void update(float mFrameTime) { camera.update(mFrameTime); menu.update(); }

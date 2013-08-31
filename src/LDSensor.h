@@ -28,8 +28,8 @@ namespace ld
 			{
 				sensor.addGroup(LDGroup::Sensor);
 
-				sensor.onPreUpdate += [&]{ active = false; sensor.setPosition(position); };
-				sensor.onDetection += [&](const ssvsc::DetectionInfo& mDI)
+				sensor.onPreUpdate += [this]{ active = false; sensor.setPosition(position); };
+				sensor.onDetection += [this](const ssvsc::DetectionInfo& mDI)
 				{
 					if(mDI.userData == nullptr) return;
 					auto& entity(*static_cast<sses::Entity*>(mDI.userData));

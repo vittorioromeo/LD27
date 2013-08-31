@@ -22,13 +22,13 @@ namespace ld
 	{
 		body.setUserData(&getEntity());
 
-		body.onDetection += [&](const DetectionInfo& mDetectionInfo)
+		body.onDetection += [this](const DetectionInfo& mDetectionInfo)
 		{
 			if(mDetectionInfo.userData == nullptr) return;
 			Entity* entity(static_cast<Entity*>(mDetectionInfo.userData));
 			onDetection(*entity);
 		};
-		body.onResolution += [&](const ResolutionInfo& mResolutionInfo)
+		body.onResolution += [this](const ResolutionInfo& mResolutionInfo)
 		{
 			onResolution(mResolutionInfo.resolution);
 
@@ -38,7 +38,7 @@ namespace ld
 			if(mResolutionInfo.resolution.y > 0) crushedTop = crushedMax;
 			else if(mResolutionInfo.resolution.y < 0) crushedBottom = crushedMax;
 		};
-		body.onPreUpdate += [&]
+		body.onPreUpdate += [this]
 		{
 			lastResolution = {0, 0};
 			if(crushedLeft > 0) --crushedLeft;
