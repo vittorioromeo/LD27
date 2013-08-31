@@ -18,7 +18,7 @@ namespace ld
 	{
 		std::string title{"unnamed level"};
 		bool tutorial{false}, started{false};
-		ssvu::Ticker timer{60.f};
+		ssvs::Ticker timer{60.f};
 
 	};
 
@@ -39,7 +39,7 @@ namespace ld
 
 			ssvs::BitmapText msgText;
 			std::string currentMsg;
-			ssvu::Ticker msgCharTimer{2.f}, msgTimer{0.f, false};
+			ssvs::Ticker msgCharTimer{2.f}, msgTimer{0.f, false};
 
 			ssvs::BitmapText timerText;
 			ssvs::Vec2f panVec;
