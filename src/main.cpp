@@ -40,3 +40,6 @@ int main()
 
 	return 0;
 }
+
+// TODO: addressanitizer reports crash
+// TODO: stack big crate on top of small crate - you can now push big crate???

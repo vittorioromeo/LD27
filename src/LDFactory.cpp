@@ -92,10 +92,7 @@ namespace ld
 
 		body.setRestitutionX(0.3f);
 		body.setRestitutionY(0.3f);
-		body.setMass(10.f);
-
-		body.onPreUpdate += [&body]{ lo << body.getVelocity().x << " ; " << body.getVelocity().y << endl; };
-		body.onPostUpdate += [&body]{ lo << body.getVelocity().x << " ; " << body.getVelocity().y << endl; };
+		body.setMass(4.f);
 
 		Sprite s{assets.get<Texture>("worldTiles.png")};
 		s.setTextureRect(assets.tilesetWorld[{2, 0}]);
