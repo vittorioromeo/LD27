@@ -24,7 +24,6 @@ namespace ld
 			inline LDAssets()
 			{
 				ssvs::loadAssetsFromJson(assetManager, "Data/", ssvuj::readFromFile("Data/assets.json"));
-				assetManager.load<ssvs::BitmapFont>("limeStroked", assetManager.get<sf::Texture>("limeStroked.png"), ssvuj::as<ssvs::BitmapFontData>(ssvuj::readFromFile("Data/lime.json")));
 
 				soundPlayer.setVolume(50);
 				musicPlayer.setVolume(30);

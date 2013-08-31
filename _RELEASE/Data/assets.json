@@ -5,7 +5,6 @@
 		"charTiles.png",
 		"worldTiles.png"
 	],
-
 	"soundBuffers":
 	[	
 		"bounce.wav",
@@ -19,9 +18,12 @@
 		"drop.wav",
 		"blip.wav"
 	],
-
 	"musics":
 	[
 		"mus.ogg"
-	]	
+	],
+	"bitmapFonts":
+	{
+		"limeStroked": ["limeStroked.png", "lime.json"]
+	}
 }

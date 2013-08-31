@@ -61,7 +61,7 @@ namespace ld
 				};
 
 			}
-			~LDCBlock() { onDestroy(); } // TODO: find a way to detect dead entities after LD27
+			~LDCBlock() { onDestroy(); } // TODO: find a way to detect dead entities after LD27!!!!!!!!!!!!
 
 			inline void update(float) override
 			{

@@ -20,7 +20,7 @@ namespace ld
 		LDGame& game;
 		ssvms::Menu menu;
 		ssvs::BitmapText txt, creditsTxt;
-		ssvs::Camera camera{window, {400 - 200, 300 - 150}, 2.f}; // TODO: overhaul camera class
+		ssvs::Camera camera{window, 2.f};
 		int level{0};
 
 		LDMenu(ssvs::GameWindow& mGameWindow, LDAssets& mAssets, LDGame& mGame) : window(mGameWindow), assets(mAssets), game(mGame),
