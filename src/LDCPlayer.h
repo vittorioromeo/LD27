@@ -24,8 +24,6 @@ namespace ld
 			ssvs::BitmapText text;
 
 		public:
-			ssvu::Delegate<void()> onDestroy;
-
 			LDCBlock(int mVal, LDGame& mGame, LDCPhysics& mCPhysics) : val(mVal), game(mGame), cPhysics(mCPhysics), body(cPhysics.getBody()),
 				text{game.getAssets().get<ssvs::BitmapFont>("limeStroked"), ssvu::toStr(val)}
 			{
@@ -48,7 +46,7 @@ namespace ld
 						body.setVelocityX(body.getVelocity().x * 0.9f);
 
 						// If velocity is very small, set it to 0
-						if(std::abs(body.getVelocity().x) < 50.f) body.setVelocityX(0.f);
+						if(std::abs(body.getVelocity().x) < 5.f) body.setVelocityX(0.f);
 
 						if(parent == nullptr) body.delGroupNoResolve(LDGroup::Player);
 					}
@@ -61,8 +59,6 @@ namespace ld
 				};
 
 			}
-			~LDCBlock() { onDestroy(); } // TODO: find a way to detect dead entities after LD27!!!!!!!!!!!!
-
 			inline void update(float) override
 			{
 				text.setPosition(toPixels(body.getShape().getVertexNW<int>()) + ssvs::Vec2f{4, 3});
@@ -77,7 +73,7 @@ namespace ld
 
 
 			}
-			inline void draw() override { if(val > -1) game.render(text); }
+			inline void draw() override { if(val != -1) game.render(text); }
 
 			inline void pickedUp(LDCPhysics& mParent)
 			{
@@ -114,7 +110,7 @@ namespace ld
 			float lastJump{0.f}, stepTime{0.f};
 
 			LDSensor blockSensor{cPhysics, ssvs::Vec2i{10, 2400}};
-			LDCBlock* currentBlock{nullptr};
+			LDCBlock* currentBlock{nullptr}; sses::EntityStat currentBlockStat;
 			ssvsc::Body* lastBlock{nullptr};
 			float lastBlockTimer{0.f};
 
@@ -123,8 +119,6 @@ namespace ld
 			~LDCPlayer()
 			{
 				if(currentBlock == nullptr) return;
-
-				currentBlock->onDestroy.clear();
 				currentBlock->dropped();
 			}
 
@@ -138,9 +132,8 @@ namespace ld
 					if(!mE.getComponent<LDCPhysics>().getBody().hasGroup(LDGroup::CanBePicked)) return;
 					auto& block(mE.getComponent<LDCBlock>());
 					block.pickedUp(cPhysics);
-					if(currentBlock != nullptr) currentBlock->onDestroy.clear();
-					currentBlock = &block;
-					currentBlock->onDestroy += [this]{ currentBlock = nullptr; };
+					if(currentBlock != nullptr) currentBlock->dropped();
+					currentBlock = &block; currentBlockStat = currentBlock->getEntity().getStat();
 					lastBlock = &mE.getComponent<LDCPhysics>().getBody();
 
 					game.getAssets().playSound("pick.wav", ssvs::SoundPlayer::Mode::Abort);
@@ -164,6 +157,8 @@ namespace ld
 			}
 			void update(float mFrameTime) override
 			{
+				if(currentBlock != nullptr && !getManager().isAlive(currentBlockStat)) currentBlock = nullptr;
+
 				wasFacingLeft = facingLeft;
 				wasFacingRight = !facingLeft;
 

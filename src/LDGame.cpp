@@ -67,6 +67,8 @@ namespace ld
 		gameState.addInput({{k::Num6}}, [this](float){ factory.createReceiver(getMousePosition()); }, t::Once);
 		gameState.addInput({{k::Num7}}, [this](float){ factory.createBlockBig(getMousePosition()); }, t::Once);
 		gameState.addInput({{k::Num8}}, [this](float){ factory.createBlockBall(getMousePosition()); }, t::Once);
+		gameState.addInput({{k::Num9}}, [this](float){ factory.createBlockRubberH(getMousePosition()); }, t::Once);
+		gameState.addInput({{k::Num0}}, [this](float){ factory.createBlockRubberV(getMousePosition()); }, t::Once);
 	}
 
 	void LDGame::start10Secs()		{ levelStatus.started = true; }

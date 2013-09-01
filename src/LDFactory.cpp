@@ -92,7 +92,7 @@ namespace ld
 
 		body.setRestitutionX(0.3f);
 		body.setRestitutionY(0.3f);
-		body.setMass(4.f);
+		body.setMass(1000.f);
 
 		Sprite s{assets.get<Texture>("worldTiles.png")};
 		s.setTextureRect(assets.tilesetWorld[{2, 0}]);
@@ -121,6 +121,56 @@ namespace ld
 
 		Sprite s{assets.get<Texture>("worldTiles.png")};
 		s.setTextureRect(assets.tilesetWorld[{7, 0}]);
+
+		if(mVal > -1)
+		{
+			if(colorMap.find(mVal) == colorMap.end()) colorMap[mVal] = Color(getRnd(0, 255), getRnd(0, 255), getRnd(0, 255), 255);
+			s.setColor(colorMap[mVal]);
+		}
+
+		cRender.addSprite(s);
+
+		return result;
+	}
+	Entity& LDFactory::createBlockRubberH(const Vec2i& mPos, int mVal)
+	{
+		auto& result(createBlockBase(mPos, {1600, 1600}, mVal));
+		auto& cPhysics(result.getComponent<LDCPhysics>());
+		auto& cRender(result.getComponent<LDCRender>());
+		Body& body(cPhysics.getBody());
+
+		body.addGroup(LDGroup::CanBePicked);
+		body.setRestitutionX(0.8f);
+		body.setRestitutionY(0.3f);
+		body.setMass(0.8f);
+
+		Sprite s{assets.get<Texture>("worldTiles.png")};
+		s.setTextureRect(assets.tilesetWorld[{9, 0}]);
+
+		if(mVal > -1)
+		{
+			if(colorMap.find(mVal) == colorMap.end()) colorMap[mVal] = Color(getRnd(0, 255), getRnd(0, 255), getRnd(0, 255), 255);
+			s.setColor(colorMap[mVal]);
+		}
+
+		cRender.addSprite(s);
+
+		return result;
+	}
+	Entity& LDFactory::createBlockRubberV(const Vec2i& mPos, int mVal)
+	{
+		auto& result(createBlockBase(mPos, {1600, 1600}, mVal));
+		auto& cPhysics(result.getComponent<LDCPhysics>());
+		auto& cRender(result.getComponent<LDCRender>());
+		Body& body(cPhysics.getBody());
+
+		body.addGroup(LDGroup::CanBePicked);
+		body.setRestitutionX(0.3f);
+		body.setRestitutionY(0.8f);
+		body.setMass(0.8f);
+
+		Sprite s{assets.get<Texture>("worldTiles.png")};
+		s.setTextureRect(assets.tilesetWorld[{10, 0}]);
 
 		if(mVal > -1)
 		{

@@ -31,6 +31,8 @@ namespace ld
 			sses::Entity& createBlock(const ssvs::Vec2i& mPos, int mVal = -1);
 			sses::Entity& createBlockBig(const ssvs::Vec2i& mPos, int mVal = -1);
 			sses::Entity& createBlockBall(const ssvs::Vec2i& mPos, int mVal = -1);
+			sses::Entity& createBlockRubberH(const ssvs::Vec2i& mPos, int mVal = -1);
+			sses::Entity& createBlockRubberV(const ssvs::Vec2i& mPos, int mVal = -1);
 			sses::Entity& createPlayer(const ssvs::Vec2i& mPos);
 			sses::Entity& createReceiver(const ssvs::Vec2i& mPos, int mVal = -1);
 			sses::Entity& createTele(const ssvs::Vec2i& mPos);
