@@ -36,6 +36,7 @@ namespace ld
 			sses::Entity& createPlayer(const ssvs::Vec2i& mPos);
 			sses::Entity& createReceiver(const ssvs::Vec2i& mPos, int mVal = -1);
 			sses::Entity& createTele(const ssvs::Vec2i& mPos);
+			sses::Entity& createLift(const ssvs::Vec2i& mPos, const ssvs::Vec2f& mVel);
 	};
 }
 

@@ -34,6 +34,8 @@ namespace ld
 		Body& body(cPhysics.getBody());
 		body.addGroup(LDGroup::Solid);
 		body.addGroupToCheck(LDGroup::Solid);
+		body.setVelTransferMultX(1.f);
+		body.setVelTransferMultY(1.f);
 
 		Sprite s{assets.get<Texture>("worldTiles.png")};
 		if(getRnd(0, 100) < 75) s.setTextureRect(assets.tilesetWorld[{1, 0}]);
@@ -69,6 +71,7 @@ namespace ld
 		body.setRestitutionX(0.3f);
 		body.setRestitutionY(0.3f);
 		body.setMass(1.f);
+		body.setVelTransferMultX(0.1f);
 
 		Sprite s{assets.get<Texture>("worldTiles.png")};
 		s.setTextureRect(assets.tilesetWorld[{0, 0}]);
@@ -90,12 +93,18 @@ namespace ld
 		auto& cRender(result.getComponent<LDCRender>());
 		Body& body(cPhysics.getBody());
 
+
+		//cPhysics.setAffectedByGravity(false);
+		//body.onPreUpdate += [&]{ body.setPosition(body.getPosition() - Vec2i{-0, 0}); body.setVelocityX(80); };
+		//body.onPostUpdate += [&]{ body.setPosition(body.getPosition() - Vec2i{-0, 0}); body.setVelocityX(80); };
 		body.setRestitutionX(0.3f);
 		body.setRestitutionY(0.3f);
-		body.setMass(1000.f);
+		body.setMass(10.f);
+		body.setVelTransferMultX(0.1f);
+		body.setVelTransferMultY(0.1f);
 
 		Sprite s{assets.get<Texture>("worldTiles.png")};
-		s.setTextureRect(assets.tilesetWorld[{2, 0}]);
+		s.setTextureRect(assets.tilesetWorld[{1, 1}]);
 
 		if(mVal > -1)
 		{
@@ -104,6 +113,7 @@ namespace ld
 		}
 
 		cRender.addSprite(s);
+		//cRender.setScaleWithBody(true);
 
 		return result;
 	}
@@ -118,6 +128,7 @@ namespace ld
 		body.setRestitutionX(0.8f);
 		body.setRestitutionY(0.8f);
 		body.setMass(0.6f);
+		body.setVelTransferMultX(0.01f);
 
 		Sprite s{assets.get<Texture>("worldTiles.png")};
 		s.setTextureRect(assets.tilesetWorld[{7, 0}]);
@@ -270,6 +281,30 @@ namespace ld
 
 		Sprite s{assets.get<Texture>("worldTiles.png")};
 		s.setTextureRect(assets.tilesetWorld[{6, 0}]);
+
+		cRender.addSprite(s);
+		return result;
+	}
+	Entity& LDFactory::createLift(const Vec2i& mPos, const Vec2f& mVel)
+	{
+		auto& result(manager.createEntity()); result.addGroup(LDGroup::Block);
+		auto& cPhysics(result.createComponent<LDCPhysics>(world, false, mPos, Vec2i{3200, 1800}));
+		auto& cRender(result.createComponent<LDCRender>(game, cPhysics.getBody()));
+
+		Body& body(cPhysics.getBody());
+		body.addGroup(LDGroup::Solid);
+		body.addGroupToCheck(LDGroup::Solid);
+		body.addGroupNoResolve(LDGroup::BlockFloating);
+		cPhysics.setAffectedByGravity(false);
+		body.onPreUpdate += [&, mVel]{ body.setVelocity(mVel * 5.f); };
+		body.setRestitutionX(0.3f);
+		body.setRestitutionY(0.3f);
+		body.setMass(100.f);
+		body.setVelTransferMultX(1.f);
+		body.setVelTransferMultY(1.f);
+
+		Sprite s{assets.get<Texture>("worldTiles.png")};
+		s.setTextureRect(assets.tilesetWorld[{0, 1}]);
 
 		cRender.addSprite(s);
 		return result;

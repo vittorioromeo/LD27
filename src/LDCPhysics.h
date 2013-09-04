@@ -5,6 +5,7 @@
 #ifndef SSVLD_COMPONENTS_PHYSICS
 #define SSVLD_COMPONENTS_PHYSICS
 
+#include "LDSensor.h"
 #include "LDDependencies.h"
 
 namespace ld
@@ -23,16 +24,21 @@ namespace ld
 			int crushedLeft{0}, crushedRight{0}, crushedTop{0}, crushedBottom{0};
 			int maxVelocityY{1000};
 			ssvs::Vec2f gravityForce{0, 25};
+			LDSensor groundSensor;
 
 		public:
 			ssvu::Delegate<void(sses::Entity&)> onDetection;
 			ssvu::Delegate<void(ssvs::Vec2i)> onResolution;
 
-			LDCPhysics(ssvsc::World& mWorld, bool mIsStatic, const ssvs::Vec2i& mPosition, const ssvs::Vec2i& mSize, bool mAffectedByGravity = true);
-			~LDCPhysics();
+			LDCPhysics(ssvsc::World& mWorld, bool mIsStatic, const ssvs::Vec2i& mPosition, const ssvs::Vec2i& mSize, bool mAffectedByGravity = true)
+				: world(mWorld), body(world.create(mPosition, mSize, mIsStatic)), affectedByGravity{mAffectedByGravity}, groundSensor{body, ssvs::Vec2i{body.getWidth(), 10}} { }
+			inline ~LDCPhysics() { body.destroy(); }
 
 			void init() override;
-			void update(float mFrameTime) override;
+			inline void update(float) override
+			{
+				if(affectedByGravity && body.getVelocity().y < maxVelocityY) body.applyForce(gravityForce);
+			}
 
 			inline void setAffectedByGravity(bool mAffectedByGravity) { affectedByGravity = mAffectedByGravity; }
 
@@ -49,7 +55,7 @@ namespace ld
 			inline int getCrushedRight() const					{ return crushedRight; }
 			inline int getCrushedTop() const					{ return crushedTop; }
 			inline int getCrushedBottom() const					{ return crushedBottom; }
-			inline bool isInAir()								{ return std::abs(body.getShape().getY() - body.getOldShape().getY()) > 10.f + std::abs(body.getLastResolution().y); }
+			inline bool isInAir()								{ return !groundSensor.isActive(); } //std::abs(body.getShape().getY() - body.getOldShape().getY()) >= std::abs(body.getLastResolution().y) + 10.f; }
 	};
 }
 

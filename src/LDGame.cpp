@@ -69,6 +69,10 @@ namespace ld
 		gameState.addInput({{k::Num8}}, [this](float){ factory.createBlockBall(getMousePosition()); }, t::Once);
 		gameState.addInput({{k::Num9}}, [this](float){ factory.createBlockRubberH(getMousePosition()); }, t::Once);
 		gameState.addInput({{k::Num0}}, [this](float){ factory.createBlockRubberV(getMousePosition()); }, t::Once);
+		gameState.addInput({{k::J}}, [this](float){ factory.createLift(getMousePosition(), Vec2f{-100, 0}); }, t::Once);
+		gameState.addInput({{k::L}}, [this](float){ factory.createLift(getMousePosition(), Vec2f{100, 0}); }, t::Once);
+		gameState.addInput({{k::I}}, [this](float){ factory.createLift(getMousePosition(), Vec2f{0, -100}); }, t::Once);
+		gameState.addInput({{k::K}}, [this](float){ factory.createLift(getMousePosition(), Vec2f{0, 100}); }, t::Once);
 	}
 
 	void LDGame::start10Secs()		{ levelStatus.started = true; }
@@ -349,16 +353,18 @@ namespace ld
 		world.update(mFrameTime); // World is from SSVSCollision, it handles "physics"
 		updateDebugText(mFrameTime); // And debugText is just a debugging text showing FPS and other cool info
 
-		// TODO: more concise?
-		if(manager.getEntityCount(LDGroup::Player) > 0)
+		if(manager.hasEntity(LDGroup::Player))
 		{
-			auto pPos(toPixels(manager.getEntities(LDGroup::Player)[0]->getComponent<LDCPhysics>().getPos()));
-			panVec += manager.getEntities(LDGroup::Player)[0]->getComponent<LDCPlayer>().isFacingLeft() ? Vec2f{-1.f, 0} : Vec2f{1.f, 0};
-			cClamp(panVec, -100.f, 100.f);
+			auto& player(manager.getEntities(LDGroup::Player)[0]);
+			auto& cPhysics(player->getComponent<LDCPhysics>());
+			auto& cPlayer(player->getComponent<LDCPlayer>());
+			auto pPos(toPixels(cPhysics.getPos()));
+			panVec += Vec2f{cPlayer.isFacingLeft() ? -1.f : 1.f, 0};
+			cClamp(panVec, -50.f, 50.f);
 			camera.pan(-(camera.getCenter() - (pPos + panVec)) / 40.f);
 		}
 
-		if(manager.getEntityCount(LDGroup::Block) == 0) levelStatus.started = false;
+		if(!manager.hasEntity(LDGroup::Block)) levelStatus.started = false;
 
 		if(mustChangeLevel) { mustChangeLevel = false; newGame(); }
 

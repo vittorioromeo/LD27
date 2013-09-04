@@ -43,17 +43,23 @@ namespace ld
 					if(!cPhysics.isInAir())
 					{
 						// Ground friction
-						body.setVelocityX(body.getVelocity().x * 0.9f);
+						//body.setVelocityX(body.getVelocity().x * 0.9f);
+
+	//					if(body.getWidth() > 1900)
+						//else
+						//	body.setVelocityX(body.getVelocity().x * 0.98f);
 
 						// If velocity is very small, set it to 0
 						if(std::abs(body.getVelocity().x) < 5.f) body.setVelocityX(0.f);
 
 						if(parent == nullptr) body.delGroupNoResolve(LDGroup::Player);
 					}
+					//text.setString(ssvu::toStr(body.getVelocity().y));
 				};
 
 				body.onPostUpdate += [this]
 				{
+
 					// Global min/max velocity
 					//body.setVelocity(ssvs::getCClamped(body.getVelocity(), -800.f, 800.f));
 				};
@@ -73,7 +79,9 @@ namespace ld
 
 
 			}
-			inline void draw() override { if(val != -1) game.render(text); }
+			inline void draw() override {
+				//if(val != -1)
+					game.render(text); }
 
 			inline void pickedUp(LDCPhysics& mParent)
 			{
@@ -109,7 +117,7 @@ namespace ld
 			bool wasFacingLeft{false}; float lastTurn{0.f}; bool wasFacingRight{false};
 			float lastJump{0.f}, stepTime{0.f};
 
-			LDSensor blockSensor{cPhysics, ssvs::Vec2i{10, 2400}};
+			LDSensor blockSensor{cPhysics.getBody(), ssvs::Vec2i{10, 2400}};
 			LDCBlock* currentBlock{nullptr}; sses::EntityStat currentBlockStat;
 			ssvsc::Body* lastBlock{nullptr};
 			float lastBlockTimer{0.f};
@@ -153,7 +161,7 @@ namespace ld
 					mRI.noResolvePosition = mRI.noResolveVelocity = true;
 				};
 
-				cPhysics.onResolution += [this](const ssvs::Vec2i& mMinIntersection) { if(mMinIntersection.y < 0) jumpReady = true; };
+				cPhysics.onResolution += [this](const ssvs::Vec2i& mMinIntersection) {  jumpReady = true; };
 			}
 			void update(float mFrameTime) override
 			{
@@ -226,8 +234,8 @@ namespace ld
 			}
 			inline void jump()
 			{
-				if(cPhysics.isInAir() || !jumpReady) return;
-				body.setVelocityY(-jumpSpeed);
+				if(cPhysics.isInAir() || lastJump > 0.f) return;
+				body.setVelocityY(body.getVelocity().y - jumpSpeed);
 				lastJump = 20.f;
 				game.getAssets().playSound("jump.wav");
 			}

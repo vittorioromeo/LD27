@@ -14,12 +14,10 @@ using namespace ssvu;
 
 namespace ld
 {
-	LDCPhysics::LDCPhysics(World& mWorld, bool mIsStatic, const Vec2i& mPosition, const Vec2i& mSize, bool mAffectedByGravity)
-		: world(mWorld), body(world.create(mPosition, mSize, mIsStatic)), affectedByGravity{mAffectedByGravity} { }
-	LDCPhysics::~LDCPhysics() { body.destroy(); }
-
 	void LDCPhysics::init()
 	{
+		groundSensor.getSensor().addGroupToCheck(LDGroup::Solid);
+
 		body.setUserData(&getEntity());
 
 		body.onDetection += [this](const DetectionInfo& mDetectionInfo)
@@ -40,16 +38,13 @@ namespace ld
 		};
 		body.onPreUpdate += [this]
 		{
+			groundSensor.setPosition(body.getPosition() + Vec2i{0, body.getHeight() / 2});
+
 			lastResolution = {0, 0};
 			if(crushedLeft > 0) --crushedLeft;
 			if(crushedRight > 0) --crushedRight;
 			if(crushedTop > 0) --crushedTop;
 			if(crushedBottom > 0) --crushedBottom;
 		};
-	}
-
-	void LDCPhysics::update(float)
-	{
-		if(affectedByGravity && body.getVelocity().y < maxVelocityY) body.applyForce(gravityForce);
 	}
 }
