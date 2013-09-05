@@ -71,7 +71,7 @@ namespace ld
 		body.setRestitutionX(0.3f);
 		body.setRestitutionY(0.3f);
 		body.setMass(1.f);
-		body.setVelTransferMultX(0.1f);
+		body.setVelTransferMultX(0.6f);
 
 		Sprite s{assets.get<Texture>("worldTiles.png")};
 		s.setTextureRect(assets.tilesetWorld[{0, 0}]);
@@ -296,7 +296,7 @@ namespace ld
 		body.addGroupToCheck(LDGroup::Solid);
 		body.addGroupNoResolve(LDGroup::BlockFloating);
 		cPhysics.setAffectedByGravity(false);
-		body.onPreUpdate += [&, mVel]{ body.setVelocity(mVel * 5.f); };
+		body.onPreUpdate += [&, mVel]{ body.setVelocity(mVel * 2.f); };
 		body.setRestitutionX(0.3f);
 		body.setRestitutionY(0.3f);
 		body.setMass(100.f);
