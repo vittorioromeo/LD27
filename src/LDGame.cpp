@@ -138,7 +138,7 @@ namespace ld
 		const auto& pReceiverBody(pReceiver.getComponent<LDCPhysics>().getBody());
 
 		auto intro([=, &pBody]{ return pBody.getPosition().x < pCrateX - 5000 && (msgTimer.isEnabled() || !msgText.getString().empty()); });
-		auto crateNotPlaced([=, &pCrateBody, &pReceiverBody]{ return getDistanceEuclidean(pCrateBody.getPosition(), pReceiverBody.getPosition()) > 3200; });
+		auto crateNotPlaced([=, &pCrateBody, &pReceiverBody]{ /* check if crate is alive here */ return getDistanceEuclidean(pCrateBody.getPosition(), pReceiverBody.getPosition()) > 3200; });
 
 		auto& t(timelineManager.create());
 		t.append<Do>([=]{ showMessage("10corp welcomes you, worker #" + rndWorkerHash, 150); });																		t.append<WaitWhile>(intro);
