@@ -28,7 +28,7 @@ namespace ld
 
 		public:
 			ssvu::Delegate<void(sses::Entity&)> onDetection;
-			ssvu::Delegate<void(ssvs::Vec2i)> onResolution;
+			ssvu::Delegate<void(const ssvs::Vec2i&)> onResolution;
 
 			LDCPhysics(ssvsc::World& mWorld, bool mIsStatic, const ssvs::Vec2i& mPosition, const ssvs::Vec2i& mSize, bool mAffectedByGravity = true)
 				: world(mWorld), body(world.create(mPosition, mSize, mIsStatic)), affectedByGravity{mAffectedByGravity}, groundSensor{body, ssvs::Vec2i{body.getWidth(), 10}} { }
