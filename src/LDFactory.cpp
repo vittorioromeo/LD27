@@ -41,6 +41,8 @@ namespace ld
 		if(getRnd(0, 100) < 75) s.setTextureRect(assets.tilesetWorld[{1, 0}]);
 		else s.setTextureRect(assets.tilesetWorld[Vec2u(3 + getRnd(0, 2), 0)]);
 
+		body.setStressMult(0.f);
+
 		cRender.addSprite(s);
 		cRender.setScaleWithBody(false);
 
@@ -299,7 +301,7 @@ namespace ld
 		body.onPreUpdate += [&, mVel]{ body.setVelocity(mVel * 2.f); };
 		body.setRestitutionX(0.3f);
 		body.setRestitutionY(0.3f);
-		body.setMass(100.f);
+		body.setMass(10.f);
 		body.setVelTransferMultX(1.f);
 		body.setVelTransferMultY(1.f);
 

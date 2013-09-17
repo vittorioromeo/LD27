@@ -27,6 +27,7 @@ namespace ld
 			LDCBlock(int mVal, LDGame& mGame, LDCPhysics& mCPhysics) : val(mVal), game(mGame), cPhysics(mCPhysics), body(cPhysics.getBody()),
 				text{game.getAssets().get<ssvs::BitmapFont>("limeStroked"), ssvu::toStr(val)}
 			{
+				text.setScale(0.75f, 0.75f);
 				text.setTracking(-3);
 				body.onResolution += [this](const ssvsc::ResolutionInfo& mRI)
 				{
@@ -54,12 +55,12 @@ namespace ld
 
 						if(parent == nullptr) body.delGroupNoResolve(LDGroup::Player);
 					}
-					//text.setString(ssvu::toStr(body.getVelocity().y));
+					text.setString(ssvu::toStr((int)(body.getStress().y)));
 				};
 
 				body.onPostUpdate += [this]
 				{
-
+					if(body.getStress().y > 10000) getEntity().destroy();
 					// Global min/max velocity
 					//body.setVelocity(ssvs::getCClamped(body.getVelocity(), -800.f, 800.f));
 				};
@@ -161,7 +162,7 @@ namespace ld
 					mRI.noResolvePosition = mRI.noResolveVelocity = true;
 				};
 
-				cPhysics.onResolution += [this](const ssvs::Vec2i& mMinIntersection) {  jumpReady = true; };
+				cPhysics.onResolution += [this](const ssvs::Vec2i&) { jumpReady = true; };
 			}
 			void update(float mFrameTime) override
 			{

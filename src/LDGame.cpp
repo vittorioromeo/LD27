@@ -318,7 +318,7 @@ namespace ld
 
 				timerText.setString("too slow");
 			}
-			else if(levelStatus.timer.getTotalSecs() < 10)
+			else if(levelStatus.timer.getTotalSecs() < 10.f)
 			{
 				timerText.setColor(Color::Red);
 				timerText.setString(toStr(10.f - levelStatus.timer.getTotalSecs()));
