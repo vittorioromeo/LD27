@@ -73,7 +73,7 @@ namespace ld
 				if(parent != nullptr)
 				{
 					ssvs::Vec2f v{(parent->getBody().getPosition() + offset) - body.getPosition()};
-					if(ssvs::getDistanceEuclidean(parent->getBody().getPosition(), body.getPosition()) > 1700) dropped();
+					if(ssvs::getDistEuclidean(parent->getBody().getPosition(), body.getPosition()) > 1700) dropped();
 					else body.setVelocity(v);
 				}
 
