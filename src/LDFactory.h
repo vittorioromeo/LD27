@@ -11,6 +11,7 @@ namespace ld
 {
 	class LDAssets;
 	class LDGame;
+	class LDCRender;
 
 	class LDFactory
 	{
@@ -22,10 +23,13 @@ namespace ld
 			sses::Manager& manager;
 			ssvsc::World& world;
 
+			sf::Sprite getSpriteFromTile(const std::string& mTextureId, const sf::IntRect& mTextureRect) const;
+			void emplaceSpriteFromTile(LDCRender& mCRender, const std::string& mTextureId, const sf::IntRect& mTextureRect) const;
+
 			sses::Entity& createBlockBase(const ssvs::Vec2i& mPos, const ssvs::Vec2i& mSize, int mVal = -1);
 
 		public:
-			LDFactory(LDAssets& mAssets, LDGame& mGame, sses::Manager& mManager, ssvsc::World& mWorld);
+			LDFactory(LDAssets& mAssets, LDGame& mGame, sses::Manager& mManager, ssvsc::World& mWorld) : assets(mAssets), game(mGame), manager(mManager), world(mWorld) { }
 
 			sses::Entity& createWall(const ssvs::Vec2i& mPos);
 			sses::Entity& createBlock(const ssvs::Vec2i& mPos, int mVal = -1);

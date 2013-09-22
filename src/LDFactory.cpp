@@ -23,7 +23,8 @@ using namespace sses;
 
 namespace ld
 {
-	LDFactory::LDFactory(LDAssets& mAssets, LDGame& mGame, Manager& mManager, World& mWorld) : assets(mAssets), game(mGame), manager(mManager), world(mWorld) { }
+	Sprite LDFactory::getSpriteFromTile(const std::string& mTextureId, const IntRect& mTextureRect) const { return {assets.get<Texture>(mTextureId), mTextureRect}; }
+	void LDFactory::emplaceSpriteFromTile(LDCRender& mCDraw, const std::string& mTextureId, const sf::IntRect& mTextureRect) const { mCDraw.emplaceSprite(assets.get<Texture>(mTextureId), mTextureRect); }
 
 	Entity& LDFactory::createWall(const Vec2i& mPos)
 	{
@@ -37,13 +38,8 @@ namespace ld
 		body.setVelTransferMultX(1.f);
 		body.setVelTransferMultY(1.f);
 
-		Sprite s{assets.get<Texture>("worldTiles.png")};
-		if(getRnd(0, 100) < 75) s.setTextureRect(assets.tilesetWorld[{1, 0}]);
-		else s.setTextureRect(assets.tilesetWorld[Vec2u(3 + getRnd(0, 2), 0)]);
-
+		emplaceSpriteFromTile(cRender, "worldTiles.png", assets.tilesetWorld[(getRnd(0, 100) < 75) ? Vec2u{1, 0} : Vec2u(3 + getRnd(0, 2), 0)]);
 		body.setStressMult(0.f);
-
-		cRender.addSprite(s);
 		cRender.setScaleWithBody(false);
 
 		return result;
@@ -75,16 +71,13 @@ namespace ld
 		body.setMass(1.f);
 		body.setVelTransferMultX(0.6f);
 
-		Sprite s{assets.get<Texture>("worldTiles.png")};
-		s.setTextureRect(assets.tilesetWorld[{0, 0}]);
+		emplaceSpriteFromTile(cRender, "worldTiles.png", assets.tilesetWorld[{0, 0}]);
 
 		if(mVal > -1)
 		{
 			if(colorMap.find(mVal) == colorMap.end()) colorMap[mVal] = Color(getRnd(0, 255), getRnd(0, 255), getRnd(0, 255), 255);
-			s.setColor(colorMap[mVal]);
+			cRender[0].setColor(colorMap[mVal]);
 		}
-
-		cRender.addSprite(s);
 
 		return result;
 	}
@@ -95,7 +88,6 @@ namespace ld
 		auto& cRender(result.getComponent<LDCRender>());
 		Body& body(cPhysics.getBody());
 
-
 		//cPhysics.setAffectedByGravity(false);
 		//body.onPreUpdate += [&]{ body.setPosition(body.getPosition() - Vec2i{-0, 0}); body.setVelocityX(80); };
 		//body.onPostUpdate += [&]{ body.setPosition(body.getPosition() - Vec2i{-0, 0}); body.setVelocityX(80); };
@@ -105,17 +97,13 @@ namespace ld
 		body.setVelTransferMultX(0.1f);
 		body.setVelTransferMultY(0.1f);
 
-		Sprite s{assets.get<Texture>("worldTiles.png")};
-		s.setTextureRect(assets.tilesetWorld[{1, 1}]);
+		emplaceSpriteFromTile(cRender, "worldTiles.png", assets.tilesetWorld[{1, 1}]);
 
 		if(mVal > -1)
 		{
 			if(colorMap.find(mVal) == colorMap.end()) colorMap[mVal] = Color(getRnd(0, 255), getRnd(0, 255), getRnd(0, 255), 255);
-			s.setColor(colorMap[mVal]);
+			cRender[0].setColor(colorMap[mVal]);
 		}
-
-		cRender.addSprite(s);
-		//cRender.setScaleWithBody(true);
 
 		return result;
 	}
@@ -132,16 +120,13 @@ namespace ld
 		body.setMass(0.6f);
 		body.setVelTransferMultX(0.01f);
 
-		Sprite s{assets.get<Texture>("worldTiles.png")};
-		s.setTextureRect(assets.tilesetWorld[{7, 0}]);
+		emplaceSpriteFromTile(cRender, "worldTiles.png", assets.tilesetWorld[{7, 0}]);
 
 		if(mVal > -1)
 		{
 			if(colorMap.find(mVal) == colorMap.end()) colorMap[mVal] = Color(getRnd(0, 255), getRnd(0, 255), getRnd(0, 255), 255);
-			s.setColor(colorMap[mVal]);
+			cRender[0].setColor(colorMap[mVal]);
 		}
-
-		cRender.addSprite(s);
 
 		return result;
 	}
@@ -157,16 +142,13 @@ namespace ld
 		body.setRestitutionY(0.3f);
 		body.setMass(0.8f);
 
-		Sprite s{assets.get<Texture>("worldTiles.png")};
-		s.setTextureRect(assets.tilesetWorld[{9, 0}]);
+		emplaceSpriteFromTile(cRender, "worldTiles.png", assets.tilesetWorld[{9, 0}]);
 
 		if(mVal > -1)
 		{
 			if(colorMap.find(mVal) == colorMap.end()) colorMap[mVal] = Color(getRnd(0, 255), getRnd(0, 255), getRnd(0, 255), 255);
-			s.setColor(colorMap[mVal]);
+			cRender[0].setColor(colorMap[mVal]);
 		}
-
-		cRender.addSprite(s);
 
 		return result;
 	}
@@ -182,16 +164,13 @@ namespace ld
 		body.setRestitutionY(0.8f);
 		body.setMass(0.8f);
 
-		Sprite s{assets.get<Texture>("worldTiles.png")};
-		s.setTextureRect(assets.tilesetWorld[{10, 0}]);
+		emplaceSpriteFromTile(cRender, "worldTiles.png", assets.tilesetWorld[{10, 0}]);
 
 		if(mVal > -1)
 		{
 			if(colorMap.find(mVal) == colorMap.end()) colorMap[mVal] = Color(getRnd(0, 255), getRnd(0, 255), getRnd(0, 255), 255);
-			s.setColor(colorMap[mVal]);
+			cRender[0].setColor(colorMap[mVal]);
 		}
-
-		cRender.addSprite(s);
 
 		return result;
 	}
@@ -213,8 +192,8 @@ namespace ld
 		body.setRestitutionY(0.f);
 		body.setMass(1.f);
 
-		cRender.addSprite(Sprite{assets.get<Texture>("charTiles.png")});
-		cRender.addSprite(Sprite{assets.get<Texture>("charTiles.png")});
+		cRender.emplaceSprite(assets.get<Texture>("charTiles.png"));
+		cRender.emplaceSprite(assets.get<Texture>("charTiles.png"));
 		cRender.setScaleWithBody(false);
 
 		result.setDrawPriority(-1000);
@@ -246,16 +225,14 @@ namespace ld
 			}
 		};
 
-		Sprite s{assets.get<Texture>("worldTiles.png")};
-		s.setTextureRect(assets.tilesetWorld[{5, 0}]);
+		emplaceSpriteFromTile(cRender, "worldTiles.png", assets.tilesetWorld[{5, 0}]);
 
 		if(mVal > -1)
 		{
 			if(colorMap.find(mVal) == colorMap.end()) colorMap[mVal] = Color(getRnd(0, 255), getRnd(0, 255), getRnd(0, 255), 255);
-			s.setColor(colorMap[mVal]);
+			cRender[0].setColor(colorMap[mVal]);
 		}
 
-		cRender.addSprite(s);
 		return result;
 	}
 
@@ -281,10 +258,7 @@ namespace ld
 			}
 		};
 
-		Sprite s{assets.get<Texture>("worldTiles.png")};
-		s.setTextureRect(assets.tilesetWorld[{6, 0}]);
-
-		cRender.addSprite(s);
+		emplaceSpriteFromTile(cRender, "worldTiles.png", assets.tilesetWorld[{6, 0}]);
 		return result;
 	}
 	Entity& LDFactory::createLift(const Vec2i& mPos, const Vec2f& mVel)
@@ -305,10 +279,7 @@ namespace ld
 		body.setVelTransferMultX(1.f);
 		body.setVelTransferMultY(1.f);
 
-		Sprite s{assets.get<Texture>("worldTiles.png")};
-		s.setTextureRect(assets.tilesetWorld[{0, 1}]);
-
-		cRender.addSprite(s);
+		emplaceSpriteFromTile(cRender, "worldTiles.png", assets.tilesetWorld[{0, 1}]);
 		return result;
 	}
 }
