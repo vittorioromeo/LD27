@@ -38,7 +38,7 @@ namespace ld
 		body.setVelTransferMultX(1.f);
 		body.setVelTransferMultY(1.f);
 
-		emplaceSpriteFromTile(cRender, "worldTiles.png", assets.tilesetWorld[(getRnd(0, 100) < 75) ? Vec2u{1, 0} : Vec2u(3 + getRnd(0, 2), 0)]);
+		emplaceSpriteFromTile(cRender, "worldTiles.png", assets.tilesetWorld((getRnd(0, 100) < 75) ? Vec2u{1, 0} : Vec2u(3 + getRnd(0, 2), 0)));
 		body.setStressMult(0.f);
 		cRender.setScaleWithBody(false);
 
@@ -71,7 +71,7 @@ namespace ld
 		body.setMass(1.f);
 		body.setVelTransferMultX(0.6f);
 
-		emplaceSpriteFromTile(cRender, "worldTiles.png", assets.tilesetWorld[{0, 0}]);
+		emplaceSpriteFromTile(cRender, "worldTiles.png", assets.tilesetWorld(0, 0));
 
 		if(mVal > -1)
 		{
@@ -97,7 +97,7 @@ namespace ld
 		body.setVelTransferMultX(0.1f);
 		body.setVelTransferMultY(0.1f);
 
-		emplaceSpriteFromTile(cRender, "worldTiles.png", assets.tilesetWorld[{1, 1}]);
+		emplaceSpriteFromTile(cRender, "worldTiles.png", assets.tilesetWorld(1, 1));
 
 		if(mVal > -1)
 		{
@@ -120,7 +120,7 @@ namespace ld
 		body.setMass(0.6f);
 		body.setVelTransferMultX(0.01f);
 
-		emplaceSpriteFromTile(cRender, "worldTiles.png", assets.tilesetWorld[{7, 0}]);
+		emplaceSpriteFromTile(cRender, "worldTiles.png", assets.tilesetWorld(7, 0));
 
 		if(mVal > -1)
 		{
@@ -142,7 +142,7 @@ namespace ld
 		body.setRestitutionY(0.3f);
 		body.setMass(0.8f);
 
-		emplaceSpriteFromTile(cRender, "worldTiles.png", assets.tilesetWorld[{9, 0}]);
+		emplaceSpriteFromTile(cRender, "worldTiles.png", assets.tilesetWorld(9, 0));
 
 		if(mVal > -1)
 		{
@@ -164,7 +164,7 @@ namespace ld
 		body.setRestitutionY(0.8f);
 		body.setMass(0.8f);
 
-		emplaceSpriteFromTile(cRender, "worldTiles.png", assets.tilesetWorld[{10, 0}]);
+		emplaceSpriteFromTile(cRender, "worldTiles.png", assets.tilesetWorld(10, 0));
 
 		if(mVal > -1)
 		{
@@ -225,7 +225,7 @@ namespace ld
 			}
 		};
 
-		emplaceSpriteFromTile(cRender, "worldTiles.png", assets.tilesetWorld[{5, 0}]);
+		emplaceSpriteFromTile(cRender, "worldTiles.png", assets.tilesetWorld(5, 0));
 
 		if(mVal > -1)
 		{
@@ -258,7 +258,7 @@ namespace ld
 			}
 		};
 
-		emplaceSpriteFromTile(cRender, "worldTiles.png", assets.tilesetWorld[{6, 0}]);
+		emplaceSpriteFromTile(cRender, "worldTiles.png", assets.tilesetWorld(6, 0));
 		return result;
 	}
 	Entity& LDFactory::createLift(const Vec2i& mPos, const Vec2f& mVel)
@@ -279,7 +279,7 @@ namespace ld
 		body.setVelTransferMultX(1.f);
 		body.setVelTransferMultY(1.f);
 
-		emplaceSpriteFromTile(cRender, "worldTiles.png", assets.tilesetWorld[{0, 1}]);
+		emplaceSpriteFromTile(cRender, "worldTiles.png", assets.tilesetWorld(0, 1));
 		return result;
 	}
 }

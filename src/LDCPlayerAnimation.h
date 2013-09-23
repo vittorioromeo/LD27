@@ -75,13 +75,13 @@ namespace ld
 				if(currentTorsoAnim != nullptr)
 				{
 					currentTorsoAnim->update(mFrameTime);
-					cRender[1].setTextureRect(tileset[currentTorsoAnim->getTileIndex()]);
+					cRender[1].setTextureRect(tileset(currentTorsoAnim->getTileIndex()));
 				}
 
 				if(currentLegsAnim != nullptr)
 				{
 					currentLegsAnim->update(mFrameTime);
-					cRender[0].setTextureRect(tileset[currentLegsAnim->getTileIndex()]);
+					cRender[0].setTextureRect(tileset(currentLegsAnim->getTileIndex()));
 				}
 			}
 	};
