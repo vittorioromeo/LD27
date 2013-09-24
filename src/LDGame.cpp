@@ -137,7 +137,7 @@ namespace ld
 		const auto& pCrateBody(pCrate.getComponent<LDCPhysics>().getBody());
 		const auto& pReceiverBody(pReceiver.getComponent<LDCPhysics>().getBody());
 
-		auto intro([=, &pBody]{ return pBody.getPosition().x < pCrateX - 5000 && (msgTimer.isEnabled() || !msgText.getString().empty()); });
+		auto intro([=, &pBody]{ return pBody.getPosition().x < pCrateX - 5000 && (msgTimer.isRunning() || !msgText.getString().empty()); });
 		auto crateNotPlaced([=, &pCrateBody, &pReceiverBody]{ /* check if crate is alive here */ return getDistEuclidean(pCrateBody.getPosition(), pReceiverBody.getPosition()) > 3200; });
 
 		auto& t(timelineManager.create());
@@ -164,7 +164,7 @@ namespace ld
 		auto& player(factory.createPlayer(put(1, -1)));
 		const auto& pBody(player.getComponent<LDCPhysics>().getBody());
 
-		auto intro([=, &pBody]{ return !levelStatus.started && (msgTimer.isEnabled() || !msgText.getString().empty()); });
+		auto intro([=, &pBody]{ return !levelStatus.started && (msgTimer.isRunning() || !msgText.getString().empty()); });
 
 		pW(9, 1);	pB(10, 1);																pB(16, 1);
 		pW(9, 2);	pW(10, 2);										pW(14, 2);				pB(16, 2);
@@ -186,7 +186,7 @@ namespace ld
 		auto& player(factory.createPlayer(put(1, -1)));
 		const auto& pBody(player.getComponent<LDCPhysics>().getBody());
 
-		auto intro([=, &pBody]{ return (msgTimer.isEnabled() || !msgText.getString().empty()); });
+		auto intro([=, &pBody]{ return (msgTimer.isRunning() || !msgText.getString().empty()); });
 
 		pB(9, -3);
 		pB(9, -2);
@@ -211,7 +211,7 @@ namespace ld
 		auto& player(factory.createPlayer(put(1, -1)));
 		const auto& pBody(player.getComponent<LDCPhysics>().getBody());
 
-		auto intro([=, &pBody]{ return (msgTimer.isEnabled() || !msgText.getString().empty()); });
+		auto intro([=, &pBody]{ return (msgTimer.isRunning() || !msgText.getString().empty()); });
 
 														pW(13, -1);
 											pR(12,0,0);	pW(13, 0);	pR(14,0,1);
@@ -235,7 +235,7 @@ namespace ld
 		auto& player(factory.createPlayer(put(1, -1)));
 		const auto& pBody(player.getComponent<LDCPhysics>().getBody());
 
-		auto intro([=, &pBody]{ return (msgTimer.isEnabled() || !msgText.getString().empty()); });
+		auto intro([=, &pBody]{ return (msgTimer.isRunning() || !msgText.getString().empty()); });
 
 											pW(11, -2);
 											pW(11, -1);				pB(13,-1,0);
@@ -259,7 +259,7 @@ namespace ld
 		auto& player(factory.createPlayer(put(1, -1)));
 		const auto& pBody(player.getComponent<LDCPhysics>().getBody());
 
-		auto intro([=, &pBody]{ return (msgTimer.isEnabled() || !msgText.getString().empty()); });
+		auto intro([=, &pBody]{ return (msgTimer.isRunning() || !msgText.getString().empty()); });
 
 											pW(11, -2);	pW(12, -2);	pW(13, -2);
 														pR(12,-1,0);
@@ -286,7 +286,7 @@ namespace ld
 		auto& player(factory.createPlayer(put(1, -1)));
 		const auto& pBody(player.getComponent<LDCPhysics>().getBody());
 
-		auto intro([=, &pBody]{ return (msgTimer.isEnabled() || !msgText.getString().empty()); });											pW(18, -1);
+		auto intro([=, &pBody]{ return (msgTimer.isRunning() || !msgText.getString().empty()); });											pW(18, -1);
 																																pW(18, 0);
 																	pW(13, 1);										pB(17,2,1);	pW(18, 1);
 																													pW(17, 3);	pW(18, 2);
@@ -337,13 +337,13 @@ namespace ld
 		timerText.setPosition({0.f, gameWindow.getHeight() - timerText.getGlobalBounds().height});
 
 		// Message control
-		if(msgTimer.isEnabled() && msgText.getString().size() < currentMsg.size())
+		if(msgTimer.isRunning() && msgText.getString().size() < currentMsg.size())
 		{
 			if(msgCharTimer.update(mFrameTime, 2.f)) msgText.setString(msgText.getString() + currentMsg[msgText.getString().size()]);
 		}
 		else if(msgTimer.update(mFrameTime)) msgTimer.stop();
 
-		if(!msgTimer.isEnabled() && !msgText.getString().empty())
+		if(!msgTimer.isRunning() && !msgText.getString().empty())
 		{
 			if(msgCharTimer.update(mFrameTime, 0.6f)) msgText.setString(msgText.getString().substr(0, msgText.getString().size() - 1));
 		}
