@@ -43,7 +43,7 @@ namespace ld
 				animLegsWalk = ssvs::getAnimationFromJson(tileset, animsLegs["walk"]);
 			}
 
-			void update(float mFrameTime) override
+			void update(float mFT) override
 			{
 				using Action = LDCPlayer::Action;
 
@@ -74,13 +74,13 @@ namespace ld
 
 				if(currentTorsoAnim != nullptr)
 				{
-					currentTorsoAnim->update(mFrameTime);
+					currentTorsoAnim->update(mFT);
 					cRender[1].setTextureRect(tileset(currentTorsoAnim->getTileIndex()));
 				}
 
 				if(currentLegsAnim != nullptr)
 				{
-					currentLegsAnim->update(mFrameTime);
+					currentLegsAnim->update(mFT);
 					cRender[0].setTextureRect(tileset(currentLegsAnim->getTileIndex()));
 				}
 			}

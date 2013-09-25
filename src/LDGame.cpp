@@ -27,7 +27,7 @@ namespace ld
 	{
 		// Let's initialize stuff from my game framework
 		// These are delegates from SSVUtils, similar to C# delegates
-		gameState.onUpdate += [this](float mFrameTime){ update(mFrameTime); };
+		gameState.onUpdate += [this](float mFT){ update(mFT); };
 		gameState.onDraw += [this]{ draw(); };
 
 		// Let's make the text prettier
@@ -300,13 +300,13 @@ namespace ld
 		t.append<Do>([=]{ showMessage("this is your final task for today\ngood luck, worker", 150); });	t.append<WaitWhile>(intro);
 	}
 
-	void LDGame::update(float mFrameTime)
+	void LDGame::update(float mFT)
 	{
 		if(levelStatus.started && !levelStatus.tutorial)
 		{
 			levelStatus.timer.resume();
 
-			if(levelStatus.timer.update(mFrameTime)) assets.playSound("blip.wav", SoundPlayer::Mode::Overlap, levelStatus.timer.getTicks() - 3.f);
+			if(levelStatus.timer.update(mFT)) assets.playSound("blip.wav", SoundPlayer::Mode::Overlap, levelStatus.timer.getTicks() - 3.f);
 
 			if(levelStatus.timer.getTotalSecs() > 10.f)
 			{
@@ -339,19 +339,19 @@ namespace ld
 		// Message control
 		if(msgTimer.isRunning() && msgText.getString().size() < currentMsg.size())
 		{
-			if(msgCharTimer.update(mFrameTime, 2.f)) msgText.setString(msgText.getString() + currentMsg[msgText.getString().size()]);
+			if(msgCharTimer.update(mFT, 2.f)) msgText.setString(msgText.getString() + currentMsg[msgText.getString().size()]);
 		}
-		else if(msgTimer.update(mFrameTime)) msgTimer.stop();
+		else if(msgTimer.update(mFT)) msgTimer.stop();
 
 		if(!msgTimer.isRunning() && !msgText.getString().empty())
 		{
-			if(msgCharTimer.update(mFrameTime, 0.6f)) msgText.setString(msgText.getString().substr(0, msgText.getString().size() - 1));
+			if(msgCharTimer.update(mFT, 0.6f)) msgText.setString(msgText.getString().substr(0, msgText.getString().size() - 1));
 		}
 
-		timelineManager.update(mFrameTime); // TimelineManager is from SSVUtils, it handles coroutine-like timeline objects
-		manager.update(mFrameTime); // Manager is from SSVEntitySystem, it handles entities and components
-		world.update(mFrameTime); // World is from SSVSCollision, it handles "physics"
-		updateDebugText(mFrameTime); // And debugText is just a debugging text showing FPS and other cool info
+		timelineManager.update(mFT); // TimelineManager is from SSVUtils, it handles coroutine-like timeline objects
+		manager.update(mFT); // Manager is from SSVEntitySystem, it handles entities and components
+		world.update(mFT); // World is from SSVSCollision, it handles "physics"
+		updateDebugText(mFT); // And debugText is just a debugging text showing FPS and other cool info
 
 		if(manager.hasEntity(LDGroup::Player))
 		{
@@ -368,9 +368,9 @@ namespace ld
 
 		if(mustChangeLevel) { mustChangeLevel = false; newGame(); }
 
-		camera.update(mFrameTime);
+		camera.update(mFT);
 	}
-	void LDGame::updateDebugText(float mFrameTime)
+	void LDGame::updateDebugText(float mFT)
 	{
 		ostringstream s;
 		const auto& entities(manager.getEntities());
@@ -380,7 +380,7 @@ namespace ld
 		for(const auto& b : bodies) if(!b->isStatic()) ++dynamicBodiesCount;
 
 		s << "FPS: "				<< gameWindow.getFPS() << "\n";
-		s << "FrameTime: "			<< mFrameTime << "\n";
+		s << "FrameTime: "			<< mFT << "\n";
 		s << "Bodies(all): "		<< bodies.size() << "\n";
 		s << "Bodies(static): "		<< bodies.size() - dynamicBodiesCount << "\n";
 		s << "Bodies(dynamic): "	<< dynamicBodiesCount << "\n";

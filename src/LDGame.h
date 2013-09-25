@@ -78,8 +78,8 @@ namespace ld
 			inline void setMenuGame(LDMenu& mMG){ menuGame = &mMG; }
 			inline void setLevel(int mLevel){ level = mLevel; }
 
-			void update(float mFrameTime);
-			void updateDebugText(float mFrameTime);
+			void update(float mFT);
+			void updateDebugText(float mFT);
 			void draw();
 			inline void render(const sf::Drawable& mDrawable) { gameWindow.draw(mDrawable); }
 

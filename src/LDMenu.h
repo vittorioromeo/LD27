@@ -32,7 +32,7 @@ namespace ld
 			creditsTxt.setString("entry for ludum dare #27\ncreated by vittorio romeo\nhttp://vittorioromeo.info\n\nmove with arrow keys\nkeep 'Z' pressed to grab blocks\npress 'X' to jump\nuse 'W/S/A/D' to pan camera\nuse 'Q/E' to zoom\npress 'R' to restart the level");
 			creditsTxt.setPosition({window.getWidth() - creditsTxt.getGlobalBounds().width, window.getHeight() - creditsTxt.getGlobalBounds().height});
 
-			gameState.onUpdate += [this](float mFrameTime){ update(mFrameTime); };
+			gameState.onUpdate += [this](float mFT){ update(mFT); };
 			gameState.onDraw += [this]{ draw(); };
 
 			using k = sf::Keyboard::Key;
@@ -61,7 +61,7 @@ namespace ld
 			main.create<i::Single>("exit", [this]{ window.stop(); });
 		}
 
-		inline void update(float mFrameTime) { camera.update(mFrameTime); menu.update(); }
+		inline void update(float mFT) { camera.update(mFT); menu.update(); }
 		inline void draw() { camera.apply(); drawMenu(menu); camera.unapply(); render(creditsTxt); }
 
 		inline void render(sf::Drawable& mDrawable) { window.draw(mDrawable); }

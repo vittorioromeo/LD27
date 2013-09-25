@@ -164,7 +164,7 @@ namespace ld
 
 				cPhysics.onResolution += [this](const ssvs::Vec2i&) { jumpReady = true; };
 			}
-			void update(float mFrameTime) override
+			void update(float mFT) override
 			{
 				if(currentBlock != nullptr && !getManager().isAlive(currentBlockStat)) currentBlock = nullptr;
 
@@ -174,9 +174,9 @@ namespace ld
 				ssvs::Vec2i offset{facingLeft ? -1000 : 1000, -600};
 				blockSensor.setPosition(body.getPosition() + ssvs::Vec2i{offset.x / 2, 300});
 
-				if(game.getIX() == 0) move(0, mFrameTime);
-				else if(game.getIX() == -1) move(-1, mFrameTime);
-				else if(game.getIX() == 1) move(1, mFrameTime);
+				if(game.getIX() == 0) move(0, mFT);
+				else if(game.getIX() == -1) move(-1, mFT);
+				else if(game.getIX() == 1) move(1, mFT);
 
 				if(game.getIJump() == 1) jump();
 
@@ -199,8 +199,8 @@ namespace ld
 				if(facingLeft && !wasFacingLeft) lastTurn = 20.f;
 				if(!facingLeft && !wasFacingRight) lastTurn = 20.f;
 
-				if(lastTurn > 0.f) lastTurn -= mFrameTime;
-				if(lastJump > 0.f) lastJump -= mFrameTime;
+				if(lastTurn > 0.f) lastTurn -= mFT;
+				if(lastJump > 0.f) lastJump -= mFT;
 
 				if(hasBlock())
 				{
@@ -216,16 +216,16 @@ namespace ld
 					currentBlock->setOffset(offset);
 					if(!currentBlock->hasParent()) currentBlock = nullptr;
 				}
-				else if(lastBlockTimer > 0) lastBlockTimer -= mFrameTime;
+				else if(lastBlockTimer > 0) lastBlockTimer -= mFT;
 			}
 
-			inline void move(int mDirection, float mFrameTime)
+			inline void move(int mDirection, float mFT)
 			{
 				body.setVelocityX(walkSpeed * mDirection);
 
 				if(mDirection != 0)
 				{
-					if(stepTime > 0.f) stepTime -= mFrameTime;
+					if(stepTime > 0.f) stepTime -= mFT;
 					else if(!cPhysics.isInAir())
 					{
 						game.getAssets().playSound("step.wav");
