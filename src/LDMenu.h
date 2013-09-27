@@ -76,7 +76,7 @@ namespace ld
 
 		void drawMenu(const ssvms::Menu& mMenu)
 		{
-			renderText(mMenu.getCategory().getName(), txt, {0.f, 0.f});
+			renderText(mMenu.getCategory().getName(), txt, ssvs::zeroVec2f);
 
 			float currentX{0.f}, currentY{0.f};
 			auto& currentItems(mMenu.getItems());

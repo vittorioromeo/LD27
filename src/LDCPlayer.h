@@ -20,7 +20,7 @@ namespace ld
 			LDCPhysics& cPhysics;
 			ssvsc::Body& body;
 			LDCPhysics* parent{nullptr};
-			ssvs::Vec2i offset{0, 0};
+			ssvs::Vec2i offset;
 			ssvs::BitmapText text;
 
 		public:
