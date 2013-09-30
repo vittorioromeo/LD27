@@ -52,8 +52,7 @@ namespace ld
 		result.createComponent<LDCBlock>(mVal, game, cPhysics);
 
 		Body& body(cPhysics.getBody());
-		body.addGroup(LDGroup::Solid);
-		body.addGroup(LDGroup::Block);
+		body.addGroups(LDGroup::Solid, LDGroup::Block);
 		body.addGroupToCheck(LDGroup::Solid);
 		body.addGroupNoResolve(LDGroup::BlockFloating);
 		return result;
@@ -184,8 +183,7 @@ namespace ld
 		result.createComponent<LDCPlayerAnimation>(assets.tilesetChar, cRender, cPlayer);
 
 		Body& body(cPhysics.getBody());
-		body.addGroup(LDGroup::Solid);
-		body.addGroup(LDGroup::Player);
+		body.addGroups(LDGroup::Solid, LDGroup::Player);
 		body.addGroupToCheck(LDGroup::Solid);
 		body.addGroupNoResolve(LDGroup::BlockFloating);
 		body.setRestitutionX(0.f);
