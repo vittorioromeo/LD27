@@ -17,4 +17,13 @@
 #include <SSVMenuSystem/SSVMenuSystem.h>
 #include <SSVSCollision/SSVSCollision.h>
 
+namespace ld
+{
+	using World = ssvsc::World<ssvsc::HashGrid, ssvsc::Impulse>;
+	using Body = World::BodyType;
+	using Sensor = World::SensorType;
+	using DetectionInfo = World::DetectionInfoType;
+	using ResolutionInfo = World::ResolutionInfoType;
+}
+
 #endif

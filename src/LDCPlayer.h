@@ -18,7 +18,7 @@ namespace ld
 			int val;
 			LDGame& game;
 			LDCPhysics& cPhysics;
-			ssvsc::Body& body;
+			Body& body;
 			LDCPhysics* parent{nullptr};
 			ssvs::Vec2i offset;
 			ssvs::BitmapText text;
@@ -29,7 +29,7 @@ namespace ld
 			{
 				text.setScale(0.75f, 0.75f);
 				text.setTracking(-3);
-				body.onResolution += [this](const ssvsc::ResolutionInfo& mRI)
+				body.onResolution += [this](const ResolutionInfo& mRI)
 				{
 					if(body.hasGroup(LDGroup::BlockFloating)) return;
 
@@ -111,7 +111,7 @@ namespace ld
 		private:
 			LDGame& game;
 			LDCPhysics& cPhysics;
-			ssvsc::Body& body;
+			Body& body;
 			Action action;
 			bool facingLeft{false}, jumpReady{false};
 			float walkSpeed{150.f}, jumpSpeed{520.f};
@@ -120,7 +120,7 @@ namespace ld
 
 			LDSensor blockSensor{cPhysics.getBody(), ssvs::Vec2i{10, 2400}};
 			LDCBlock* currentBlock{nullptr}; sses::EntityStat currentBlockStat;
-			ssvsc::Body* lastBlock{nullptr};
+			Body* lastBlock{nullptr};
 			float lastBlockTimer{0.f};
 
 		public:
@@ -150,8 +150,8 @@ namespace ld
 
 				body.onPreUpdate += [this]{ jumpReady = false; };
 				body.onPostUpdate += [this]{ };
-				body.onDetection += [this](const ssvsc::DetectionInfo&){ };
-				body.onResolution += [this](const ssvsc::ResolutionInfo& mRI)
+				body.onDetection += [this](const DetectionInfo&){ };
+				body.onResolution += [this](const ResolutionInfo& mRI)
 				{
 					// When you get pushed in a floor/ceiling so hard that a fourth of your height is inside, you're considered crushed
 					//if(std::abs(mRI.resolution.y) > body.getHeight() / 12.f) { getEntity().destroy(); return; }

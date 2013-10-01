@@ -16,20 +16,20 @@ namespace ld
 	class LDSensor
 	{
 		private:
-			ssvsc::Body& parent;
+			Body& parent;
 			ssvs::Vec2i position;
-			ssvsc::Sensor& sensor;
+			Sensor& sensor;
 			bool active{false};
 
 		public:
 			ssvu::Delegate<void(sses::Entity&)> onDetection;
 
-			LDSensor(ssvsc::Body& mParent, const ssvs::Vec2i& mSize) : parent(mParent), position(parent.getPosition()), sensor(parent.getWorld().createSensor(position, mSize))
+			LDSensor(Body& mParent, const ssvs::Vec2i& mSize) : parent(mParent), position(parent.getPosition()), sensor(parent.getWorld().createSensor(position, mSize))
 			{
-				sensor.addGroup(LDGroup::Sensor);
+				sensor.addGroup(LDGroup::GSensor);
 
 				sensor.onPreUpdate += [this]{ active = false; sensor.setPosition(position); };
-				sensor.onDetection += [this](const ssvsc::DetectionInfo& mDI)
+				sensor.onDetection += [this](const DetectionInfo& mDI)
 				{
 					if(&mDI.body == &parent) return;
 					active = true;
@@ -43,8 +43,8 @@ namespace ld
 
 			void setPosition(const ssvs::Vec2i& mPos) { position = mPos; }
 
-			inline ssvsc::Sensor& getSensor()	{ return sensor; }
-			inline bool isActive() const		{ return active; }
+			inline Sensor& getSensor()		{ return sensor; }
+			inline bool isActive() const	{ return active; }
 	};
 }
 

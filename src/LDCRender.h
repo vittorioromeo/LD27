@@ -17,14 +17,14 @@ namespace ld
 	{
 		private:
 			LDGame& game;
-			ssvsc::Body& body;
+			Body& body;
 			std::vector<sf::Sprite> sprites;
 			std::vector<ssvs::Vec2f> offsets;
 			bool flippedX{false}, flippedY{false}, scaleWithBody{false};
 			ssvs::Vec2f globalOffset;
 
 		public:
-			inline LDCRender(LDGame& mGame, ssvsc::Body& mBody) : game(mGame), body(mBody) { }
+			inline LDCRender(LDGame& mGame, Body& mBody) : game(mGame), body(mBody) { }
 
 			inline void update(float) override
 			{

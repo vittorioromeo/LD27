@@ -9,7 +9,7 @@
 
 namespace ld
 {
-	enum LDGroup : unsigned int {Solid, Block, CanBePicked, Player, BlockFloating, Sensor};
+	enum LDGroup : unsigned int {Solid, Block, CanBePicked, Player, BlockFloating, GSensor};
 }
 
 #endif

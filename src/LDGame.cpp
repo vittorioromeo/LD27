@@ -22,7 +22,7 @@ namespace ld
 	int LDGame::levelCount{6};
 
 	LDGame::LDGame(GameWindow& mGameWindow, LDAssets& mAssets) : gameWindow(mGameWindow), assets(mAssets), factory{assets, *this, manager, world},
-		world(createResolver<Impulse>(), createSpatial<HashGrid>(1000, 1000, 3000, 500)),  debugText{assets.get<BitmapFont>("limeStroked")}, msgText{assets.get<BitmapFont>("limeStroked")},
+		world(1000, 1000, 3000, 500),  debugText{assets.get<BitmapFont>("limeStroked")}, msgText{assets.get<BitmapFont>("limeStroked")},
 		timerText{assets.get<BitmapFont>("limeStroked")}
 	{
 		// Let's initialize stuff from my game framework

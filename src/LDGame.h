@@ -30,7 +30,7 @@ namespace ld
 			ssvs::Camera camera{gameWindow, 2.f};
 			LDFactory factory;
 			ssvs::GameState gameState;
-			ssvsc::World world;
+			World world;
 			sses::Manager manager;
 			ssvs::BitmapText debugText;
 			ssvu::TimelineManager timelineManager;
@@ -88,7 +88,7 @@ namespace ld
 			inline LDAssets& getAssets()				{ return assets; }
 			inline LDFactory& getFactory()				{ return factory; }
 			inline ssvs::GameState& getGameState()		{ return gameState; }
-			inline ssvsc::World& getWorld()				{ return world; }
+			inline World& getWorld()					{ return world; }
 			inline sses::Manager& getManager()			{ return manager; }
 
 			inline bool getIAction() const				{ return inputAction; }

@@ -17,8 +17,8 @@ namespace ld
 		private:
 			static constexpr int crushedMax{3}, crushedTolerance{1};
 
-			ssvsc::World& world;
-			ssvsc::Body& body;
+			World& world;
+			Body& body;
 			ssvs::Vec2i lastResolution;
 			bool affectedByGravity{true};
 			int crushedLeft{0}, crushedRight{0}, crushedTop{0}, crushedBottom{0};
@@ -30,7 +30,7 @@ namespace ld
 			ssvu::Delegate<void(sses::Entity&)> onDetection;
 			ssvu::Delegate<void(const ssvs::Vec2i&)> onResolution;
 
-			LDCPhysics(ssvsc::World& mWorld, bool mIsStatic, const ssvs::Vec2i& mPosition, const ssvs::Vec2i& mSize, bool mAffectedByGravity = true)
+			LDCPhysics(World& mWorld, bool mIsStatic, const ssvs::Vec2i& mPosition, const ssvs::Vec2i& mSize, bool mAffectedByGravity = true)
 				: world(mWorld), body(world.create(mPosition, mSize, mIsStatic)), affectedByGravity{mAffectedByGravity}, groundSensor{body, ssvs::Vec2i{body.getWidth(), 10}} { }
 			inline ~LDCPhysics() { body.destroy(); }
 
@@ -42,8 +42,8 @@ namespace ld
 
 			inline void setAffectedByGravity(bool mAffectedByGravity) { affectedByGravity = mAffectedByGravity; }
 
-			inline ssvsc::World& getWorld() const				{ return world; }
-			inline ssvsc::Body& getBody() const					{ return body; }
+			inline World& getWorld() const						{ return world; }
+			inline Body& getBody() const						{ return body; }
 			inline const ssvs::Vec2i& getPos() const			{ return body.getPosition(); }
 			inline const ssvs::Vec2i& getLastResolution() const	{ return lastResolution; }
 			inline bool isAffectedByGravity() const				{ return affectedByGravity; }
