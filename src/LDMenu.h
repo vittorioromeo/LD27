@@ -85,7 +85,7 @@ namespace ld
 				currentY += 12;
 				if(i != 0 && i % 21 == 0) { currentY = 0; currentX += 180; }
 				std::string name, itemName{currentItems[i]->getName()};
-				if(i == mMenu.getIndex()) name.append(">> ");
+				if(i == mMenu.getIdx()) name.append(">> ");
 				name.append(itemName);
 
 				int extraSpacing{0};
