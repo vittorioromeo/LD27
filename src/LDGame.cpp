@@ -374,7 +374,8 @@ namespace ld
 	{
 		ostringstream s;
 		const auto& entities(manager.getEntities());
-		const auto& bodies(world.getBodies());
+		const auto& bodies(world.getBodies().getItems());
+		const auto& sensors(world.getSensors().getItems());
 		std::size_t componentCount{0}, dynamicBodiesCount{0};
 		for(const auto& e : entities) componentCount += e->getComponents().size();
 		for(const auto& b : bodies) if(!b->isStatic()) ++dynamicBodiesCount;
@@ -384,7 +385,7 @@ namespace ld
 		s << "Bodies(all): "		<< bodies.size() << "\n";
 		s << "Bodies(static): "		<< bodies.size() - dynamicBodiesCount << "\n";
 		s << "Bodies(dynamic): "	<< dynamicBodiesCount << "\n";
-		s << "Sensors: "			<< world.getSensors().size() << "\n";
+		s << "Sensors: "			<< sensors.size() << "\n";
 		s << "Entities: "			<< entities.size() << "\n";
 		s << "Components: "			<< componentCount << endl;
 
@@ -398,7 +399,7 @@ namespace ld
 		camera.apply<int>();
 		manager.draw();
 		camera.unapply();
-		//render(debugText);
+		render(debugText);
 		render(msgText);
 		render(timerText);
 	}
