@@ -33,8 +33,8 @@ namespace ld
 		auto& cRender(result.createComponent<LDCRender>(game, cPhysics.getBody()));
 
 		Body& body(cPhysics.getBody());
-		body.addGroup(LDGroup::Solid);
-		body.addGroupToCheck(LDGroup::Solid);
+		body.addGroups(LDGroup::Solid);
+		body.addGroupsToCheck(LDGroup::Solid);
 		body.setVelTransferMultX(1.f);
 		body.setVelTransferMultY(1.f);
 
@@ -46,15 +46,15 @@ namespace ld
 	}
 	Entity& LDFactory::createBlockBase(const Vec2i& mPos, const Vec2i& mSize, int mVal)
 	{
-		auto& result(manager.createEntity()); result.addGroup(LDGroup::Block);
+		auto& result(manager.createEntity()); result.addGroups(LDGroup::Block);
 		auto& cPhysics(result.createComponent<LDCPhysics>(world, false, mPos, mSize));
 		result.createComponent<LDCRender>(game, cPhysics.getBody());
 		result.createComponent<LDCBlock>(mVal, game, cPhysics);
 
 		Body& body(cPhysics.getBody());
 		body.addGroups(LDGroup::Solid, LDGroup::Block);
-		body.addGroupToCheck(LDGroup::Solid);
-		body.addGroupNoResolve(LDGroup::BlockFloating);
+		body.addGroupsToCheck(LDGroup::Solid);
+		body.addGroupsNoResolve(LDGroup::BlockFloating);
 		return result;
 	}
 	Entity& LDFactory::createBlock(const Vec2i& mPos, int mVal)
@@ -64,7 +64,7 @@ namespace ld
 		auto& cRender(result.getComponent<LDCRender>());
 		Body& body(cPhysics.getBody());
 
-		body.addGroup(LDGroup::CanBePicked);
+		body.addGroups(LDGroup::CanBePicked);
 		body.setRestitutionX(0.3f);
 		body.setRestitutionY(0.3f);
 		body.setMass(1.f);
@@ -113,7 +113,7 @@ namespace ld
 		auto& cRender(result.getComponent<LDCRender>());
 		Body& body(cPhysics.getBody());
 
-		body.addGroup(LDGroup::CanBePicked);
+		body.addGroups(LDGroup::CanBePicked);
 		body.setRestitutionX(0.8f);
 		body.setRestitutionY(0.8f);
 		body.setMass(0.6f);
@@ -136,7 +136,7 @@ namespace ld
 		auto& cRender(result.getComponent<LDCRender>());
 		Body& body(cPhysics.getBody());
 
-		body.addGroup(LDGroup::CanBePicked);
+		body.addGroups(LDGroup::CanBePicked);
 		body.setRestitutionX(0.8f);
 		body.setRestitutionY(0.3f);
 		body.setMass(0.8f);
@@ -158,7 +158,7 @@ namespace ld
 		auto& cRender(result.getComponent<LDCRender>());
 		Body& body(cPhysics.getBody());
 
-		body.addGroup(LDGroup::CanBePicked);
+		body.addGroups(LDGroup::CanBePicked);
 		body.setRestitutionX(0.3f);
 		body.setRestitutionY(0.8f);
 		body.setMass(0.8f);
@@ -176,7 +176,7 @@ namespace ld
 
 	Entity& LDFactory::createPlayer(const Vec2i& mPos)
 	{
-		auto& result(manager.createEntity()); result.addGroup(LDGroup::Player);
+		auto& result(manager.createEntity()); result.addGroups(LDGroup::Player);
 		auto& cPhysics(result.createComponent<LDCPhysics>(world, false, mPos, Vec2i{800, 2700}));
 		auto& cRender(result.createComponent<LDCRender>(game, cPhysics.getBody()));
 		auto& cPlayer(result.createComponent<LDCPlayer>(game, cPhysics));
@@ -184,8 +184,8 @@ namespace ld
 
 		Body& body(cPhysics.getBody());
 		body.addGroups(LDGroup::Solid, LDGroup::Player);
-		body.addGroupToCheck(LDGroup::Solid);
-		body.addGroupNoResolve(LDGroup::BlockFloating);
+		body.addGroupsToCheck(LDGroup::Solid);
+		body.addGroupsNoResolve(LDGroup::BlockFloating);
 		body.setRestitutionX(0.f);
 		body.setRestitutionY(0.f);
 		body.setMass(1.f);
@@ -207,7 +207,7 @@ namespace ld
 		result.createComponent<LDCBlock>(mVal, game, cPhysics);
 
 		Body& body(cPhysics.getBody());
-		body.addGroupToCheck(LDGroup::Block);
+		body.addGroupsToCheck(LDGroup::Block);
 		body.setResolve(false);
 
 		body.onDetection += [this, mVal](const DetectionInfo& mDI)
@@ -242,7 +242,7 @@ namespace ld
 		auto& cRender(result.createComponent<LDCRender>(game, cPhysics.getBody()));
 
 		Body& body(cPhysics.getBody());
-		body.addGroupToCheck(LDGroup::Player);
+		body.addGroupsToCheck(LDGroup::Player);
 		body.setResolve(false);
 
 		body.onDetection += [this](const DetectionInfo& mDI)
@@ -261,14 +261,14 @@ namespace ld
 	}
 	Entity& LDFactory::createLift(const Vec2i& mPos, const Vec2f& mVel)
 	{
-		auto& result(manager.createEntity()); result.addGroup(LDGroup::Block);
+		auto& result(manager.createEntity()); result.addGroups(LDGroup::Block);
 		auto& cPhysics(result.createComponent<LDCPhysics>(world, false, mPos, Vec2i{3200, 1800}));
 		auto& cRender(result.createComponent<LDCRender>(game, cPhysics.getBody()));
 
 		Body& body(cPhysics.getBody());
-		body.addGroup(LDGroup::Solid);
-		body.addGroupToCheck(LDGroup::Solid);
-		body.addGroupNoResolve(LDGroup::BlockFloating);
+		body.addGroups(LDGroup::Solid);
+		body.addGroupsToCheck(LDGroup::Solid);
+		body.addGroupsNoResolve(LDGroup::BlockFloating);
 		cPhysics.setAffectedByGravity(false);
 		body.onPreUpdate += [&, mVel]{ body.setVelocity(mVel * 2.f); };
 		body.setRestitutionX(0.3f);

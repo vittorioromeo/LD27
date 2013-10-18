@@ -26,7 +26,7 @@ namespace ld
 
 			LDSensor(Body& mParent, const ssvs::Vec2i& mSize) : parent(mParent), position(parent.getPosition()), sensor(parent.getWorld().createSensor(position, mSize))
 			{
-				sensor.addGroup(LDGroup::GSensor);
+				sensor.addGroups(LDGroup::GSensor);
 
 				sensor.onPreUpdate += [this]{ active = false; sensor.setPosition(position); };
 				sensor.onDetection += [this](const DetectionInfo& mDI)

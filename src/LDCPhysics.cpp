@@ -16,7 +16,7 @@ namespace ld
 {
 	void LDCPhysics::init()
 	{
-		groundSensor.getSensor().addGroupToCheck(LDGroup::Solid);
+		groundSensor.getSensor().addGroupsToCheck(LDGroup::Solid);
 
 		body.setUserData(&getEntity());
 

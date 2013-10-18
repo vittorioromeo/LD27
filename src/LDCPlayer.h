@@ -53,7 +53,7 @@ namespace ld
 						// If velocity is very small, set it to 0
 						if(std::abs(body.getVelocity().x) < 5.f) body.setVelocityX(0.f);
 
-						if(parent == nullptr) body.delGroupNoResolve(LDGroup::Player);
+						if(parent == nullptr) body.delGroupsNoResolve(LDGroup::Player);
 					}
 					text.setString(ssvu::toStr((int)(body.getStress().y)));
 				};
@@ -88,15 +88,15 @@ namespace ld
 			{
 				game.start10Secs();
 				parent = &mParent;
-				body.addGroup(LDGroup::BlockFloating);
-				body.addGroupNoResolve(LDGroup::Player);
+				body.addGroups(LDGroup::BlockFloating);
+				body.addGroupsNoResolve(LDGroup::Player);
 			}
 			inline void dropped(float mHBoost = 1.f, float mVBoost = 1.f)
 			{
 				parent = nullptr;
 				auto newVel(body.getVelocity()); newVel.x *= mHBoost; newVel.y *= mVBoost;
 				body.setVelocity(ssvs::getCClamped(newVel, -1000.f, 1000.f));
-				body.delGroup(LDGroup::BlockFloating);
+				body.delGroups(LDGroup::BlockFloating);
 			}
 			inline void setOffset(const ssvs::Vec2i& mOffset) { offset = mOffset; }
 			inline bool hasParent() { return parent != nullptr; }
@@ -133,7 +133,7 @@ namespace ld
 
 			void init() override
 			{
-				blockSensor.getSensor().addGroupToCheck(LDGroup::Block);
+				blockSensor.getSensor().addGroupsToCheck(LDGroup::Block);
 
 				blockSensor.onDetection += [this](sses::Entity& mE)
 				{
