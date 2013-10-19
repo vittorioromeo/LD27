@@ -38,8 +38,8 @@ namespace ld
 		timerText.setScale(4.f, 4.f);
 
 		// Input initialization
-		using k = Keyboard::Key;
-		using b = Mouse::Button;
+		using k = KKey;
+		using b = MBtn;
 		using t = Input::Trigger::Type;
 
 		gameState.addInput({{k::Escape}}, [this](float){ assets.musicPlayer.stop(); gameWindow.setGameState(menuGame->gameState); });

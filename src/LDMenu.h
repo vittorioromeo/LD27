@@ -35,8 +35,8 @@ namespace ld
 			gameState.onUpdate += [this](float mFT){ update(mFT); };
 			gameState.onDraw += [this]{ draw(); };
 
-			using k = sf::Keyboard::Key;
-			using b = sf::Mouse::Button;
+			using k = ssvs::KKey;
+			using b = ssvs::MBtn;
 			using t = ssvs::Input::Trigger::Type;
 			gameState.addInput({{k::Up}},					[this](float){ assets.playSound("blip.wav"); menu.previous(); }, t::Once);
 			gameState.addInput({{k::Down}},					[this](float){ assets.playSound("blip.wav"); menu.next(); }, t::Once);
