@@ -131,7 +131,7 @@ namespace ld
 				currentBlock->dropped();
 			}
 
-			void init() override
+			void init()
 			{
 				blockSensor.getSensor().addGroupsToCheck(LDGroup::Block);
 

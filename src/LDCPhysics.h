@@ -34,7 +34,7 @@ namespace ld
 				: world(mWorld), body(world.create(mPosition, mSize, mIsStatic)), affectedByGravity{mAffectedByGravity}, groundSensor{body, ssvs::Vec2i{body.getWidth(), 10}} { }
 			inline ~LDCPhysics() { body.destroy(); }
 
-			void init() override;
+			void init();
 			inline void update(float) override
 			{
 				if(affectedByGravity && body.getVelocity().y < maxVelocityY) body.applyForce(gravityForce);
