@@ -38,9 +38,9 @@ namespace ld
 		timerText.setScale(4.f, 4.f);
 
 		// Input initialization
-		using k = KKey;
-		using b = MBtn;
-		using t = Input::Trigger::Type;
+		using k = ssvs::KKey;
+		//using b = ssvs::MBtn;
+		using t = Input::TriggerType;
 
 		gameState.addInput({{k::Escape}}, [this](float){ assets.musicPlayer.stop(); gameWindow.setGameState(menuGame->gameState); });
 
