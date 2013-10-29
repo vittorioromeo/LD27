@@ -40,7 +40,7 @@ namespace ld
 		// Input initialization
 		using k = ssvs::KKey;
 		//using b = ssvs::MBtn;
-		using t = Input::TriggerType;
+		using t = Input::Type;
 
 		gameState.addInput({{k::Escape}}, [this](float){ assets.musicPlayer.stop(); gameWindow.setGameState(menuGame->gameState); });
 
