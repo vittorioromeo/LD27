@@ -25,7 +25,7 @@ int main()
 
 	GameWindow gameWindow;
 	gameWindow.setTitle("10corp - LD27 - by vittorio romeo");
-	gameWindow.setTimer<StaticTimer>(0.5f, 0.5f);
+	gameWindow.setTimer<TimerStatic>(0.5f, 0.5f);
 	gameWindow.setSize(width, height);
 	gameWindow.setFullscreen(false);
 	gameWindow.setFPSLimited(true);
