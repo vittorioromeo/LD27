@@ -10,12 +10,12 @@
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Network.hpp>
-#include <SSVUtils/SSVUtils.h>
-#include <SSVUtilsJson/SSVUtilsJson.h>
-#include <SSVStart/SSVStart.h>
-#include <SSVEntitySystem/SSVEntitySystem.h>
-#include <SSVMenuSystem/SSVMenuSystem.h>
-#include <SSVSCollision/SSVSCollision.h>
+#include <SSVUtils/SSVUtils.hpp>
+#include <SSVUtilsJson/SSVUtilsJson.hpp>
+#include <SSVStart/SSVStart.hpp>
+#include <SSVEntitySystem/SSVEntitySystem.hpp>
+#include <SSVMenuSystem/SSVMenuSystem.hpp>
+#include <SSVSCollision/SSVSCollision.hpp>
 
 namespace ld
 {
