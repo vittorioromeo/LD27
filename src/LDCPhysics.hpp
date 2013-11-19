@@ -37,7 +37,7 @@ namespace ld
 			void init();
 			inline void update(float) override
 			{
-				if(affectedByGravity && body.getVelocity().y < maxVelocityY) body.applyForce(gravityForce);
+				if(affectedByGravity && body.getVelocity().y < maxVelocityY) body.applyAccel(gravityForce);
 			}
 
 			inline void setAffectedByGravity(bool mAffectedByGravity) { affectedByGravity = mAffectedByGravity; }
