@@ -2,8 +2,8 @@
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
-#include "LDGame.h"
-#include "LDCPhysics.h"
+#include "LDGame.hpp"
+#include "LDCPhysics.hpp"
 
 using namespace ssvs;
 using namespace sses;

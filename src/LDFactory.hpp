@@ -5,7 +5,7 @@
 #ifndef SSVLD_FACTORY
 #define SSVLD_FACTORY
 
-#include "LDDependencies.h"
+#include "LDDependencies.hpp"
 
 namespace ld
 {

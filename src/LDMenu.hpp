@@ -5,10 +5,10 @@
 #ifndef SSVLD_MENU
 #define SSVLD_MENU
 
-#include "LDDependencies.h"
-#include "LDAssets.h"
-#include "LDConfig.h"
-#include "LDGame.h"
+#include "LDDependencies.hpp"
+#include "LDAssets.hpp"
+#include "LDConfig.hpp"
+#include "LDGame.hpp"
 
 namespace ld
 {

@@ -5,7 +5,7 @@
 #ifndef SSVLD_CONFIG
 #define SSVLD_CONFIG
 
-#include "LDDependencies.h"
+#include "LDDependencies.hpp"
 
 namespace ld
 {

@@ -2,11 +2,11 @@
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
-#include "LDGame.h"
-#include "LDMenu.h"
-#include "LDGroups.h"
-#include "LDCPhysics.h"
-#include "LDCPlayer.h"
+#include "LDGame.hpp"
+#include "LDMenu.hpp"
+#include "LDGroups.hpp"
+#include "LDCPhysics.hpp"
+#include "LDCPlayer.hpp"
 
 using namespace std;
 using namespace sf;

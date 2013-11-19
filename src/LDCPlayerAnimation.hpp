@@ -5,8 +5,8 @@
 #ifndef SSVLD_COMPONENTS_PLAYERANIMATION
 #define SSVLD_COMPONENTS_PLAYERANIMATION
 
-#include "LDDependencies.h"
-#include "LDUtils.h"
+#include "LDDependencies.hpp"
+#include "LDUtils.hpp"
 
 namespace ld
 {

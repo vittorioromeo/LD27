@@ -5,8 +5,8 @@
 #ifndef SSVLD_ASSETS
 #define SSVLD_ASSETS
 
-#include "LDDependencies.h"
-#include "LDConfig.h"
+#include "LDDependencies.hpp"
+#include "LDConfig.hpp"
 
 namespace ld
 {

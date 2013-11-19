@@ -5,8 +5,8 @@
 #ifndef SSVLD_COMPONENTS_PHYSICS
 #define SSVLD_COMPONENTS_PHYSICS
 
-#include "LDSensor.h"
-#include "LDDependencies.h"
+#include "LDSensor.hpp"
+#include "LDDependencies.hpp"
 
 namespace ld
 {

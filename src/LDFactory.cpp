@@ -4,13 +4,13 @@
 
 #include <unordered_map>
 
-#include "LDFactory.h"
-#include "LDGroups.h"
+#include "LDFactory.hpp"
+#include "LDGroups.hpp"
 
-#include "LDCPhysics.h"
-#include "LDCRender.h"
-#include "LDCPlayer.h"
-#include "LDCPlayerAnimation.h"
+#include "LDCPhysics.hpp"
+#include "LDCRender.hpp"
+#include "LDCPlayer.hpp"
+#include "LDCPlayerAnimation.hpp"
 
 using namespace std;
 using namespace sf;

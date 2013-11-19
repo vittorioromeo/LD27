@@ -5,7 +5,7 @@
 #ifndef SSVLD_GROUPS
 #define SSVLD_GROUPS
 
-#include "LDDependencies.h"
+#include "LDDependencies.hpp"
 
 namespace ld
 {

@@ -5,10 +5,10 @@
 #ifndef SSVLD_COMPONENTS_PLAYER
 #define SSVLD_COMPONENTS_PLAYER
 
-#include "LDDependencies.h"
-#include "LDGroups.h"
-#include "LDSensor.h"
-#include "LDUtils.h"
+#include "LDDependencies.hpp"
+#include "LDGroups.hpp"
+#include "LDSensor.hpp"
+#include "LDUtils.hpp"
 
 namespace ld
 {

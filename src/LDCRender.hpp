@@ -5,9 +5,9 @@
 #ifndef SSVLD_COMPONENTS_RENDER
 #define SSVLD_COMPONENTS_RENDER
 
-#include "LDDependencies.h"
-#include "LDGame.h"
-#include "LDUtils.h"
+#include "LDDependencies.hpp"
+#include "LDGame.hpp"
+#include "LDUtils.hpp"
 
 namespace ld
 {

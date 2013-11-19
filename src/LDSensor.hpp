@@ -5,8 +5,8 @@
 #ifndef SSVLD_SENSOR
 #define SSVLD_SENSOR
 
-#include "LDDependencies.h"
-#include "LDGroups.h"
+#include "LDDependencies.hpp"
+#include "LDGroups.hpp"
 
 namespace ld
 {

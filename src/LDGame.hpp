@@ -5,10 +5,10 @@
 #ifndef SSVLD_GAME
 #define SSVLD_GAME
 
-#include "LDDependencies.h"
-#include "LDAssets.h"
-#include "LDFactory.h"
-#include "LDUtils.h"
+#include "LDDependencies.hpp"
+#include "LDAssets.hpp"
+#include "LDFactory.hpp"
+#include "LDUtils.hpp"
 
 namespace ld
 {
