@@ -57,7 +57,7 @@ namespace ld
 			void start10Secs();
 			void refresh10Secs();
 
-			void showMessage(const std::string& mMsg, float mDuration, const sf::Color& mColor = sf::Color::White);
+			void showMessage(const std::string& mMsg, FT mDuration, const sf::Color& mColor = sf::Color::White);
 
 			void newGame();
 			void nextLevel();
@@ -78,8 +78,8 @@ namespace ld
 			inline void setMenuGame(LDMenu& mMG){ menuGame = &mMG; }
 			inline void setLevel(int mLevel){ level = mLevel; }
 
-			void update(float mFT);
-			void updateDebugText(float mFT);
+			void update(FT mFT);
+			void updateDebugText(FT mFT);
 			void draw();
 			inline void render(const sf::Drawable& mDrawable) { gameWindow.draw(mDrawable); }
 

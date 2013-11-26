@@ -43,7 +43,7 @@ namespace ld
 				animLegsWalk = ssvs::getAnimationFromJson(tileset, animsLegs["walk"]);
 			}
 
-			void update(float mFT) override
+			void update(FT mFT) override
 			{
 				using Action = LDCPlayer::Action;
 

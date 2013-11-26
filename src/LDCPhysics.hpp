@@ -35,7 +35,7 @@ namespace ld
 			inline ~LDCPhysics() { body.destroy(); }
 
 			void init();
-			inline void update(float) override
+			inline void update(FT) override
 			{
 				if(affectedByGravity && body.getVelocity().y < maxVelocityY) body.applyAccel(gravityForce);
 			}

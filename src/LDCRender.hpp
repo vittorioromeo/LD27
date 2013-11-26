@@ -26,7 +26,7 @@ namespace ld
 		public:
 			inline LDCRender(LDGame& mGame, Body& mBody) : game(mGame), body(mBody) { }
 
-			inline void update(float) override
+			inline void update(FT) override
 			{
 				const auto& position(toPixels(body.getPosition()));
 				const auto& size(toPixels(body.getSize()));

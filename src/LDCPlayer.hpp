@@ -66,7 +66,7 @@ namespace ld
 				};
 
 			}
-			inline void update(float) override
+			inline void update(FT) override
 			{
 				text.setPosition(toPixels(body.getShape().getVertexNW<int>()) + ssvs::Vec2f{4, 3});
 
@@ -164,7 +164,7 @@ namespace ld
 
 				cPhysics.onResolution += [this](const ssvs::Vec2i&) { jumpReady = true; };
 			}
-			void update(float mFT) override
+			void update(FT mFT) override
 			{
 				if(currentBlock != nullptr && !getManager().isAlive(currentBlockStat)) currentBlock = nullptr;
 
@@ -219,7 +219,7 @@ namespace ld
 				else if(lastBlockTimer > 0) lastBlockTimer -= mFT;
 			}
 
-			inline void move(int mDirection, float mFT)
+			inline void move(int mDirection, FT mFT)
 			{
 				body.setVelocityX(walkSpeed * mDirection);
 

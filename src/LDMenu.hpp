@@ -32,17 +32,17 @@ namespace ld
 			creditsTxt.setString("entry for ludum dare #27\ncreated by vittorio romeo\nhttp://vittorioromeo.info\n\nmove with arrow keys\nkeep 'Z' pressed to grab blocks\npress 'X' to jump\nuse 'W/S/A/D' to pan camera\nuse 'Q/E' to zoom\npress 'R' to restart the level");
 			creditsTxt.setPosition({window.getWidth() - creditsTxt.getGlobalBounds().width, window.getHeight() - creditsTxt.getGlobalBounds().height});
 
-			gameState.onUpdate += [this](float mFT){ update(mFT); };
+			gameState.onUpdate += [this](FT mFT){ update(mFT); };
 			gameState.onDraw += [this]{ draw(); };
 
 			using k = ssvs::KKey;
 			//using b = ssvs::MBtn;
 			using t = ssvs::Input::Type;
-			gameState.addInput({{k::Up}},					[this](float){ assets.playSound("blip.wav"); menu.previous(); }, t::Once);
-			gameState.addInput({{k::Down}},					[this](float){ assets.playSound("blip.wav"); menu.next(); }, t::Once);
-			gameState.addInput({{k::Left}},					[this](float){ assets.playSound("blip.wav"); menu.decrease(); }, t::Once);
-			gameState.addInput({{k::Right}},				[this](float){ assets.playSound("blip.wav"); menu.increase(); }, t::Once);
-			gameState.addInput({{k::Return}, {k::Space}},	[this](float){ assets.playSound("blip.wav"); menu.exec(); }, t::Once);
+			gameState.addInput({{k::Up}},					[this](FT){ assets.playSound("blip.wav"); menu.previous(); }, t::Once);
+			gameState.addInput({{k::Down}},					[this](FT){ assets.playSound("blip.wav"); menu.next(); }, t::Once);
+			gameState.addInput({{k::Left}},					[this](FT){ assets.playSound("blip.wav"); menu.decrease(); }, t::Once);
+			gameState.addInput({{k::Right}},				[this](FT){ assets.playSound("blip.wav"); menu.increase(); }, t::Once);
+			gameState.addInput({{k::Return}, {k::Space}},	[this](FT){ assets.playSound("blip.wav"); menu.exec(); }, t::Once);
 
 			namespace i = ssvms::Items;
 			auto& main = menu.createCategory("10corp");
@@ -61,7 +61,7 @@ namespace ld
 			main.create<i::Single>("exit", [this]{ window.stop(); });
 		}
 
-		inline void update(float mFT) { camera.update(mFT); menu.update(); }
+		inline void update(FT mFT) { camera.update(mFT); menu.update(); }
 		inline void draw() { camera.apply(); drawMenu(menu); camera.unapply(); render(creditsTxt); }
 
 		inline void render(sf::Drawable& mDrawable) { window.draw(mDrawable); }

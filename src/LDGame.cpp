@@ -27,7 +27,7 @@ namespace ld
 	{
 		// Let's initialize stuff from my game framework
 		// These are delegates from SSVUtils, similar to C# delegates
-		gameState.onUpdate += [this](float mFT){ update(mFT); };
+		gameState.onUpdate += [this](FT mFT){ update(mFT); };
 		gameState.onDraw += [this]{ draw(); };
 
 		// Let's make the text prettier
@@ -42,14 +42,14 @@ namespace ld
 		//using b = ssvs::MBtn;
 		using t = Input::Type;
 
-		gameState.addInput({{k::Escape}}, [this](float){ assets.musicPlayer.stop(); gameWindow.setGameState(menuGame->gameState); });
+		gameState.addInput({{k::Escape}}, [this](FT){ assets.musicPlayer.stop(); gameWindow.setGameState(menuGame->gameState); });
 
-		gameState.addInput({{k::A}}, [=](float){ camera.pan(-10, 0); });
-		gameState.addInput({{k::D}}, [=](float){ camera.pan(10, 0); });
-		gameState.addInput({{k::W}}, [=](float){ camera.pan(0, -10); });
-		gameState.addInput({{k::S}}, [=](float){ camera.pan(0, 10); });
-		gameState.addInput({{k::Q}}, [=](float){ camera.zoomOut(1.1f); });
-		gameState.addInput({{k::E}}, [=](float){ camera.zoomIn(1.1f); });
+		gameState.addInput({{k::A}}, [=](FT){ camera.pan(-10, 0); });
+		gameState.addInput({{k::D}}, [=](FT){ camera.pan(10, 0); });
+		gameState.addInput({{k::W}}, [=](FT){ camera.pan(0, -10); });
+		gameState.addInput({{k::S}}, [=](FT){ camera.pan(0, 10); });
+		gameState.addInput({{k::Q}}, [=](FT){ camera.zoomOut(1.1f); });
+		gameState.addInput({{k::E}}, [=](FT){ camera.zoomIn(1.1f); });
 
 		add2StateInput(gameState, {{k::Z}}, inputAction);
 		add2StateInput(gameState, {{k::X}}, inputJump);
@@ -57,28 +57,28 @@ namespace ld
 		add3StateInput(gameState, {{k::Left}}, {{k::Right}}, inputX);
 		add3StateInput(gameState, {{k::Up}}, {{k::Down}}, inputY);
 
-		gameState.addInput({{k::R}}, [this](float){ newGame(); }, t::Once);
+		gameState.addInput({{k::R}}, [this](FT){ newGame(); }, t::Once);
 
-		gameState.addInput({{k::Num1}}, [this](float){ factory.createWall(getMousePosition()); }, t::Once);
-		gameState.addInput({{k::Num2}}, [this](float){ factory.createBlock(getMousePosition(), getRnd(0, 10)); }, t::Once);
-		gameState.addInput({{k::Num3}}, [this](float){ factory.createPlayer(getMousePosition()); }, t::Once);
-		gameState.addInput({{k::Num4}}, [this](float){ factory.createBlock(getMousePosition()); }, t::Once);
-		gameState.addInput({{k::Num5}}, [this](float){ factory.createReceiver(getMousePosition(), getRnd(0, 10)); }, t::Once);
-		gameState.addInput({{k::Num6}}, [this](float){ factory.createReceiver(getMousePosition()); }, t::Once);
-		gameState.addInput({{k::Num7}}, [this](float){ factory.createBlockBig(getMousePosition()); }, t::Once);
-		gameState.addInput({{k::Num8}}, [this](float){ factory.createBlockBall(getMousePosition()); }, t::Once);
-		gameState.addInput({{k::Num9}}, [this](float){ factory.createBlockRubberH(getMousePosition()); }, t::Once);
-		gameState.addInput({{k::Num0}}, [this](float){ factory.createBlockRubberV(getMousePosition()); }, t::Once);
-		gameState.addInput({{k::J}}, [this](float){ factory.createLift(getMousePosition(), Vec2f{-100, 0}); }, t::Once);
-		gameState.addInput({{k::L}}, [this](float){ factory.createLift(getMousePosition(), Vec2f{100, 0}); }, t::Once);
-		gameState.addInput({{k::I}}, [this](float){ factory.createLift(getMousePosition(), Vec2f{0, -100}); }, t::Once);
-		gameState.addInput({{k::K}}, [this](float){ factory.createLift(getMousePosition(), Vec2f{0, 100}); }, t::Once);
+		gameState.addInput({{k::Num1}}, [this](FT){ factory.createWall(getMousePosition()); }, t::Once);
+		gameState.addInput({{k::Num2}}, [this](FT){ factory.createBlock(getMousePosition(), getRnd(0, 10)); }, t::Once);
+		gameState.addInput({{k::Num3}}, [this](FT){ factory.createPlayer(getMousePosition()); }, t::Once);
+		gameState.addInput({{k::Num4}}, [this](FT){ factory.createBlock(getMousePosition()); }, t::Once);
+		gameState.addInput({{k::Num5}}, [this](FT){ factory.createReceiver(getMousePosition(), getRnd(0, 10)); }, t::Once);
+		gameState.addInput({{k::Num6}}, [this](FT){ factory.createReceiver(getMousePosition()); }, t::Once);
+		gameState.addInput({{k::Num7}}, [this](FT){ factory.createBlockBig(getMousePosition()); }, t::Once);
+		gameState.addInput({{k::Num8}}, [this](FT){ factory.createBlockBall(getMousePosition()); }, t::Once);
+		gameState.addInput({{k::Num9}}, [this](FT){ factory.createBlockRubberH(getMousePosition()); }, t::Once);
+		gameState.addInput({{k::Num0}}, [this](FT){ factory.createBlockRubberV(getMousePosition()); }, t::Once);
+		gameState.addInput({{k::J}}, [this](FT){ factory.createLift(getMousePosition(), Vec2f{-100, 0}); }, t::Once);
+		gameState.addInput({{k::L}}, [this](FT){ factory.createLift(getMousePosition(), Vec2f{100, 0}); }, t::Once);
+		gameState.addInput({{k::I}}, [this](FT){ factory.createLift(getMousePosition(), Vec2f{0, -100}); }, t::Once);
+		gameState.addInput({{k::K}}, [this](FT){ factory.createLift(getMousePosition(), Vec2f{0, 100}); }, t::Once);
 	}
 
 	void LDGame::start10Secs()		{ levelStatus.started = true; }
 	void LDGame::refresh10Secs()	{ levelStatus.timer.resetAll(); }
 
-	void LDGame::showMessage(const string& mMsg, float mDuration, const Color& mColor) { msgTimer.restart(mDuration); currentMsg = "> " + mMsg; msgText.setString(""); msgText.setColor(mColor); }
+	void LDGame::showMessage(const string& mMsg, FT mDuration, const Color& mColor) { msgTimer.restart(mDuration); currentMsg = "> " + mMsg; msgText.setString(""); msgText.setColor(mColor); }
 
 	void LDGame::newGame()
 	{
@@ -300,7 +300,7 @@ namespace ld
 		t.append<Do>([=]{ showMessage("this is your final task for today\ngood luck, worker", 150); });	t.append<WaitWhile>(intro);
 	}
 
-	void LDGame::update(float mFT)
+	void LDGame::update(FT mFT)
 	{
 		if(levelStatus.started && !levelStatus.tutorial)
 		{
@@ -370,7 +370,7 @@ namespace ld
 
 		camera.update(mFT);
 	}
-	void LDGame::updateDebugText(float mFT)
+	void LDGame::updateDebugText(FT mFT)
 	{
 		ostringstream s;
 		const auto& entities(manager.getEntities());
