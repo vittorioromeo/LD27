@@ -188,7 +188,7 @@ namespace ld
 				if(!cPhysics.isInAir())
 				{
 					if(velocity.x == 0) action = Action::Standing;
-					else if(abs(velocity.x) >= walkSpeed) action = Action::Walking;
+					else if(std::abs(velocity.x) >= walkSpeed) action = Action::Walking;
 				}
 				else
 				{
