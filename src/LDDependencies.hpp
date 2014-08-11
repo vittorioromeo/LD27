@@ -25,6 +25,7 @@ namespace ld
 	using DetectionInfo = World::DetectionInfoType;
 	using ResolutionInfo = World::ResolutionInfoType;
 	using FT = ssvu::FT;
+	using Ticker = ssvs::Ticker;
 }
 
 #endif
