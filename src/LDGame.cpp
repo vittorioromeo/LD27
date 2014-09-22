@@ -387,9 +387,9 @@ namespace ld
 		s << "Bodies(dynamic): "	<< dynamicBodiesCount << "\n";
 		s << "Sensors: "			<< sensors.size() << "\n";
 		s << "Entities: "			<< entities.size() << "\n";
-		s << "Components: "			<< componentCount << endl;
+		s << "Components: "			<< componentCount << "\n";
 
-		if(manager.getEntityCount(LDGroup::Block) == 0) s << "SAFE: NO BLOCKS" << endl;
+		if(manager.getEntityCount(LDGroup::Block) == 0) s << "SAFE: NO BLOCKS\n";
 
 		debugText.setString(s.str());
 	}
