@@ -18,12 +18,12 @@ namespace ld
 		public:
 			ssvs::SoundPlayer soundPlayer;
 			ssvs::MusicPlayer musicPlayer;
-			ssvs::Tileset tilesetChar{ssvuj::getExtr<ssvs::Tileset>(ssvuj::getFromFile("Data/Tilesets/tilesetChar.json"))};
-			ssvs::Tileset tilesetWorld{ssvuj::getExtr<ssvs::Tileset>(ssvuj::getFromFile("Data/Tilesets/tilesetWorld.json"))};
+			ssvs::Tileset tilesetChar{ssvj::Val::fromFile("Data/Tilesets/tilesetChar.json").as<ssvs::Tileset>()};
+			ssvs::Tileset tilesetWorld{ssvj::Val::fromFile("Data/Tilesets/tilesetWorld.json").as<ssvs::Tileset>()};
 
 			inline LDAssets()
 			{
-				ssvs::loadAssetsFromJson(assetManager, "Data/", ssvuj::getFromFile("Data/assets.json"));
+				ssvs::loadAssetsFromJson(assetManager, "Data/", ssvj::Val::fromFile("Data/assets.json"));
 
 				soundPlayer.setVolume(50);
 				musicPlayer.setVolume(30);

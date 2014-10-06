@@ -27,20 +27,20 @@ namespace ld
 			LDCPlayerAnimation(ssvs::Tileset& mTileset, LDCRender& mCRender, LDCPlayer& mCPlayer) :
 				 cRender(mCRender), cPlayer(mCPlayer), tileset(mTileset)
 			{
-				ssvuj::Obj animsTorso{ssvuj::getFromFile("Data/Animations/animCharTorso.json")};
-				ssvuj::Obj animsLegs{ssvuj::getFromFile("Data/Animations/animCharLegs.json")};
+				auto animsTorso(ssvj::Val::fromFile("Data/Animations/animCharTorso.json"));
+				auto animsLegs(ssvj::Val::fromFile("Data/Animations/animCharLegs.json"));
 
-				animTorsoStand = ssvs::getAnimationFromJson(tileset, ssvuj::getObj(animsTorso, "stand"));
-				animTorsoJump = ssvs::getAnimationFromJson(tileset, ssvuj::getObj(animsTorso, "jump"));
-				animTorsoFall = ssvs::getAnimationFromJson(tileset, ssvuj::getObj(animsTorso, "fall"));
-				animTorsoWalk = ssvs::getAnimationFromJson(tileset, ssvuj::getObj(animsTorso, "walk"));
+				animTorsoStand = ssvs::getAnimationFromJson(tileset, animsTorso["stand"]);
+				animTorsoJump = ssvs::getAnimationFromJson(tileset, animsTorso["jump"]);
+				animTorsoFall = ssvs::getAnimationFromJson(tileset, animsTorso["fall"]);
+				animTorsoWalk = ssvs::getAnimationFromJson(tileset, animsTorso["walk"]);
 				animTorsoWalk.setType(ssvs::Animation::Type::PingPong); animTorsoWalk.setSpeed(0.75f);
-				animTorsoHold = ssvs::getAnimationFromJson(tileset, ssvuj::getObj(animsTorso, "hold"));
+				animTorsoHold = ssvs::getAnimationFromJson(tileset, animsTorso["hold"]);
 
-				animLegsStand = ssvs::getAnimationFromJson(tileset, ssvuj::getObj(animsLegs, "stand"));
-				animLegsJump = ssvs::getAnimationFromJson(tileset, ssvuj::getObj(animsLegs, "jump"));
-				animLegsFall = ssvs::getAnimationFromJson(tileset, ssvuj::getObj(animsLegs, "fall"));
-				animLegsWalk = ssvs::getAnimationFromJson(tileset, ssvuj::getObj(animsLegs, "walk"));
+				animLegsStand = ssvs::getAnimationFromJson(tileset, animsLegs["stand"]);
+				animLegsJump = ssvs::getAnimationFromJson(tileset, animsLegs["jump"]);
+				animLegsFall = ssvs::getAnimationFromJson(tileset, animsLegs["fall"]);
+				animLegsWalk = ssvs::getAnimationFromJson(tileset, animsLegs["walk"]);
 			}
 
 			void update(FT mFT) override
