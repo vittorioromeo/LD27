@@ -14,7 +14,8 @@ using namespace ssvu;
 
 namespace ld
 {
-	void LDCPhysics::init()
+	LDCPhysics::LDCPhysics(sses::Entity& mE, World& mWorld, bool mIsStatic, const ssvs::Vec2i& mPosition, const ssvs::Vec2i& mSize, bool mAffectedByGravity)
+		: sses::Component{mE}, world(mWorld), body(world.create(mPosition, mSize, mIsStatic)), affectedByGravity{mAffectedByGravity}, groundSensor{body, ssvs::Vec2i{body.getWidth(), 10}}
 	{
 		groundSensor.getSensor().addGroupsToCheck(LDGroup::Solid);
 

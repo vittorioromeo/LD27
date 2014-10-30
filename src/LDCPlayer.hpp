@@ -24,7 +24,7 @@ namespace ld
 			ssvs::BitmapText text;
 
 		public:
-			LDCBlock(int mVal, LDGame& mGame, LDCPhysics& mCPhysics) : val(mVal), game(mGame), cPhysics(mCPhysics), body(cPhysics.getBody()),
+			LDCBlock(sses::Entity& mE, int mVal, LDGame& mGame, LDCPhysics& mCPhysics) : sses::Component{mE}, val(mVal), game(mGame), cPhysics(mCPhysics), body(cPhysics.getBody()),
 				text{game.getAssets().get<ssvs::BitmapFont>("limeStroked"), ssvu::toStr(val)}
 			{
 				text.setScale(0.75f, 0.75f);
@@ -124,26 +124,19 @@ namespace ld
 			float lastBlockTimer{0.f};
 
 		public:
-			LDCPlayer(LDGame& mGame, LDCPhysics& mCPhysics) : game(mGame), cPhysics(mCPhysics), body(cPhysics.getBody()) { }
-			~LDCPlayer()
-			{
-				if(currentBlock == nullptr) return;
-				currentBlock->dropped();
-			}
-
-			void init()
+			LDCPlayer(sses::Entity& mE, LDGame& mGame, LDCPhysics& mCPhysics) : sses::Component{mE}, game(mGame), cPhysics(mCPhysics), body(cPhysics.getBody())
 			{
 				blockSensor.getSensor().addGroupsToCheck(LDGroup::Block);
 
-				blockSensor.onDetection += [this](sses::Entity& mE)
+				blockSensor.onDetection += [this](sses::Entity& mDE)
 				{
 					if(hasBlock() || !game.getIAction()) return;
-					if(!mE.getComponent<LDCPhysics>().getBody().hasGroup(LDGroup::CanBePicked)) return;
-					auto& block(mE.getComponent<LDCBlock>());
+					if(!mDE.getComponent<LDCPhysics>().getBody().hasGroup(LDGroup::CanBePicked)) return;
+					auto& block(mDE.getComponent<LDCBlock>());
 					block.pickedUp(cPhysics);
 					if(currentBlock != nullptr) currentBlock->dropped();
 					currentBlock = &block; currentBlockStat = currentBlock->getEntity().getStat();
-					lastBlock = &mE.getComponent<LDCPhysics>().getBody();
+					lastBlock = &mDE.getComponent<LDCPhysics>().getBody();
 
 					game.getAssets().playSound("pick.wav", ssvs::SoundPlayer::Mode::Abort);
 				};
@@ -164,6 +157,12 @@ namespace ld
 
 				cPhysics.onResolution += [this](const ssvs::Vec2i&) { jumpReady = true; };
 			}
+			~LDCPlayer()
+			{
+				if(currentBlock == nullptr) return;
+				currentBlock->dropped();
+			}
+
 			void update(FT mFT) override
 			{
 				if(currentBlock != nullptr && !getManager().isAlive(currentBlockStat)) currentBlock = nullptr;

@@ -24,8 +24,8 @@ namespace ld
 			ssvs::Animation* currentLegsAnim{nullptr};
 
 		public:
-			LDCPlayerAnimation(ssvs::Tileset& mTileset, LDCRender& mCRender, LDCPlayer& mCPlayer) :
-				 cRender(mCRender), cPlayer(mCPlayer), tileset(mTileset)
+			LDCPlayerAnimation(sses::Entity& mE, ssvs::Tileset& mTileset, LDCRender& mCRender, LDCPlayer& mCPlayer) :
+				 sses::Component{mE}, cRender(mCRender), cPlayer(mCPlayer), tileset(mTileset)
 			{
 				auto animsTorso(ssvj::Val::fromFile("Data/Animations/animCharTorso.json"));
 				auto animsLegs(ssvj::Val::fromFile("Data/Animations/animCharLegs.json"));

@@ -24,7 +24,7 @@ namespace ld
 			ssvs::Vec2f globalOffset;
 
 		public:
-			inline LDCRender(LDGame& mGame, Body& mBody) : game(mGame), body(mBody) { }
+			inline LDCRender(sses::Entity& mE, LDGame& mGame, Body& mBody) : sses::Component{mE}, game(mGame), body(mBody) { }
 
 			inline void update(FT) override
 			{
