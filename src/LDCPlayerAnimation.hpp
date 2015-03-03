@@ -27,8 +27,8 @@ namespace ld
 			LDCPlayerAnimation(sses::Entity& mE, ssvs::Tileset& mTileset, LDCRender& mCRender, LDCPlayer& mCPlayer) :
 				 sses::Component{mE}, cRender(mCRender), cPlayer(mCPlayer), tileset(mTileset)
 			{
-				auto animsTorso(ssvj::Val::fromFile("Data/Animations/animCharTorso.json"));
-				auto animsLegs(ssvj::Val::fromFile("Data/Animations/animCharLegs.json"));
+				auto animsTorso(ssvj::fromFile("Data/Animations/animCharTorso.json"));
+				auto animsLegs(ssvj::fromFile("Data/Animations/animCharLegs.json"));
 
 				animTorsoStand = ssvs::getAnimationFromJson(tileset, animsTorso["stand"]);
 				animTorsoJump = ssvs::getAnimationFromJson(tileset, animsTorso["jump"]);
