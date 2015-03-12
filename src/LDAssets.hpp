@@ -13,7 +13,7 @@ namespace ld
 	class LDAssets
 	{
 		private:
-			ssvs::AssetManager assetManager;
+			ssvs::AssetManager<> assetManager;
 
 		public:
 			ssvs::SoundPlayer soundPlayer;
@@ -29,7 +29,7 @@ namespace ld
 				musicPlayer.setVolume(30);
 			}
 
-			inline ssvs::AssetManager& operator()() { return assetManager; }
+			inline auto& operator()() { return assetManager; }
 			template<typename T> inline T& get(const std::string& mId) { return assetManager.get<T>(mId); }
 
 			inline void playSound(const std::string& mName, ssvs::SoundPlayer::Mode mMode = ssvs::SoundPlayer::Mode::Overlap, float mPitch = 1.f)
