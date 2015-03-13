@@ -38,7 +38,7 @@ namespace ld
 		body.setVelTransferMultX(1.f);
 		body.setVelTransferMultY(1.f);
 
-		emplaceSpriteFromTile(cRender, "worldTiles.png", assets.tilesetWorld((getRnd(0, 100) < 75) ? Vec2u{1, 0} : Vec2u(3 + getRnd(0, 2), 0)));
+		emplaceSpriteFromTile(cRender, "worldTiles.png", assets.tilesetWorld((getRndI(0, 100) < 75) ? Vec2u{1, 0} : Vec2u(3 + getRndI(0, 2), 0)));
 		body.setStressMult(0.f);
 		cRender.setScaleWithBody(false);
 
@@ -74,7 +74,7 @@ namespace ld
 
 		if(mVal > -1)
 		{
-			if(colorMap.find(mVal) == colorMap.end()) colorMap[mVal] = Color(getRnd(0, 255), getRnd(0, 255), getRnd(0, 255), 255);
+			if(colorMap.find(mVal) == colorMap.end()) colorMap[mVal] = Color(getRndI(0, 255), getRndI(0, 255), getRndI(0, 255), 255);
 			cRender[0].setColor(colorMap[mVal]);
 		}
 
@@ -100,7 +100,7 @@ namespace ld
 
 		if(mVal > -1)
 		{
-			if(colorMap.find(mVal) == colorMap.end()) colorMap[mVal] = Color(getRnd(0, 255), getRnd(0, 255), getRnd(0, 255), 255);
+			if(colorMap.find(mVal) == colorMap.end()) colorMap[mVal] = Color(getRndI(0, 255), getRndI(0, 255), getRndI(0, 255), 255);
 			cRender[0].setColor(colorMap[mVal]);
 		}
 
@@ -123,7 +123,7 @@ namespace ld
 
 		if(mVal > -1)
 		{
-			if(colorMap.find(mVal) == colorMap.end()) colorMap[mVal] = Color(getRnd(0, 255), getRnd(0, 255), getRnd(0, 255), 255);
+			if(colorMap.find(mVal) == colorMap.end()) colorMap[mVal] = Color(getRndI(0, 255), getRndI(0, 255), getRndI(0, 255), 255);
 			cRender[0].setColor(colorMap[mVal]);
 		}
 
@@ -145,7 +145,7 @@ namespace ld
 
 		if(mVal > -1)
 		{
-			if(colorMap.find(mVal) == colorMap.end()) colorMap[mVal] = Color(getRnd(0, 255), getRnd(0, 255), getRnd(0, 255), 255);
+			if(colorMap.find(mVal) == colorMap.end()) colorMap[mVal] = Color(getRndI(0, 255), getRndI(0, 255), getRndI(0, 255), 255);
 			cRender[0].setColor(colorMap[mVal]);
 		}
 
@@ -167,7 +167,7 @@ namespace ld
 
 		if(mVal > -1)
 		{
-			if(colorMap.find(mVal) == colorMap.end()) colorMap[mVal] = Color(getRnd(0, 255), getRnd(0, 255), getRnd(0, 255), 255);
+			if(colorMap.find(mVal) == colorMap.end()) colorMap[mVal] = Color(getRndI(0, 255), getRndI(0, 255), getRndI(0, 255), 255);
 			cRender[0].setColor(colorMap[mVal]);
 		}
 
@@ -227,7 +227,7 @@ namespace ld
 
 		if(mVal > -1)
 		{
-			if(colorMap.find(mVal) == colorMap.end()) colorMap[mVal] = Color(getRnd(0, 255), getRnd(0, 255), getRnd(0, 255), 255);
+			if(colorMap.find(mVal) == colorMap.end()) colorMap[mVal] = Color(getRndI(0, 255), getRndI(0, 255), getRndI(0, 255), 255);
 			cRender[0].setColor(colorMap[mVal]);
 		}
 

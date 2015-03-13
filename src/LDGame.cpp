@@ -60,10 +60,10 @@ namespace ld
 		gameState.addInput({{k::R}}, [this](FT){ newGame(); }, t::Once);
 
 		gameState.addInput({{k::Num1}}, [this](FT){ factory.createWall(getMousePosition()); }, t::Once);
-		gameState.addInput({{k::Num2}}, [this](FT){ factory.createBlock(getMousePosition(), getRnd(0, 10)); }, t::Once);
+		gameState.addInput({{k::Num2}}, [this](FT){ factory.createBlock(getMousePosition(), getRndI(0, 10)); }, t::Once);
 		gameState.addInput({{k::Num3}}, [this](FT){ factory.createPlayer(getMousePosition()); }, t::Once);
 		gameState.addInput({{k::Num4}}, [this](FT){ factory.createBlock(getMousePosition()); }, t::Once);
-		gameState.addInput({{k::Num5}}, [this](FT){ factory.createReceiver(getMousePosition(), getRnd(0, 10)); }, t::Once);
+		gameState.addInput({{k::Num5}}, [this](FT){ factory.createReceiver(getMousePosition(), getRndI(0, 10)); }, t::Once);
 		gameState.addInput({{k::Num6}}, [this](FT){ factory.createReceiver(getMousePosition()); }, t::Once);
 		gameState.addInput({{k::Num7}}, [this](FT){ factory.createBlockBig(getMousePosition()); }, t::Once);
 		gameState.addInput({{k::Num8}}, [this](FT){ factory.createBlockBall(getMousePosition()); }, t::Once);
@@ -114,7 +114,7 @@ namespace ld
 	{
 		levelStatus.title = "introduction - part 1"; levelStatus.tutorial = true;
 
-		string rndWorkerHash; for(int i{0}; i < 10; ++i) rndWorkerHash += toStr(getRnd(1, 10));
+		string rndWorkerHash; for(int i{0}; i < 10; ++i) rndWorkerHash += toStr(getRndI(1, 10));
 
 		for(int i{0}; i < 10; ++i) { pW(i, 0); pW(0, -i); }
 		auto& player(factory.createPlayer(put(1, -1)));
