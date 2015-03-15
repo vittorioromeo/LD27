@@ -55,7 +55,7 @@ namespace ld
 
 						if(parent == nullptr) body.delGroupsNoResolve(LDGroup::Player);
 					}
-					text.setString(ssvu::toStr(static_cast<int>(body.getStress().y)));
+					text.setString(ssvu::toStr(ssvu::toInt(body.getStress().y)));
 				};
 
 				body.onPostUpdate += [this]

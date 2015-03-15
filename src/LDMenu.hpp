@@ -80,7 +80,7 @@ namespace ld
 
 			float currentX{0.f}, currentY{0.f};
 			auto& currentItems(mMenu.getItems());
-			for(int i{0}; i < static_cast<int>(currentItems.size()); ++i)
+			for(int i{0}; i < ssvu::toInt(currentItems.size()); ++i)
 			{
 				currentY += 12;
 				if(i != 0 && i % 21 == 0) { currentY = 0; currentX += 180; }
