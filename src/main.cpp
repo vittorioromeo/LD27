@@ -21,7 +21,7 @@ int main()
     SSVUT_RUN();
 
     unsigned int width{VideoMode::getDesktopMode().width},
-    height{VideoMode::getDesktopMode().height};
+        height{VideoMode::getDesktopMode().height};
     width = 800;
     height = 600;
 

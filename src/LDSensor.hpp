@@ -10,48 +10,48 @@
 
 namespace ld
 {
-class LDGame;
-class LDCPhysics;
+    class LDGame;
+    class LDCPhysics;
 
-class LDSensor
-{
-private:
-    Body& parent;
-    ssvs::Vec2i position;
-    Sensor& sensor;
-    bool active{false};
-
-public:
-    ssvu::Delegate<void(sses::Entity&)> onDetection;
-
-    LDSensor(Body& mParent, const ssvs::Vec2i& mSize)
-        : parent(mParent), position(parent.getPosition()),
-          sensor(parent.getWorld().createSensor(position, mSize))
+    class LDSensor
     {
-        sensor.addGroups(LDGroup::GSensor);
+    private:
+        Body& parent;
+        ssvs::Vec2i position;
+        Sensor& sensor;
+        bool active{false};
 
-        sensor.onPreUpdate += [this]
+    public:
+        ssvu::Delegate<void(sses::Entity&)> onDetection;
+
+        LDSensor(Body& mParent, const ssvs::Vec2i& mSize)
+            : parent(mParent), position(parent.getPosition()),
+              sensor(parent.getWorld().createSensor(position, mSize))
         {
-            active = false;
-            sensor.setPosition(position);
-        };
-        sensor.onDetection += [this](const DetectionInfo& mDI)
-        {
-            if(&mDI.body == &parent) return;
-            active = true;
+            sensor.addGroups(LDGroup::GSensor);
 
-            if(mDI.userData == nullptr) return;
-            auto& entity(*static_cast<sses::Entity*>(mDI.userData));
-            onDetection(entity);
-        };
-    }
-    ~LDSensor() { sensor.destroy(); }
+            sensor.onPreUpdate += [this]
+            {
+                active = false;
+                sensor.setPosition(position);
+            };
+            sensor.onDetection += [this](const DetectionInfo& mDI)
+            {
+                if(&mDI.body == &parent) return;
+                active = true;
 
-    void setPosition(const ssvs::Vec2i& mPos) { position = mPos; }
+                if(mDI.userData == nullptr) return;
+                auto& entity(*static_cast<sses::Entity*>(mDI.userData));
+                onDetection(entity);
+            };
+        }
+        ~LDSensor() { sensor.destroy(); }
 
-    inline Sensor& getSensor() { return sensor; }
-    inline bool isActive() const { return active; }
-};
+        void setPosition(const ssvs::Vec2i& mPos) { position = mPos; }
+
+        inline Sensor& getSensor() { return sensor; }
+        inline bool isActive() const { return active; }
+    };
 }
 
 #endif

@@ -18,14 +18,14 @@
 
 namespace ld
 {
-using ssvu::FT;
-using ssvu::Ticker;
+    using ssvu::FT;
+    using ssvu::Ticker;
 
-using World = ssvsc::World<ssvsc::HashGrid, ssvsc::Impulse>;
-using Body = World::BodyType;
-using Sensor = World::SensorType;
-using DetectionInfo = World::DetectionInfoType;
-using ResolutionInfo = World::ResolutionInfoType;
+    using World = ssvsc::World<ssvsc::HashGrid, ssvsc::Impulse>;
+    using Body = World::BodyType;
+    using Sensor = World::SensorType;
+    using DetectionInfo = World::DetectionInfoType;
+    using ResolutionInfo = World::ResolutionInfoType;
 }
 
 #endif
